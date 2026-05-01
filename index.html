@@ -969,8 +969,8 @@
       <div class="subscribe-eyebrow">— 無料ニュースレター —</div>
       <h2>明日のヒントを、<br><em>あなたの朝に</em>届けます。</h2>
       <p>毎週水曜日の朝7時、編集長が選ぶ「次に来るアイデア」を一通の手紙にして。</p>
-      <form class="subscribe-form" id="subscribe-form" action="#" method="post" target="_blank">
-        <input type="email" name="email" placeholder="your@email.com" required>
+      <form class="subscribe-form" id="subscribe-form" action="https://kuruhimotimes.beehiiv.com/subscribe" method="get" target="_blank" rel="noopener">
+        <input type="email" name="email" placeholder="your@email.com" required autocomplete="email">
         <button type="submit">購読する</button>
       </form>
     </section>
@@ -1469,37 +1469,40 @@
     const form = document.getElementById('subscribe-form');
     if (!form) return;
 
-    const publicationUrl = beehiivConfig && beehiivConfig.publicationUrl;
+    // beehiivの購読ページURL。
+    // data.json の beehiivConfig.publicationUrl が設定されていればそれを使い、
+    // 未設定なら下のデフォルトURLを使います。
+    const DEFAULT_BEEHIIV_PUBLICATION_URL = 'https://kuruhimotimes.beehiiv.com';
+    const configuredUrl = beehiivConfig && beehiivConfig.publicationUrl;
+    const publicationUrl = (configuredUrl && !configuredUrl.includes('your-publication'))
+      ? configuredUrl
+      : DEFAULT_BEEHIIV_PUBLICATION_URL;
 
-    if (!publicationUrl || publicationUrl.includes('your-publication')) {
-      // 未設定の場合
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        alert('購読フォームはまだセットアップ中です。\n\n編集長へ: data.json の beehiivConfig.publicationUrl を設定してください。');
-      });
-      return;
-    }
+    const subscribeUrl = publicationUrl.replace(/\/$/, '') + '/subscribe';
+    form.action = subscribeUrl;
+    form.method = 'get';
+    form.target = '_blank';
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const email = form.querySelector('input[name="email"]').value;
+      const emailInput = form.querySelector('input[name="email"]');
+      const email = emailInput.value.trim();
       if (!email) return;
 
-      // beehiivの購読ページへ遷移
-      const url = publicationUrl.replace(/\/$/, '') +
-        '/subscribe?email=' + encodeURIComponent(email);
+      // beehiivの購読ページへ、入力メールアドレスつきで移動します。
+      const url = subscribeUrl + '?email=' + encodeURIComponent(email);
       window.open(url, '_blank', 'noopener');
 
-      // 確認メッセージ
       const btn = form.querySelector('button');
       const originalText = btn.textContent;
-      btn.textContent = 'beehiivで登録を完了してください →';
+      btn.textContent = '登録ページを開きました';
       btn.disabled = true;
+
       setTimeout(() => {
         btn.textContent = originalText;
         btn.disabled = false;
-        form.querySelector('input[name="email"]').value = '';
-      }, 4000);
+        emailInput.value = '';
+      }, 3500);
     });
   }
 

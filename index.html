@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>くるひもタイムズ / Kuruhimo Times — 次にくるアイデアの編集室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,200;1,9..144,400;1,9..144,700&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700;800;900&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f6f1e7;
+    --paper-2: #efe8d9;
+    --paper-3: #e8e0cc;
+    --ink: #12120f;
+    --ink-2: #2a2825;
+    --ink-3: #5a564e;
+    --vermilion: #d4391b;
+    --vermilion-soft: #e88a73;
+    --gold: #b8975a;
+    --rule: rgba(18,18,15,0.12);
+    --rule-strong: rgba(18,18,15,0.6);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  ::selection { background: var(--ink); color: var(--paper); }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    line-height: 1.75;
+    overflow-x: hidden;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 紙の質感(ノイズ) */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 10%, rgba(212,57,27,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 90%, rgba(184,151,90,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(18,18,15,0.02) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: multiply;
+  }
+
+  .container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ============================================
+     縦書き風の左サイドバー(ページナンバー)
+  ============================================ */
+  .side-marker {
+    position: fixed;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--ink-3);
+    z-index: 10;
+    text-transform: uppercase;
+  }
+  .side-marker::before {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 40px;
+    background: var(--ink-3);
+    margin-bottom: 16px;
+    vertical-align: middle;
+  }
+
+  /* ============================================
+     マストヘッド
+  ============================================ */
+  .masthead {
+    padding: 24px 0 0;
+    position: relative;
+  }
+
+  .masthead-rail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .masthead-rail .left, .masthead-rail .right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .vol-badge {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3px 8px;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+  }
+
+  .title-block {
+    text-align: center;
+    padding: 56px 0 32px;
+    position: relative;
+  }
+
+  .title-block::before {
+    content: '✦';
+    position: absolute;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--vermilion);
+    font-size: 14px;
+  }
+
+  .site-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(48px, 10vw, 152px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.88;
+    color: var(--ink);
+    display: inline-block;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .site-title .word {
+    display: inline-block;
+  }
+
+  .site-title .char {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .site-title:hover .char {
+    transform: translateY(-4px);
+  }
+
+  .site-title .char:nth-child(2):hover ~ .char,
+  .site-title .char:hover {
+    color: var(--vermilion);
+  }
+
+  .site-en {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(13px, 1.4vw, 17px);
+    letter-spacing: 0.45em;
+    color: var(--ink-3);
+    margin-top: 24px;
+    text-transform: uppercase;
+    padding-left: 0.45em;
+  }
+
+  .tagline {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(15px, 1.5vw, 19px);
+    color: var(--ink-2);
+    margin-top: 24px;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .tagline::before, .tagline::after {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--ink-3);
+  }
+
+  /* ============================================
+     ナビゲーション(ミニマル)
+  ============================================ */
+  .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    padding: 24px 0 32px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-top: 24px;
+    position: relative;
+  }
+
+  .navbar a {
+    color: var(--ink-2);
+    text-decoration: none;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    padding: 8px 24px;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .navbar a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: var(--vermilion);
+    transition: all 0.3s;
+    transform: translateX(-50%);
+  }
+
+  .navbar a:hover { color: var(--vermilion); }
+  .navbar a:hover::after, .navbar a.active::after { width: 24px; }
+  .navbar a.active { color: var(--vermilion); font-weight: 600; }
+
+  /* ============================================
+     ヒーロー(編集者の言葉のように)
+  ============================================ */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 80px;
+    padding: 96px 0 120px;
+    position: relative;
+  }
+
+  .hero-main {
+    position: relative;
+  }
+
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--vermilion);
+    font-weight: 500;
+    margin-bottom: 48px;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--vermilion);
+  }
+
+  .section-eyebrow::after {
+    content: '01';
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 0.2em;
+  }
+
+  .hero-headline {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(40px, 6.5vw, 88px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: 40px;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  .hero-headline .accent {
+    color: var(--vermilion);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+  }
+
+  .hero-deck {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(17px, 1.6vw, 21px);
+    line-height: 1.65;
+    color: var(--ink-2);
+    margin-bottom: 40px;
+    font-weight: 300;
+    max-width: 620px;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-deck::first-letter {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 3em;
+    float: left;
+    line-height: 0.9;
+    margin: 8px 12px 0 0;
+    color: var(--vermilion);
+    font-style: normal;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    flex-wrap: wrap;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-meta span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* TOP5サイドバー */
+  .hero-side {
+    border-left: 1px solid var(--rule);
+    padding-left: 40px;
+    padding-top: 8px;
+  }
+
+  .side-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--vermilion);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .side-h {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .side-h em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--vermilion);
+    font-size: 0.85em;
+  }
+
+  .side-list { list-style: none; }
+
+  .side-list li {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 16px;
+    align-items: start;
+    cursor: pointer;
+    transition: padding-left 0.3s, opacity 0.3s;
+  }
+
+  .side-list li:last-child { border-bottom: none; }
+  .side-list li:hover { padding-left: 8px; }
+  .side-list li:hover .side-num { color: var(--vermilion); }
+  .side-list li.empty { opacity: 0.4; cursor: default; }
+
+  .side-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 32px;
+    color: var(--ink);
+    line-height: 0.9;
+    transition: color 0.3s;
+  }
+
+  .side-text {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .side-text small {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    margin-top: 6px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .side-views {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--vermilion);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ============================================
+     セクション共通
+  ============================================ */
+  .section {
+    padding: 120px 0;
+    position: relative;
+  }
+
+  .section + .section { border-top: 1px solid var(--rule); }
+
+  .section-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 48px;
+    align-items: end;
+    margin-bottom: 64px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .section-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 200;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.85;
+    color: var(--vermilion);
+  }
+
+  .section-h {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .section-h .en {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-3);
+    font-size: 0.4em;
+    margin-top: 8px;
+    letter-spacing: 0.15em;
+  }
+
+  .section-more {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-decoration: none;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding-bottom: 4px;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .section-more::after {
+    content: '→';
+    margin-left: 8px;
+    transition: transform 0.3s;
+    display: inline-block;
+  }
+
+  .section-more:hover { color: var(--vermilion); }
+  .section-more:hover::after { transform: translateX(4px); }
+
+  /* ============================================
+     あしたのアイデア(マガジン風カード)
+  ============================================ */
+  .idea-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .idea-card {
+    padding: 40px 32px 36px;
+    background: var(--paper);
+    transition: background 0.4s, transform 0.4s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .idea-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--vermilion);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .idea-card:hover { background: var(--paper-2); }
+  .idea-card:hover::before { transform: scaleX(1); }
+  .idea-card:hover .idea-num { transform: translateX(8px); color: var(--vermilion); }
+
+  .idea-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 80px;
+    font-weight: 200;
+    line-height: 0.9;
+    color: var(--ink);
+    margin-bottom: 24px;
+    transition: transform 0.4s, color 0.4s;
+    letter-spacing: -0.02em;
+  }
+
+  .idea-day {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink-3);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .idea-day::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--vermilion);
+    border-radius: 50%;
+  }
+
+  .idea-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .idea-summary {
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink-2);
+    flex-grow: 1;
+    font-weight: 400;
+  }
+
+  .idea-tag {
+    margin-top: 24px;
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    align-self: flex-start;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .idea-views {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--vermilion);
+    letter-spacing: 0.1em;
+    background: var(--paper);
+    padding: 2px 8px;
+    border: 1px solid var(--vermilion);
+    border-radius: 999px;
+  }
+
+  /* ============================================
+     ブックレビュー(ダーク反転)
+  ============================================ */
+  .reviews {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 120px 48px;
+    margin: 0 -48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .reviews::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--vermilion) 50%, transparent);
+  }
+
+  .reviews .container { padding: 0; max-width: 1224px; }
+  .reviews .section-head { border-bottom-color: rgba(246,241,231,0.15); }
+  .reviews .section-h { color: var(--paper); }
+  .reviews .section-h .en { color: var(--vermilion-soft); }
+  .reviews .section-num { color: var(--vermilion-soft); }
+  .reviews .section-more { color: var(--paper); }
+  .reviews .section-more:hover { color: var(--vermilion-soft); }
+
+  .review-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px 48px;
+  }
+
+  .review-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 32px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(246,241,231,0.1);
+    cursor: pointer;
+    transition: transform 0.4s;
+  }
+
+  .review-card:hover { transform: translateX(8px); }
+  .review-card:hover .review-cover { transform: rotate(-3deg) scale(1.05); }
+
+  .review-cover {
+    width: 120px;
+    height: 168px;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 16px 12px;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow:
+      6px 6px 0 var(--vermilion),
+      12px 12px 24px rgba(0,0,0,0.3);
+    position: relative;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .review-cover::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    border: 1px solid var(--ink);
+    pointer-events: none;
+  }
+
+  .review-cover .author {
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  .review-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--vermilion-soft);
+    margin-bottom: 12px;
+  }
+
+  .review-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .review-author {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--vermilion-soft);
+    margin-bottom: 16px;
+    letter-spacing: 0.02em;
+  }
+
+  .review-excerpt {
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 14px;
+    line-height: 1.85;
+    color: rgba(246,241,231,0.78);
+    font-weight: 300;
+  }
+
+  .review-rating {
+    margin-top: 16px;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    color: var(--vermilion-soft);
+    letter-spacing: 0.3em;
+  }
+
+  /* ============================================
+     新刊
+  ============================================ */
+  .release-eyebrow {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--vermilion);
+    margin-bottom: 8px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+  }
+
+  .release-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    padding-top: 32px;
+  }
+
+  .book-item {
+    cursor: pointer;
+  }
+
+  .book-cover-wrap {
+    perspective: 1000px;
+    margin-bottom: 20px;
+  }
+
+  .book-cover {
+    aspect-ratio: 2/3;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    line-height: 1.35;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-style: preserve-3d;
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.08),
+      0 16px 40px rgba(0,0,0,0.12);
+  }
+
+  .book-item:hover .book-cover {
+    transform: rotateY(-8deg) translateY(-8px);
+    box-shadow:
+      0 8px 16px rgba(0,0,0,0.1),
+      0 24px 60px rgba(0,0,0,0.18);
+  }
+
+  .book-cover.c1 {
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%),
+      linear-gradient(135deg, #d8c8a8 0%, #b59a6e 100%);
+    color: var(--ink);
+  }
+  .book-cover.c2 {
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%),
+      linear-gradient(135deg, #2c3e54 0%, #16263a 100%);
+    color: var(--paper);
+  }
+  .book-cover.c3 {
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #d4391b 0%, #8a2010 100%);
+    color: var(--paper);
+  }
+  .book-cover.c4 {
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%),
+      linear-gradient(135deg, #4a5d3a 0%, #29371f 100%);
+    color: var(--paper);
+  }
+
+  .book-cover::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    border: 1px solid currentColor;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .book-cover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 12px;
+    width: 1px;
+    background: currentColor;
+    opacity: 0.2;
+  }
+
+  .book-cover-title {
+    font-size: 17px;
+    margin-top: 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .book-cover-author {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .book-info { padding: 0 4px; }
+  .book-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .book-author-line {
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .book-publisher {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--vermilion);
+    font-weight: 500;
+  }
+
+  /* ============================================
+     購読
+  ============================================ */
+  .subscribe {
+    padding: 160px 0;
+    text-align: center;
+    position: relative;
+    background:
+      radial-gradient(ellipse at center, var(--paper-2) 0%, transparent 70%);
+  }
+
+  .subscribe::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    border: 1px solid var(--vermilion);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .subscribe::after {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--vermilion);
+    font-size: 24px;
+    z-index: 0;
+    opacity: 0.3;
+  }
+
+  .subscribe-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: var(--vermilion);
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+  }
+
+  .subscribe h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -0.03em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .subscribe h2 em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--vermilion);
+  }
+
+  .subscribe p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--ink-2);
+    margin-bottom: 48px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  .subscribe-form {
+    display: flex;
+    max-width: 520px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--ink);
+    background: transparent;
+    position: relative;
+    z-index: 1;
+  }
+
+  .subscribe-form input {
+    flex: 1;
+    padding: 16px 4px;
+    border: none;
+    background: transparent;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .subscribe-form input::placeholder {
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
+  .subscribe-form button {
+    background: transparent;
+    color: var(--ink);
+    border: none;
+    padding: 0 4px 0 24px;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: color 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .subscribe-form button::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+
+  .subscribe-form button:hover {
+    color: var(--vermilion);
+  }
+
+  .subscribe-form button:hover::after {
+    transform: translateX(8px);
+  }
+
+  /* ============================================
+     フッター
+  ============================================ */
+  footer {
+    padding: 96px 0 48px;
+    background: var(--ink);
+    color: var(--paper);
+    margin: 0 -48px;
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+
+  footer .container { padding: 0; }
+
+  .footer-mark {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 64px;
+    color: var(--paper);
+  }
+
+  .footer-mark em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--vermilion-soft);
+    font-size: 0.5em;
+    letter-spacing: 0.15em;
+    display: block;
+    margin-top: 12px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+    padding-top: 48px;
+    border-top: 1px solid rgba(246,241,231,0.15);
+  }
+
+  .footer-brand p {
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 13px;
+    line-height: 1.85;
+    color: rgba(246,241,231,0.7);
+    max-width: 360px;
+    font-weight: 300;
+  }
+
+  .footer-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--vermilion-soft);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  .footer-col ul { list-style: none; }
+  .footer-col li { padding: 6px 0; }
+  .footer-col a {
+    color: var(--paper);
+    text-decoration: none;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    transition: color 0.3s, padding-left 0.3s;
+    display: inline-block;
+  }
+  .footer-col a:hover {
+    color: var(--vermilion-soft);
+    padding-left: 6px;
+  }
+
+  .footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid rgba(246,241,231,0.15);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: rgba(246,241,231,0.5);
+  }
+
+  /* ============================================
+     レスポンシブ
+  ============================================ */
+  @media (max-width: 1024px) {
+    .container { padding: 0 32px; }
+    .reviews, footer { margin: 0 -32px; padding-left: 32px; padding-right: 32px; }
+    .hero { grid-template-columns: 1fr; gap: 64px; padding: 64px 0 80px; }
+    .hero-side { border-left: none; padding-left: 0; padding-top: 48px; border-top: 1px solid var(--rule); }
+    .release-list { grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .review-grid { grid-template-columns: 1fr; gap: 48px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .side-marker { display: none; }
+  }
+
+  @media (max-width: 720px) {
+    .container { padding: 0 24px; }
+    .reviews, footer { margin: 0 -24px; padding-left: 24px; padding-right: 24px; }
+    .reviews { padding: 80px 24px; }
+    .section { padding: 80px 0; }
+    .idea-grid { grid-template-columns: 1fr 1fr; }
+    .release-list { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .masthead-rail { font-size: 9px; padding-bottom: 12px; }
+    .masthead-rail .left, .masthead-rail .right { gap: 12px; }
+    .navbar { gap: 0; padding: 16px 0; }
+    .navbar a { padding: 6px 12px; font-size: 12px; }
+    .section-head { grid-template-columns: 1fr; gap: 16px; }
+    .section-num { font-size: 56px; }
+    .review-card { grid-template-columns: 90px 1fr; gap: 20px; }
+    .review-cover { width: 90px; height: 126px; padding: 12px 10px; font-size: 11px; }
+    /* タイトルを2行にして「くるひも」「タイムズ」で折り返す */
+    .site-title { white-space: normal; }
+    .site-title .word { display: block; }
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 0 20px; }
+    .reviews, footer { margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
+    .title-block { padding: 32px 0 16px; }
+    .hero { padding: 48px 0 64px; }
+    .hero-deck::first-letter { font-size: 2.5em; }
+    .idea-grid { grid-template-columns: 1fr; }
+    .idea-card { min-height: auto; padding: 32px 24px; }
+    .idea-num { font-size: 64px; }
+    .release-list { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .subscribe { padding: 96px 0; }
+    .subscribe-form { flex-direction: row; }
+    .subscribe-form button { padding: 0 0 0 12px; font-size: 12px; }
+    .footer-mark { font-size: 48px; }
+  }
+
+  /* ============================================
+     スクロール出現
+  ============================================ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<aside class="side-marker">KURUHIMO · TIMES · 2026</aside>
+
+<div class="container">
+
+  <!-- マストヘッド -->
+  <header class="masthead">
+    <div class="masthead-rail">
+      <div class="left">
+        <span class="vol-badge">VOL <span id="vol">042</span></span>
+        <span id="today-date">読み込み中…</span>
+      </div>
+      <div class="right">
+        <span id="weather">晴れ</span>
+        <span>EST. 2026</span>
+      </div>
+    </div>
+
+    <div class="title-block">
+      <h1 class="site-title">
+        <span class="word"><span class="char">く</span><span class="char">る</span><span class="char">ひ</span><span class="char">も</span></span><span class="word"><span class="char">タ</span><span class="char">イ</span><span class="char">ム</span><span class="char">ズ</span></span>
+        <span class="site-en">The Kuruhimo Times</span>
+      </h1>
+      <div class="tagline">次にくるアイデアの編集室</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="#" class="active">一面</a>
+      <a href="#ideas">あしたのアイデア</a>
+      <a href="#reviews">ブックレビュー</a>
+      <a href="#today">きょう発売</a>
+      <a href="#archive">アーカイブ</a>
+      <a href="#about">編集について</a>
+    </nav>
+  </header>
+
+  <!-- ヒーロー -->
+  <section class="hero">
+    <div class="hero-main reveal">
+      <div class="section-eyebrow" id="hero-label-wrap">
+        <span id="hero-label">本日の一面</span>
+      </div>
+      <h2 class="hero-headline" id="hero-headline" data-article-id=""></h2>
+      <p class="hero-deck" id="hero-deck"></p>
+      <div class="hero-meta" id="hero-meta"></div>
+    </div>
+
+    <aside class="hero-side reveal">
+      <div class="side-eyebrow">— RANKED —</div>
+      <div class="side-h">よく読まれた<em>five</em></div>
+      <ul class="side-list" id="popular-list">
+        <li class="empty">
+          <span class="side-num">··</span>
+          <div class="side-text">集計中…<small>Loading</small></div>
+        </li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- あしたのアイデア -->
+  <section class="section" id="ideas">
+    <div class="section-head reveal">
+      <div class="section-num">02</div>
+      <h2 class="section-h">あしたのアイデア<span class="en">Tomorrow's Ideas</span></h2>
+      <a href="#" class="section-more">すべての号を読む</a>
+    </div>
+    <div class="idea-grid" id="idea-grid"></div>
+  </section>
+
+  <!-- ブックレビュー -->
+  <section class="reviews" id="reviews">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-num">03</div>
+        <h2 class="section-h">テッキーズ・ブックレビュー<span class="en">Techies' Book Review</span></h2>
+        <a href="#" class="section-more">過去のレビュー</a>
+      </div>
+      <div class="review-grid" id="review-grid"></div>
+    </div>
+  </section>
+
+  <!-- 新刊 -->
+  <section class="section" id="today">
+    <div class="section-head reveal">
+      <div class="section-num">04</div>
+      <div>
+        <div class="release-eyebrow" id="release-date">— 発売日 —</div>
+        <h2 class="section-h">きょう発売のビジネス書<span class="en">Today's Releases</span></h2>
+      </div>
+      <a href="#" class="section-more">過去の発売一覧</a>
+    </div>
+    <div class="release-list" id="release-list"></div>
+  </section>
+
+  <!-- 購読 -->
+  <section class="subscribe">
+    <div class="subscribe-eyebrow">— 無料ニュースレター —</div>
+    <h2>明日のヒントを、<br><em>あなたの朝に</em>届けます。</h2>
+    <p>毎週水曜日の朝7時、編集長が選ぶ「次に来るアイデア」を一通の手紙にして。</p>
+    <form class="subscribe-form" onsubmit="event.preventDefault(); alert('登録ありがとうございます。確認メールをお送りしました。');">
+      <input type="email" placeholder="your@email.com" required>
+      <button type="submit">購読する</button>
+    </form>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-mark">
+      くるひもタイムズ
+      <em>The Kuruhimo Times · 2026</em>
+    </div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p>次にくるアイデアと、それを支える本を、毎日少しずつ届ける編集室。テクノロジーと暮らしのあいだを、誰かより少し早く歩く、そんな小さなメディアです。</p>
+      </div>
+      <div class="footer-col">
+        <h4>Series</h4>
+        <ul>
+          <li><a href="#">あしたのアイデア</a></li>
+          <li><a href="#">テッキーズ・ブックレビュー</a></li>
+          <li><a href="#">きょう発売のビジネス書</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Topics</h4>
+        <ul>
+          <li><a href="#">テクノロジー</a></li>
+          <li><a href="#">暮らし</a></li>
+          <li><a href="#">経済</a></li>
+          <li><a href="#">文化</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Editorial</h4>
+        <ul>
+          <li><a href="#">編集方針</a></li>
+          <li><a href="#">寄稿について</a></li>
+          <li><a href="#">お問合せ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 The Kuruhimo Times</span>
+      <span>Made with curiosity, in Tokyo</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ============================================================
+  // データ読み込み
+  // ============================================================
+  async function loadData() {
+    try {
+      const res = await fetch('data.json?t=' + Date.now());
+      if (!res.ok) throw new Error('読み込み失敗');
+      return await res.json();
+    } catch (err) {
+      console.error('データ読み込みエラー:', err);
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div style="background:#d4391b;color:#f6f1e7;padding:14px 24px;text-align:center;font-family:sans-serif;font-size:13px;letter-spacing:0.05em;">' +
+        '⚠ data.jsonが読み込めません — ローカル確認時はREADME記載の方法で簡易サーバーを立ち上げてください。' +
+        '</div>'
+      );
+      return null;
+    }
+  }
+
+  // ============================================================
+  // 日付ヘルパー
+  // ============================================================
+  function todayKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function setMastheadDate(startDate) {
+    const now = new Date();
+    const days = ['日','月','火','水','木','金','土'];
+    document.getElementById('today-date').textContent =
+      now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0') + ' ' + days[now.getDay()];
+    document.getElementById('release-date').textContent =
+      '— ' + (now.getMonth()+1) + '月' + now.getDate() + '日 発売 —';
+
+    if (startDate) {
+      const start = new Date(startDate);
+      const diff = Math.floor((now - start) / (1000*60*60*24)) + 1;
+      document.getElementById('vol').textContent = String(diff).padStart(3,'0');
+    }
+  }
+
+  function pickByDate(map, key) {
+    if (!map) return null;
+    if (map[key]) return map[key];
+    return map['default'] || null;
+  }
+
+  // ============================================================
+  // ページビュー集計
+  // ============================================================
+  const ViewCounter = {
+    namespace: 'kuruhimo-times-2026',
+    endpoint: 'https://api.counterapi.dev/v1',
+    storageKey: function(id) { return 'kuruhimo_views_' + id; },
+    visitedKey: function(id) { return 'kuruhimo_visited_' + id + '_' + todayKey(); },
+
+    async increment(id) {
+      if (!id) return null;
+      if (sessionStorage.getItem(this.visitedKey(id))) return this.get(id);
+      sessionStorage.setItem(this.visitedKey(id), '1');
+      const localCount = parseInt(localStorage.getItem(this.storageKey(id)) || '0', 10) + 1;
+      localStorage.setItem(this.storageKey(id), String(localCount));
+      try {
+        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + id + '/up');
+        if (res.ok) {
+          const data = await res.json();
+          return data.count || localCount;
+        }
+      } catch (e) {}
+      return localCount;
+    },
+
+    async get(id) {
+      if (!id) return 0;
+      try {
+        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + id);
+        if (res.ok) {
+          const data = await res.json();
+          return data.count || 0;
+        }
+      } catch (e) {}
+      return parseInt(localStorage.getItem(this.storageKey(id)) || '0', 10);
+    },
+
+    async getMany(articles) {
+      const promises = articles.map(async a => ({ ...a, views: await this.get(a.id) }));
+      return Promise.all(promises);
+    }
+  };
+
+  // ============================================================
+  // レンダリング
+  // ============================================================
+  function renderHero(topStory) {
+    document.getElementById('hero-label').textContent = topStory.label.replace('本日の一面 / Top Story', '本日の一面');
+    document.getElementById('hero-headline').innerHTML = topStory.headline;
+    document.getElementById('hero-headline').dataset.articleId = topStory.id;
+    document.getElementById('hero-deck').textContent = topStory.deck;
+    document.getElementById('hero-meta').innerHTML =
+      '<span>◷ 読了 ' + topStory.readTime + '</span>' +
+      '<span>✎ ' + topStory.author + '</span>' +
+      '<span># ' + topStory.tags + '</span>';
+  }
+
+  function renderIdeas(ideas, viewMap) {
+    document.getElementById('idea-grid').innerHTML = ideas.map(idea => {
+      const views = viewMap[idea.id] || 0;
+      return '<article class="idea-card reveal" data-article-id="' + idea.id + '">' +
+        (views > 0 ? '<span class="idea-views">' + views + '</span>' : '') +
+        '<div class="idea-num">' + idea.num + '</div>' +
+        '<div class="idea-day">DAY ' + idea.num + ' · ' + idea.category + '</div>' +
+        '<h3 class="idea-title">' + idea.title + '</h3>' +
+        '<p class="idea-summary">' + idea.summary + '</p>' +
+        '<span class="idea-tag">' + idea.tag + '</span>' +
+        '</article>';
+    }).join('');
+  }
+
+  function renderReviews(reviews) {
+    document.getElementById('review-grid').innerHTML = reviews.map(r =>
+      '<article class="review-card reveal" data-article-id="' + r.id + '">' +
+        '<div class="review-cover">' +
+        '<span>' + r.coverTitle + '</span>' +
+        '<span class="author">— ' + r.coverAuthor + '</span>' +
+        '</div>' +
+        '<div>' +
+        '<div class="review-meta">' + r.label + '</div>' +
+        '<h3 class="review-title">' + r.title + '</h3>' +
+        '<div class="review-author">— ' + r.author + '</div>' +
+        '<p class="review-excerpt">' + r.excerpt + '</p>' +
+        '<div class="review-rating">' + r.rating + '</div>' +
+        '</div></article>'
+    ).join('');
+  }
+
+  function renderBooks(books) {
+    document.getElementById('release-list').innerHTML = books.map(b =>
+      '<article class="book-item reveal" data-article-id="' + b.id + '">' +
+        '<div class="book-cover-wrap"><div class="book-cover ' + b.color + '">' +
+        '<span class="book-cover-author">' + b.coverAuthor + '</span>' +
+        '<span class="book-cover-title">' + b.coverTitle + '</span>' +
+        '</div></div>' +
+        '<div class="book-info">' +
+        '<h3 class="book-title">' + b.title + '</h3>' +
+        '<p class="book-author-line">' + b.author + ' / 著</p>' +
+        '<p class="book-publisher">' + b.publisher + '</p>' +
+        '</div></article>'
+    ).join('');
+  }
+
+  function collectAllArticles(data, today) {
+    const all = [];
+    const topStory = pickByDate(data.topStoryByDate, today);
+    if (topStory) {
+      const cleanH = topStory.headline.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      all.push({ id: topStory.id, title: cleanH.slice(0, 36), source: '本日の一面' });
+    }
+    data.ideas.forEach(i => all.push({ id: i.id, title: i.title, source: 'あしたのアイデア・第' + i.num + '号' }));
+    data.reviews.forEach(r => all.push({ id: r.id, title: r.title, source: 'ブックレビュー' }));
+    const books = pickByDate(data.todayBooksByDate, today) || [];
+    books.forEach(b => all.push({ id: b.id, title: b.title, source: 'きょう発売' }));
+    return all;
+  }
+
+  async function renderPopular(allArticles) {
+    const withViews = await ViewCounter.getMany(allArticles);
+    const top5 = withViews.filter(a => a.views > 0).sort((a,b) => b.views - a.views).slice(0,5);
+    const list = document.getElementById('popular-list');
+    if (top5.length === 0) {
+      list.innerHTML = '<li class="empty"><span class="side-num">··</span><div class="side-text">まだ集計が始まっていません<small>記事をタップで集計開始</small></div></li>';
+      return;
+    }
+    list.innerHTML = top5.map((a, i) =>
+      '<li data-article-id="' + a.id + '">' +
+        '<span class="side-num">' + String(i+1).padStart(2,'0') + '</span>' +
+        '<div class="side-text">' + a.title +
+        '<small>' + a.source + '</small>' +
+        '<span class="side-views">' + a.views + ' views</span>' +
+        '</div></li>'
+    ).join('');
+  }
+
+  async function buildViewMap(articles) {
+    const withViews = await ViewCounter.getMany(articles);
+    const map = {};
+    withViews.forEach(a => map[a.id] = a.views);
+    return map;
+  }
+
+  function setupClicks() {
+    document.body.addEventListener('click', function(e) {
+      const card = e.target.closest('[data-article-id]');
+      if (!card) return;
+      const id = card.dataset.articleId;
+      if (!id) return;
+      ViewCounter.increment(id);
+      card.style.transition = 'transform 0.15s ease';
+      card.style.transform = 'scale(0.985)';
+      setTimeout(() => card.style.transform = '', 150);
+    });
+  }
+
+  function setupReveal() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  // 起動
+  (async function init() {
+    const data = await loadData();
+    if (!data) return;
+    setMastheadDate(data.site.startDate);
+    document.getElementById('weather').textContent = data.site.weather;
+    const today = todayKey();
+    const topStory = pickByDate(data.topStoryByDate, today);
+    const todayBooks = pickByDate(data.todayBooksByDate, today) || [];
+    const allArticles = collectAllArticles(data, today);
+    const viewMap = await buildViewMap(allArticles);
+    if (topStory) renderHero(topStory);
+    renderIdeas(data.ideas, viewMap);
+    renderReviews(data.reviews);
+    renderBooks(todayBooks);
+    await renderPopular(allArticles);
+    if (topStory) ViewCounter.increment(topStory.id);
+    setupClicks();
+    setupReveal();
+  })();
+</script>
+
+</body>
+</html>

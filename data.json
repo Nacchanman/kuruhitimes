@@ -1,0 +1,112 @@
+{
+  "site": {
+    "weather": "晴れ・知的好奇心",
+    "startDate": "2026-03-21",
+    "_comment_startDate": "創刊日。第n号は (今日 - 創刊日) で自動算出されます"
+  },
+
+  "topStoryByDate": {
+    "_comment": "日付(YYYY-MM-DD)をキーにして一面記事を切り替え。当日のキーが無い場合は default を表示",
+    "default": {
+      "label": "本日の一面 / Top Story",
+      "headline": "修繕の美学が、<br><span class=\"accent\">テクノロジー</span>と<br>手をつなぐ日。",
+      "deck": "買い替えから繕いへ。靴・家電・人間関係——直せる人が尊敬される時代に、AIとロボティクスはどう寄り添うのか。第12号「修繕の美学」と第20号「ローカルファーストAI」を、編集長が一本の線でつなぎます。",
+      "readTime": "8分",
+      "author": "編集部",
+      "tags": "文化 / 技術",
+      "id": "topstory-default"
+    },
+    "2026-05-01": {
+      "label": "本日の一面 / Top Story",
+      "headline": "<span class=\"accent\">沈黙</span>の価値が、<br>通知社会を<br>静かに変える。",
+      "deck": "通知ゼロのカフェ、無言ヨガ、サイレント・ディナー。喋らない時間が商品になる時代。第15号「沈黙の価値」を、編集長が深く掘り下げます。",
+      "readTime": "6分",
+      "author": "編集部",
+      "tags": "文化 / 暮らし",
+      "id": "topstory-2026-05-01"
+    },
+    "2026-05-02": {
+      "label": "本日の一面 / Top Story",
+      "headline": "ローカル経済が<br><span class=\"accent\">半径2km</span>で<br>回りはじめる。",
+      "deck": "地域通貨、商店街トークン、顔の見える消費。グローバル疲れの時代に、足元の経済圏が再び輪郭を取り戻している。",
+      "readTime": "7分",
+      "author": "編集部",
+      "tags": "経済 / 文化",
+      "id": "topstory-2026-05-02"
+    }
+  },
+
+  "ideas": [
+    { "id": "idea-07", "num": "07", "category": "文化", "title": "ご近所3.0", "summary": "マンションのSlack、徒歩5分圏のDiscord。デジタルが「遠く」を縮めた次は、「近く」を濃くする。", "tag": "Community" },
+    { "id": "idea-08", "num": "08", "category": "身体", "title": "身体性の復権", "summary": "画面の中の生産性ブームの後に来る、サウナ・農作業・料理・ダンス。手と汗で考える人たち。", "tag": "Wellness" },
+    { "id": "idea-12", "num": "12", "category": "文化", "title": "修繕の美学", "summary": "買い替えから繕いへ。靴・服・家具・家電・人間関係。直せる人が尊敬される文化。", "tag": "Lifestyle" },
+    { "id": "idea-15", "num": "15", "category": "暮らし", "title": "沈黙の価値", "summary": "通知ゼロのカフェ、無言ヨガ、サイレント・ディナー。喋らない時間を売る商売。", "tag": "Wellness" },
+    { "id": "idea-17", "num": "17", "category": "経済", "title": "ローカル経済", "summary": "半径2kmで回るお金。地域通貨、商店街トークン、顔の見える消費。", "tag": "Economy" },
+    { "id": "idea-20", "num": "20", "category": "テック", "title": "ローカルファーストAI", "summary": "クラウドではなく手元のMacで動くLLM。プライバシーも速度も自分のもの。", "tag": "Technology" }
+  ],
+
+  "reviews": [
+    {
+      "id": "review-repair",
+      "coverTitle": "Software Craft<br>and the<br>Art of Repair",
+      "coverAuthor": "A. KAWASE",
+      "label": "★ 今週の一冊 / 04.28",
+      "title": "直すという思想",
+      "author": "川瀬 礼司",
+      "excerpt": "ソフトウェアエンジニアが「壊れたコードを直す」のではなく「育てる」と言うとき、何が起きているのか。著者は20年のリファクタリング現場から、修繕という行為そのものの哲学を引き出す。",
+      "rating": "★ ★ ★ ★ ☆"
+    },
+    {
+      "id": "review-quietstack",
+      "coverTitle": "The Quiet<br>Stack",
+      "coverAuthor": "M. LIN",
+      "label": "◇ 編集部おすすめ / 04.21",
+      "title": "静かなる技術",
+      "author": "マーガレット・リン",
+      "excerpt": "通知を消し、ダッシュボードを閉じ、コマンドラインに戻る。喧騒のSaaS時代に「使うほど目立たなくなる道具」を作るエンジニアたちの記録。沈黙という設計思想。",
+      "rating": "★ ★ ★ ★ ★"
+    },
+    {
+      "id": "review-letters",
+      "coverTitle": "Letters<br>to the<br>Future",
+      "coverAuthor": "H. TANAKA",
+      "label": "✎ 新刊 / 04.14",
+      "title": "手紙の未来",
+      "author": "田中 春樹",
+      "excerpt": "即時通信が当たり前になった世界で、なぜ人々は再び封筒を求めるのか。Eメールの父が晩年に綴った、紙とインクの復権についての考察。",
+      "rating": "★ ★ ★ ★ ☆"
+    },
+    {
+      "id": "review-amateur",
+      "coverTitle": "Amateur<br>Republic",
+      "coverAuthor": "S. NAKAMURA",
+      "label": "▷ 注目作 / 04.07",
+      "title": "アマチュア共和国",
+      "author": "中村 沙織",
+      "excerpt": "プロフェッショナリズムが行き詰まった先で、下手で、いびつで、好きでやっている人たちの生態系が経済を動かし始めている。新しい職業観のフィールドノート。",
+      "rating": "★ ★ ★ ★ ☆"
+    }
+  ],
+
+  "todayBooksByDate": {
+    "_comment": "日付ごとの新刊リスト。当日のキーが無い場合はdefaultを表示",
+    "default": [
+      { "id": "book-local", "color": "c1", "coverTitle": "小さく<br>始める<br>ローカル<br>経済学", "coverAuthor": "M. SAITO", "title": "小さく始めるローカル経済学", "author": "齋藤 美保", "publisher": "文春新書" },
+      { "id": "book-aiagent", "color": "c2", "coverTitle": "AIエージェント<br>と<br>働く未来", "coverAuthor": "K. OKABE", "title": "AIエージェントと働く未来", "author": "岡部 健治", "publisher": "日経BP" },
+      { "id": "book-silence", "color": "c3", "coverTitle": "沈黙の<br>マネジメント", "coverAuthor": "R. YAMASHITA", "title": "沈黙のマネジメント", "author": "山下 涼介", "publisher": "ダイヤモンド社" },
+      { "id": "book-amateur", "color": "c4", "coverTitle": "アマチュア<br>戦略論", "coverAuthor": "A. MORI", "title": "アマチュア戦略論", "author": "森 あづさ", "publisher": "東洋経済新報社" }
+    ],
+    "2026-05-01": [
+      { "id": "book-local", "color": "c1", "coverTitle": "小さく<br>始める<br>ローカル<br>経済学", "coverAuthor": "M. SAITO", "title": "小さく始めるローカル経済学", "author": "齋藤 美保", "publisher": "文春新書" },
+      { "id": "book-aiagent", "color": "c2", "coverTitle": "AIエージェント<br>と<br>働く未来", "coverAuthor": "K. OKABE", "title": "AIエージェントと働く未来", "author": "岡部 健治", "publisher": "日経BP" },
+      { "id": "book-silence", "color": "c3", "coverTitle": "沈黙の<br>マネジメント", "coverAuthor": "R. YAMASHITA", "title": "沈黙のマネジメント", "author": "山下 涼介", "publisher": "ダイヤモンド社" },
+      { "id": "book-amateur", "color": "c4", "coverTitle": "アマチュア<br>戦略論", "coverAuthor": "A. MORI", "title": "アマチュア戦略論", "author": "森 あづさ", "publisher": "東洋経済新報社" }
+    ]
+  },
+
+  "counterConfig": {
+    "_comment": "ページビュー集計の設定。CountAPIの代替として複数のサービスをフォールバック",
+    "namespace": "kuruhi-times-2026",
+    "endpoint": "https://api.counterapi.dev/v1"
+  }
+}

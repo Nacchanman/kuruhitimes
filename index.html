@@ -863,6 +863,175 @@
   /* トップ画面と記事画面の切り替え */
   .home-view { display: block; }
   .home-view.hidden { display: none; }
+
+  /* ============================================
+     編集長ツール画面(#editor-tools)
+  ============================================ */
+  .editor-page {
+    display: none;
+    padding: 56px 0 120px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .editor-page.active { display: block; }
+
+  .editor-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--vermilion);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .editor-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: 12px;
+  }
+  .editor-title em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--vermilion);
+  }
+  .editor-desc {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 17px;
+    color: var(--ink-3);
+    margin-bottom: 56px;
+    line-height: 1.6;
+  }
+
+  .editor-section {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    padding: 32px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .editor-section h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .editor-section .editor-section-desc {
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  .editor-preview {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 24px;
+    margin-bottom: 16px;
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink-2);
+    white-space: pre-wrap;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  .editor-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .editor-btn:hover { background: var(--vermilion); }
+  .editor-btn:active { transform: scale(0.98); }
+  .editor-btn.copied { background: var(--vermilion); }
+  .editor-btn::before {
+    content: '⎘';
+    font-family: serif;
+    font-size: 16px;
+  }
+  .editor-btn.copied::before { content: '✓'; }
+
+  .editor-quick-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .editor-link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 14px 20px;
+    color: var(--ink);
+    text-decoration: none;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  .editor-link-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .editor-link-btn::after { content: '↗'; }
+
+  .editor-step {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .editor-step:last-child { border-bottom: none; }
+  .editor-step-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--vermilion);
+    line-height: 1;
+  }
+  .editor-step-text {
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+  .editor-step-text strong {
+    background: var(--vermilion);
+    color: var(--paper);
+    padding: 1px 6px;
+    font-weight: 500;
+    font-size: 12px;
+    margin: 0 2px;
+  }
+
+  @media (max-width: 720px) {
+    .editor-page { padding: 32px 0 80px; }
+    .editor-section { padding: 24px 20px; }
+    .editor-quick-links { grid-template-columns: 1fr; }
+  }
 </style>
 
 <!-- X (Twitter) 公式埋め込みスクリプト -->
@@ -998,6 +1167,56 @@
     <div class="article-body" id="article-body"></div>
     <div class="article-footer">— くるひもタイムズ 編集部 —</div>
   </article>
+
+  <!-- ============== 編集長ツール画面(#editor-tools) ============== -->
+  <section id="editor-view" class="editor-page">
+    <button class="article-back" onclick="navigateHome()">ホームに戻る</button>
+    <div class="editor-eyebrow">— EDITOR-IN-CHIEF · 編集長ツール —</div>
+    <h1 class="editor-title">毎週水曜の<em>10分</em></h1>
+    <p class="editor-desc">最新3本のアイデアを、ニュースレター用テキストに整形します。コピーしてbeehiivに貼り付けるだけ。</p>
+
+    <!-- セクション1: メール本文 -->
+    <div class="editor-section">
+      <h3>📧 メール本文</h3>
+      <p class="editor-section-desc">下のプレビューをそのままbeehiivの「Compose new post」に貼り付けてください。</p>
+      <div class="editor-preview" id="newsletter-body">読み込み中…</div>
+      <button class="editor-btn" id="copy-body-btn" onclick="copyNewsletterBody()">本文をコピー</button>
+    </div>
+
+    <!-- セクション2: 件名 -->
+    <div class="editor-section">
+      <h3>📬 件名(Subject)</h3>
+      <p class="editor-section-desc">beehiivの件名欄に貼り付けてください。</p>
+      <div class="editor-preview" id="newsletter-subject" style="font-family: 'Shippori Mincho', serif; font-size: 18px; max-height: none;">読み込み中…</div>
+      <button class="editor-btn" id="copy-subject-btn" onclick="copyNewsletterSubject()">件名をコピー</button>
+    </div>
+
+    <!-- セクション3: 配信手順 -->
+    <div class="editor-section">
+      <h3>🚀 配信ステップ</h3>
+      <p class="editor-section-desc">この順番で進めれば、毎週10分で完了します。</p>
+      <div class="editor-step">
+        <span class="editor-step-num">1</span>
+        <span class="editor-step-text">上のボタンで <strong>件名</strong> と <strong>本文</strong> をコピー</span>
+      </div>
+      <div class="editor-step">
+        <span class="editor-step-num">2</span>
+        <span class="editor-step-text">beehiivで <strong>+ New post</strong> をクリック</span>
+      </div>
+      <div class="editor-step">
+        <span class="editor-step-num">3</span>
+        <span class="editor-step-text">件名と本文を貼り付け、リンクが正しく機能するか確認</span>
+      </div>
+      <div class="editor-step">
+        <span class="editor-step-num">4</span>
+        <span class="editor-step-text"><strong>Send & Publish</strong> → 配信完了 ✉️</span>
+      </div>
+      <div class="editor-quick-links">
+        <a href="https://app.beehiiv.com" target="_blank" rel="noopener" class="editor-link-btn">beehiivを開く</a>
+        <a href="https://kuruhimotimes.beehiiv.com" target="_blank" rel="noopener" class="editor-link-btn">公開ページを見る</a>
+      </div>
+    </div>
+  </section>
 
 </div>
 
@@ -1207,6 +1426,8 @@
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('article-view').classList.add('active');
+    const editor = document.getElementById('editor-view');
+    if (editor) editor.classList.remove('active');
     document.getElementById('article-eyebrow').textContent =
       'あしたのアイデア · ' + idea.category;
     document.getElementById('article-title').textContent = idea.title;
@@ -1228,6 +1449,8 @@
     document.getElementById('home-view').classList.remove('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
+    const editor = document.getElementById('editor-view');
+    if (editor) editor.classList.remove('active');
     document.getElementById('nav-home').classList.add('active');
     document.getElementById('nav-archive').classList.remove('active');
     previousView = 'home';
@@ -1237,6 +1460,8 @@
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.add('active');
     document.getElementById('article-view').classList.remove('active');
+    const editor = document.getElementById('editor-view');
+    if (editor) editor.classList.remove('active');
     document.getElementById('nav-home').classList.remove('active');
     document.getElementById('nav-archive').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -1267,6 +1492,8 @@
       showArticle(hash);
     } else if (hash === 'archive') {
       showArchive();
+    } else if (hash === 'editor-tools') {
+      showEditor();
     } else {
       showHome();
       // セクションスクロール
@@ -1469,41 +1696,151 @@
     const form = document.getElementById('subscribe-form');
     if (!form) return;
 
-    // beehiivの購読ページURL。
-    // data.json の beehiivConfig.publicationUrl が設定されていればそれを使い、
-    // 未設定なら下のデフォルトURLを使います。
-    const DEFAULT_BEEHIIV_PUBLICATION_URL = 'https://kuruhimotimes.beehiiv.com';
-    const configuredUrl = beehiivConfig && beehiivConfig.publicationUrl;
-    const publicationUrl = (configuredUrl && !configuredUrl.includes('your-publication'))
-      ? configuredUrl
-      : DEFAULT_BEEHIIV_PUBLICATION_URL;
+    const publicationUrl = beehiivConfig && beehiivConfig.publicationUrl;
 
-    const subscribeUrl = publicationUrl.replace(/\/$/, '') + '/subscribe';
-    form.action = subscribeUrl;
-    form.method = 'get';
-    form.target = '_blank';
+    if (!publicationUrl || publicationUrl.includes('your-publication')) {
+      // 未設定の場合
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        alert('購読フォームはまだセットアップ中です。\n\n編集長へ: data.json の beehiivConfig.publicationUrl を設定してください。');
+      });
+      return;
+    }
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const emailInput = form.querySelector('input[name="email"]');
-      const email = emailInput.value.trim();
+      const email = form.querySelector('input[name="email"]').value;
       if (!email) return;
 
-      // beehiivの購読ページへ、入力メールアドレスつきで移動します。
-      const url = subscribeUrl + '?email=' + encodeURIComponent(email);
+      // beehiivの購読ページへ遷移
+      const url = publicationUrl.replace(/\/$/, '') +
+        '/subscribe?email=' + encodeURIComponent(email);
       window.open(url, '_blank', 'noopener');
 
+      // 確認メッセージ
       const btn = form.querySelector('button');
       const originalText = btn.textContent;
-      btn.textContent = '登録ページを開きました';
+      btn.textContent = 'beehiivで登録を完了してください →';
       btn.disabled = true;
-
       setTimeout(() => {
         btn.textContent = originalText;
         btn.disabled = false;
-        emailInput.value = '';
-      }, 3500);
+        form.querySelector('input[name="email"]').value = '';
+      }, 4000);
     });
+  }
+
+  // ============================================================
+  // 編集長ツール(#editor-tools)
+  // ニュースレター用テキストを生成
+  // ============================================================
+
+  // サイトのベースURL(本番)
+  const SITE_BASE_URL = 'https://kuruhitimes.pages.dev';
+
+  function generateNewsletterContent(ideas) {
+    // 最新3本を取得
+    const latest = ideas.slice(0, 3);
+    if (latest.length === 0) {
+      return { subject: '', body: '記事がありません' };
+    }
+
+    // 今日の日付
+    const now = new Date();
+    const dateStr = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日';
+
+    // 件名
+    const subject = `くるひもタイムズ ${dateStr}号 — ${latest[0].title}、ほか`;
+
+    // 本文(プレーンテキスト寄り、beehiivエディタにそのまま貼れる形)
+    let body = '';
+    body += `# 今週の3本のアイデア\n\n`;
+    body += `くるひもタイムズ編集長です。今週も、次にくる種を3つ選びました。\n\n`;
+    body += `---\n\n`;
+
+    latest.forEach((idea, i) => {
+      const num = String(i + 1).padStart(2, '0');
+      const url = SITE_BASE_URL + '/#' + idea.id;
+
+      // bodyからプレーンテキストに変換(最初の段落だけ抜粋)
+      let excerpt = '';
+      if (idea.body) {
+        const firstParaMatch = idea.body.match(/<p[^>]*>([\s\S]*?)<\/p>/);
+        if (firstParaMatch) {
+          excerpt = firstParaMatch[1]
+            .replace(/<[^>]+>/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        }
+      }
+      if (!excerpt) excerpt = idea.summary || '';
+
+      body += `## ${num}. ${idea.title}\n`;
+      body += `(${idea.category} · 読了${idea.readTime || '5分'})\n\n`;
+      body += `${excerpt}\n\n`;
+      body += `→ 続きを読む: ${url}\n\n`;
+      body += `---\n\n`;
+    });
+
+    body += `今週もありがとうございました。\n`;
+    body += `また来週、新しい3つの種をお届けします。\n\n`;
+    body += `くるひもタイムズ 編集長\n`;
+    body += `${SITE_BASE_URL}\n`;
+
+    return { subject, body };
+  }
+
+  function showEditor() {
+    document.getElementById('home-view').classList.add('hidden');
+    document.getElementById('archive-view').classList.remove('active');
+    document.getElementById('article-view').classList.remove('active');
+    document.getElementById('editor-view').classList.add('active');
+    document.getElementById('nav-home').classList.remove('active');
+    document.getElementById('nav-archive').classList.remove('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // コンテンツ生成
+    if (APP_DATA && APP_DATA.ideas) {
+      const { subject, body } = generateNewsletterContent(APP_DATA.ideas);
+      document.getElementById('newsletter-subject').textContent = subject;
+      document.getElementById('newsletter-body').textContent = body;
+    }
+  }
+
+  // クリップボードにコピー
+  async function copyToClipboard(text, btnId) {
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById(btnId);
+      const originalText = btn.textContent;
+      btn.textContent = 'コピーしました';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.classList.remove('copied');
+      }, 2000);
+    } catch (err) {
+      // フォールバック: 古いブラウザ用
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('コピーしました');
+    }
+  }
+
+  function copyNewsletterBody() {
+    const text = document.getElementById('newsletter-body').textContent;
+    copyToClipboard(text, 'copy-body-btn');
+  }
+
+  function copyNewsletterSubject() {
+    const text = document.getElementById('newsletter-subject').textContent;
+    copyToClipboard(text, 'copy-subject-btn');
   }
 
   // ============================================================

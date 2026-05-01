@@ -2,6 +2,7 @@ backend:
   name: github
   repo: Nacchanman/kuruhitimes
   branch: main
+  auth_type: pkce
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"

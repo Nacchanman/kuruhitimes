@@ -1373,7 +1373,7 @@
         return null;
       })
       .filter(Boolean)
-      .map(url => url.trim());
+      .map(url => normalizeTweetUrl(url));
 
     const grid = document.getElementById('x-grid');
 
@@ -1383,7 +1383,6 @@
       return;
     }
 
-    // プレースホルダーURL(PASTE_... または 1234567890... )が入っている場合
     const isPlaceholder = postUrls.every(url =>
       url.includes('PASTE_LATEST_POST_ID') || url.includes('1234567890')
     );
@@ -1399,45 +1398,63 @@
       return;
     }
 
-    // まず、X公式埋め込み用のblockquoteを出す。
-    // 公式スクリプトがブラウザ拡張・広告ブロック・X側制限で失敗した場合でも、
-    // 下のフォールバックリンクカードが残るようにしている。
+    // X公式ウィジェットは x.com より twitter.com 形式の方が安定します。
+    // 例: https://x.com/user/status/123?s=20
+    // →  https://twitter.com/user/status/123
     grid.innerHTML = postUrls.slice(0, 3).map(url =>
       '<div class="x-embed-wrap">' +
-        '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none">' +
+        '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none" data-dnt="true">' +
           '<a href="' + url + '"></a>' +
         '</blockquote>' +
-        '<a class="x-fallback-link" href="' + url + '" target="_blank" rel="noopener" ' +
-          'style="display:block;padding:22px 18px;text-decoration:none;color:var(--ink);font-family:\'Shippori Mincho\',serif;font-size:16px;line-height:1.6;">' +
-          'Xで投稿を見る →<br>' +
-          '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--ink-3);word-break:break-all;">' + url + '</span>' +
-        '</a>' +
       '</div>'
     ).join('');
 
-    function hideFallbacksIfEmbedded() {
-      grid.querySelectorAll('.x-embed-wrap').forEach(wrap => {
-        const iframe = wrap.querySelector('iframe');
-        const fallback = wrap.querySelector('.x-fallback-link');
-        if (iframe && fallback) fallback.style.display = 'none';
-      });
+    loadTwitterWidgets();
+  }
+
+  function normalizeTweetUrl(rawUrl) {
+    try {
+      const u = new URL(String(rawUrl).trim());
+      const parts = u.pathname.split('/').filter(Boolean);
+      const statusIndex = parts.indexOf('status');
+
+      if (statusIndex > 0 && parts[statusIndex + 1]) {
+        const user = parts[statusIndex - 1];
+        const id = parts[statusIndex + 1];
+        return 'https://twitter.com/' + user + '/status/' + id;
+      }
+
+      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
+    } catch (e) {
+      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
+    }
+  }
+
+  function loadTwitterWidgets() {
+    function render() {
+      if (window.twttr && window.twttr.widgets) {
+        window.twttr.widgets.load(document.getElementById('x-grid'));
+      }
     }
 
-    // widgets.js が読み込まれていれば再描画
     if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load(grid).then(hideFallbacksIfEmbedded);
-    } else {
-      const checkInterval = setInterval(() => {
-        if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load(grid).then(hideFallbacksIfEmbedded);
-          clearInterval(checkInterval);
-        }
-      }, 200);
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        hideFallbacksIfEmbedded();
-      }, 8000);
+      render();
+      return;
     }
+
+    const existing = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
+    if (existing) {
+      existing.addEventListener('load', render);
+      setTimeout(render, 1000);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://platform.twitter.com/widgets.js';
+    script.async = true;
+    script.charset = 'utf-8';
+    script.onload = render;
+    document.body.appendChild(script);
   }
 
   // ============================================================

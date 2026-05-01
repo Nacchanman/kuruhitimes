@@ -1,11 +1,8 @@
 {
   "site": {
     "weather": "晴れ・知的好奇心",
-    "startDate": "2026-03-21"
+    "startDate": "2026-05-01"
   },
-
-  "_ideas_help": "配列の先頭が最新。新しいアイデアは配列の一番上に追加してください。ホームには先頭3件のみ表示され、4件目以降は自動的にアーカイブページに移動します",
-
   "ideas": [
     {
       "id": "idea-20",
@@ -66,31 +63,39 @@
       "publishDate": "2026-04-25",
       "readTime": "5分",
       "body": "<p>マンションの管理組合がSlackを使い始めた、という話を最近よく聞く。回覧板の代わりではない。「水曜の夜、屋上でビール飲みませんか」「庭の植え替え、誰か手伝ってくれる人」——そんなやり取りが、毎日少しずつ流れている。</p><p>SNSが広く浅い「弱いつながり」を最適化した時代から、ふたたび狭く深い「近くの人」へ。ご近所3.0と呼びたい現象が、静かに各地で立ち上がっている。</p><h3>なぜ今、近くなのか</h3><p>遠くの人とつながる技術が成熟しきった今、私たちは皮肉にも「近くの人」と話す機会を失っていた。エレベーターで会っても挨拶しない、隣に住んでいる人の名前も知らない。それが当たり前だった。</p><p>でも、コロナ禍を経て、徒歩圏内の人間関係の重要性に気づいた人たちがいる。災害時の助け合い、子育ての協力、ちょっとした困りごとの解決。すべて「近く」が前提になる。</p><h3>具体例</h3><p>都内のあるマンションでは、住民専用のDiscordサーバーが運用されている。チャンネルは「日常雑談」「子育て」「ジム情報」「不要品譲ります」など20以上。月に1〜2回、有志でオフ会も開かれる。</p><p>地方では、商店街単位のLINEグループが機能している。お店の人と常連客が混ざって、新メニューの試食会や小さな勉強会を開く。</p><h3>編集長の視点</h3><p>「ご近所」という古い言葉が、デジタルツールを得て新しい意味を持ち始めている。次のSNSは、世界中とつながるものではなく、半径500メートルでつながるものになるかもしれない。</p>"
+    },
+    {
+      "id": "idea-21",
+      "category": "community",
+      "title": "com",
+      "summary": "commmu",
+      "tag": "tech",
+      "publishDate": "2026-05-01",
+      "readTime": "1",
+      "body": "aaa"
     }
   ],
-
-  "noteConfig": {
-    "_comment": "テッキーズ・ブックレビューはNoteのRSSから最新3記事を取得して表示する",
-    "username": "techno_optimist",
-    "_username_help": "Noteのプロフィール画面でURLが https://note.com/xxxxx だった場合、xxxxx を入れる",
-    "displayCount": 3
-  },
-
-  "beehiivConfig": {
-    "_comment": "ニュースレター購読のbeehiiv連携。RSS自動配信を使うので、メール送信はbeehiiv側で完全自動",
-    "publicationUrl": "https://your-publication.beehiiv.com",
-    "_publicationUrl_help": "beehiivで作成したパブリケーションのURL。例: https://kuruhimotimes.beehiiv.com",
-    "_setup_help": "beehiivのSettings > Integrations > RSS to Email で、サイトのrss.xmlを毎週水曜7時に配信するよう設定する"
-  },
-
   "xPostsConfig": {
-    "_comment": "きょう発売のビジネス書はXの投稿を埋め込み表示。投稿のURLを最大3つまで指定",
-    "accountUrl": "https://x.com/newbookforbiz",
     "postUrls": [
       "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_1",
       "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_2",
       "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_3"
     ],
+    "_comment": "きょう発売のビジネス書はXの投稿を埋め込み表示。投稿のURLを最大3つまで指定",
+    "accountUrl": "https://x.com/newbookforbiz",
     "_postUrls_help": "Xの投稿の「リンクをコピー」で取得したURLを貼り付け。3つまで表示されます。最新3投稿を取得する自動化はXのAPI仕様上、無料では不可"
-  }
+  },
+  "beehiivConfig": {
+    "_setup_help": "beehiivのSettings > Integrations > RSS to Email で、サイトのrss.xmlを毎週水曜7時に配信するよう設定する",
+    "_publicationUrl_help": "beehiivで作成したパブリケーションのURL。例: https://kuruhimotimes.beehiiv.com",
+    "publicationUrl": "https://your-publication.beehiiv.com",
+    "_comment": "ニュースレター購読のbeehiiv連携。RSS自動配信を使うので、メール送信はbeehiiv側で完全自動"
+  },
+  "noteConfig": {
+    "displayCount": 3,
+    "_username_help": "Noteのプロフィール画面でURLが https://note.com/xxxxx だった場合、xxxxx を入れる",
+    "username": "techno_optimist",
+    "_comment": "テッキーズ・ブックレビューはNoteのRSSから最新3記事を取得して表示する"
+  },
+  "_ideas_help": "配列の先頭が最新。新しいアイデアは配列の一番上に追加してください。ホームには先頭3件のみ表示され、4件目以降は自動的にアーカイブページに移動します"
 }

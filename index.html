@@ -1590,7 +1590,13 @@
   // X (Twitter) 投稿の埋め込み
   // ============================================================
   function loadXEmbeds(config) {
-    const postUrls = (config && config.postUrls) || [];
+    const postUrls = ((config && config.postUrls) || [])
+  .map(item => {
+    if (typeof item === 'string') return item;
+    if (item && item.url) return item.url;
+    return null;
+  })
+  .filter(Boolean);
     if (postUrls.length === 0) {
       document.getElementById('x-grid').innerHTML =
         '<div class="x-error">data.jsonにX投稿のURLが設定されていません。</div>';

@@ -145,7 +145,7 @@
 
   .idea-row {
     display: grid;
-    grid-template-columns: 80px 1fr auto auto;
+    grid-template-columns: 1fr auto auto;
     gap: 32px;
     align-items: baseline;
     padding: 32px 0;
@@ -169,19 +169,8 @@
 
   .idea-row:hover { padding-left: 24px; }
   .idea-row:hover::before { width: 16px; }
-  .idea-row:hover .idea-row-num { color: var(--vermilion); }
   .idea-row:hover .idea-row-arrow { transform: translateX(8px); color: var(--vermilion); }
-
-  .idea-row-num {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 200;
-    font-size: 56px;
-    line-height: 0.85;
-    color: var(--ink);
-    transition: color 0.3s;
-    letter-spacing: -0.02em;
-  }
+  .idea-row:hover .idea-row-title { color: var(--vermilion); }
 
   .idea-row-main { min-width: 0; }
   .idea-row-cat {
@@ -190,7 +179,7 @@
     text-transform: uppercase;
     letter-spacing: 0.25em;
     color: var(--ink-3);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -205,11 +194,12 @@
 
   .idea-row-title {
     font-family: 'Shippori Mincho', serif;
-    font-size: clamp(22px, 2.5vw, 32px);
+    font-size: clamp(24px, 2.8vw, 36px);
     font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 6px;
-    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    letter-spacing: -0.015em;
+    transition: color 0.3s;
   }
 
   .idea-row-summary {
@@ -237,6 +227,169 @@
     color: var(--ink-3);
     transition: transform 0.3s, color 0.3s;
   }
+
+  /* アーカイブを見るリンク */
+  .idea-archive-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+  .idea-archive-link a {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 16px;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 12px 32px;
+    border: 1px solid var(--ink);
+    transition: all 0.3s;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .idea-archive-link a:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .idea-archive-link a::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+  .idea-archive-link a:hover::after {
+    transform: translateX(6px);
+  }
+
+  /* ============================================
+     アーカイブページ
+  ============================================ */
+  .archive-page {
+    display: none;
+    padding: 56px 0 120px;
+  }
+  .archive-page.active { display: block; }
+
+  .archive-head {
+    margin-bottom: 64px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .archive-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--vermilion);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .archive-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: 16px;
+  }
+
+  .archive-title em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--vermilion);
+  }
+
+  .archive-desc {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 18px;
+    color: var(--ink-3);
+    max-width: 620px;
+    line-height: 1.6;
+  }
+
+  .archive-count {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .archive-count strong {
+    color: var(--vermilion);
+    font-weight: 500;
+    margin: 0 4px;
+  }
+
+  /* アーカイブリスト(カテゴリ別グルーピング表示) */
+  .archive-list {
+    list-style: none;
+  }
+
+  .archive-list li {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 32px;
+    align-items: baseline;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: padding-left 0.3s;
+  }
+  .archive-list li:hover { padding-left: 16px; }
+  .archive-list li:hover .archive-list-title { color: var(--vermilion); }
+
+  .archive-list-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .archive-list-main { min-width: 0; }
+
+  .archive-list-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--vermilion);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .archive-list-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    transition: color 0.3s;
+    margin-bottom: 4px;
+  }
+
+  .archive-list-summary {
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 13px;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  .archive-list-views {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .archive-list-views.has-views { color: var(--vermilion); }
 
   /* ============================================
      個別記事ページ
@@ -366,21 +519,60 @@
   .note-card {
     background: rgba(246,241,231,0.04);
     border: 1px solid rgba(246,241,231,0.1);
-    padding: 32px 28px;
     text-decoration: none;
     color: var(--paper);
     display: flex;
     flex-direction: column;
     transition: background 0.3s, transform 0.4s, border-color 0.3s;
     cursor: pointer;
-    min-height: 280px;
     position: relative;
+    overflow: hidden;
   }
 
   .note-card:hover {
     background: rgba(246,241,231,0.08);
     transform: translateY(-4px);
     border-color: var(--vermilion);
+  }
+
+  .note-card:hover .note-card-image img {
+    transform: scale(1.05);
+  }
+
+  .note-card-image {
+    aspect-ratio: 16/9;
+    background: rgba(246,241,231,0.08);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .note-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    display: block;
+  }
+
+  .note-card-image.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(246,241,231,0.3);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  .note-card-image.no-image::before {
+    content: 'no image';
+  }
+
+  .note-card-body {
+    padding: 28px 28px 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
   .note-card-eyebrow {
@@ -412,7 +604,6 @@
     line-height: 1.45;
     margin-bottom: 16px;
     letter-spacing: -0.01em;
-    flex-grow: 1;
   }
 
   .note-card-excerpt {
@@ -421,6 +612,7 @@
     color: rgba(246,241,231,0.65);
     font-weight: 300;
     margin-bottom: 24px;
+    flex-grow: 1;
   }
 
   .note-card-foot {
@@ -644,10 +836,15 @@
     .site-title { white-space: normal; }
     .site-title .word { display: block; }
     /* アイデアリスト:スマホ用に再構成 */
-    .idea-row { grid-template-columns: 60px 1fr auto; gap: 16px; padding: 24px 0; }
-    .idea-row-num { font-size: 40px; }
+    .idea-row { grid-template-columns: 1fr auto; gap: 16px; padding: 24px 0; }
     .idea-row-meta { display: none; }
     .idea-row-arrow { font-size: 20px; }
+    /* アーカイブリスト:スマホ用 */
+    .archive-list li { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
+    .archive-list-date { order: -1; }
+    .archive-list-views { font-size: 9px; }
+    .archive-page { padding: 32px 0 80px; }
+    .archive-title { font-size: 36px; }
     /* 個別記事 */
     .article-page { padding: 32px 0 80px; }
     .article-body { font-size: 16px; line-height: 1.85; }
@@ -703,7 +900,7 @@
       <a href="#ideas">あしたのアイデア</a>
       <a href="#reviews">ブックレビュー</a>
       <a href="#today">きょう発売</a>
-      <a href="#ranked">ランキング</a>
+      <a href="#archive" id="nav-archive">アーカイブ</a>
     </nav>
   </header>
 
@@ -715,9 +912,12 @@
       <div class="section-head reveal">
         <div class="section-num">01</div>
         <h2 class="section-h">あしたのアイデア<span class="en">Tomorrow's Ideas</span></h2>
-        <span class="section-more" style="cursor:default;">タイトルをタップで本文へ</span>
+        <a class="section-more" href="#archive">アーカイブ</a>
       </div>
       <ul class="idea-list" id="idea-list"></ul>
+      <div class="idea-archive-link reveal">
+        <a href="#archive">過去のアイデアをすべて見る</a>
+      </div>
     </section>
 
     <!-- テッキーズ・ブックレビュー(NoteのRSS) -->
@@ -769,17 +969,29 @@
       <div class="subscribe-eyebrow">— 無料ニュースレター —</div>
       <h2>明日のヒントを、<br><em>あなたの朝に</em>届けます。</h2>
       <p>毎週水曜日の朝7時、編集長が選ぶ「次に来るアイデア」を一通の手紙にして。</p>
-      <form class="subscribe-form" onsubmit="event.preventDefault(); alert('登録ありがとうございます。確認メールをお送りしました。');">
-        <input type="email" placeholder="your@email.com" required>
+      <form class="subscribe-form" id="subscribe-form" action="#" method="post" target="_blank">
+        <input type="email" name="email" placeholder="your@email.com" required>
         <button type="submit">購読する</button>
       </form>
     </section>
 
   </div>
 
+  <!-- ============== アーカイブページ ============== -->
+  <section id="archive-view" class="archive-page">
+    <button class="article-back" onclick="navigateHome()">ホームに戻る</button>
+    <div class="archive-head">
+      <div class="archive-eyebrow">— ARCHIVE · 過去のすべての号 —</div>
+      <h1 class="archive-title">あしたのアイデア<br><em>Archive</em></h1>
+      <p class="archive-desc">これまでに掲載された、次にくるアイデアの種たち。古い順から最新まで、一気に読み返せます。</p>
+      <div class="archive-count">全 <strong id="archive-count-num">0</strong> 号</div>
+    </div>
+    <ul class="archive-list" id="archive-list"></ul>
+  </section>
+
   <!-- ============== 個別記事ページ ============== -->
   <article id="article-view" class="article-page">
-    <button class="article-back" onclick="navigateHome()">アイデア一覧に戻る</button>
+    <button class="article-back" onclick="goBackFromArticle()">戻る</button>
     <div class="article-eyebrow" id="article-eyebrow"></div>
     <h1 class="article-title" id="article-title"></h1>
     <div class="article-meta" id="article-meta"></div>
@@ -917,13 +1129,16 @@
   };
 
   // ============================================================
-  // あしたのアイデア(リスト+個別記事)
+  // あしたのアイデア(リスト+個別記事+アーカイブ)
+  // ============================================================
+  // 配列の先頭が最新。ホームには先頭3件、アーカイブには全件
   // ============================================================
   function renderIdeaList(ideas, viewMap) {
-    document.getElementById('idea-list').innerHTML = ideas.map(idea => {
+    // ホームには最新3件だけ
+    const latest = ideas.slice(0, 3);
+    document.getElementById('idea-list').innerHTML = latest.map(idea => {
       const views = viewMap[idea.id] || 0;
       return '<li class="idea-row reveal" data-idea-id="' + idea.id + '">' +
-        '<span class="idea-row-num">' + idea.num + '</span>' +
         '<div class="idea-row-main">' +
           '<div class="idea-row-cat">' + idea.category + ' · ' + idea.tag + '</div>' +
           '<h3 class="idea-row-title">' + idea.title + '</h3>' +
@@ -946,6 +1161,42 @@
     });
   }
 
+  // アーカイブページのリスト(全件)
+  function renderArchive(ideas, viewMap) {
+    const list = document.getElementById('archive-list');
+    document.getElementById('archive-count-num').textContent = ideas.length;
+
+    if (ideas.length === 0) {
+      list.innerHTML = '<li style="text-align:center; padding: 64px 0; color: var(--ink-3); font-style: italic;">まだ記事がありません</li>';
+      return;
+    }
+
+    list.innerHTML = ideas.map(idea => {
+      const views = viewMap[idea.id] || 0;
+      const dateLabel = idea.publishDate || '—';
+      return '<li data-idea-id="' + idea.id + '">' +
+        '<div class="archive-list-date">' + dateLabel + '</div>' +
+        '<div class="archive-list-main">' +
+          '<div class="archive-list-cat">' + idea.category + ' · ' + idea.tag + '</div>' +
+          '<h3 class="archive-list-title">' + idea.title + '</h3>' +
+          '<p class="archive-list-summary">' + (idea.summary || '') + '</p>' +
+        '</div>' +
+        '<div class="archive-list-views' + (views > 0 ? ' has-views' : '') + '">' +
+          (views > 0 ? views + ' views' : '—') +
+        '</div>' +
+        '</li>';
+    }).join('');
+
+    list.querySelectorAll('li[data-idea-id]').forEach(li => {
+      li.addEventListener('click', () => {
+        location.hash = li.dataset.ideaId;
+      });
+    });
+  }
+
+  // 直前のページを記憶(記事から戻るときに使う)
+  let previousView = 'home'; // 'home' | 'archive'
+
   function showArticle(ideaId) {
     const idea = APP_DATA.ideas.find(i => i.id === ideaId);
     if (!idea) {
@@ -954,9 +1205,10 @@
     }
 
     document.getElementById('home-view').classList.add('hidden');
+    document.getElementById('archive-view').classList.remove('active');
     document.getElementById('article-view').classList.add('active');
     document.getElementById('article-eyebrow').textContent =
-      'あしたのアイデア · 第' + idea.num + '号 · ' + idea.category;
+      'あしたのアイデア · ' + idea.category;
     document.getElementById('article-title').textContent = idea.title;
     document.getElementById('article-meta').innerHTML =
       '<span>◷ 読了 ' + (idea.readTime || '5分') + '</span>' +
@@ -968,14 +1220,27 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
     ViewCounter.increment(ideaId);
 
-    // ナビのアクティブ状態
     document.getElementById('nav-home').classList.remove('active');
+    document.getElementById('nav-archive').classList.remove('active');
   }
 
   function showHome() {
     document.getElementById('home-view').classList.remove('hidden');
+    document.getElementById('archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.add('active');
+    document.getElementById('nav-archive').classList.remove('active');
+    previousView = 'home';
+  }
+
+  function showArchive() {
+    document.getElementById('home-view').classList.add('hidden');
+    document.getElementById('archive-view').classList.add('active');
+    document.getElementById('article-view').classList.remove('active');
+    document.getElementById('nav-home').classList.remove('active');
+    document.getElementById('nav-archive').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    previousView = 'archive';
   }
 
   function navigateHome() {
@@ -986,10 +1251,22 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // 記事ページから「戻る」を押した時の挙動
+  function goBackFromArticle() {
+    if (previousView === 'archive') {
+      location.hash = 'archive';
+    } else {
+      navigateHome();
+    }
+  }
+
   function handleHashChange() {
     const hash = location.hash.replace('#', '');
+
     if (hash && hash.startsWith('idea-')) {
       showArticle(hash);
+    } else if (hash === 'archive') {
+      showArchive();
     } else {
       showHome();
       // セクションスクロール
@@ -1045,11 +1322,30 @@
           .replace(/\s+/g, ' ')
           .trim()
           .slice(0, 90) + '…';
+
+        // アイキャッチ画像を取得(優先順: thumbnail → enclosure → description内の最初の画像)
+        let imageUrl = '';
+        if (item.thumbnail && item.thumbnail.length > 0) {
+          imageUrl = item.thumbnail;
+        } else if (item.enclosure && item.enclosure.link) {
+          imageUrl = item.enclosure.link;
+        } else if (item.description) {
+          const m = item.description.match(/<img[^>]+src=["']([^"']+)["']/);
+          if (m) imageUrl = m[1];
+        }
+
+        const imageBlock = imageUrl
+          ? '<div class="note-card-image"><img src="' + imageUrl + '" alt="" loading="lazy" onerror="this.parentElement.classList.add(\'no-image\'); this.remove();"></div>'
+          : '<div class="note-card-image no-image"></div>';
+
         return '<a class="note-card" href="' + item.link + '" target="_blank" rel="noopener">' +
-          '<div class="note-card-eyebrow">' + dateStr + '</div>' +
-          '<h3 class="note-card-title">' + item.title + '</h3>' +
-          '<p class="note-card-excerpt">' + excerpt + '</p>' +
-          '<div class="note-card-foot"><span>READ ON NOTE</span></div>' +
+          imageBlock +
+          '<div class="note-card-body">' +
+            '<div class="note-card-eyebrow">' + dateStr + '</div>' +
+            '<h3 class="note-card-title">' + item.title + '</h3>' +
+            '<p class="note-card-excerpt">' + excerpt + '</p>' +
+            '<div class="note-card-foot"><span>READ ON NOTE</span></div>' +
+          '</div>' +
           '</a>';
       }).join('');
     } catch (err) {
@@ -1166,6 +1462,50 @@
   // ============================================================
   // 出現アニメーション
   // ============================================================
+  // ============================================================
+  // ニュースレター購読(beehiiv連携)
+  // ============================================================
+  function setupSubscribeForm(beehiivConfig) {
+    const form = document.getElementById('subscribe-form');
+    if (!form) return;
+
+    const publicationUrl = beehiivConfig && beehiivConfig.publicationUrl;
+
+    if (!publicationUrl || publicationUrl.includes('your-publication')) {
+      // 未設定の場合
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        alert('購読フォームはまだセットアップ中です。\n\n編集長へ: data.json の beehiivConfig.publicationUrl を設定してください。');
+      });
+      return;
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = form.querySelector('input[name="email"]').value;
+      if (!email) return;
+
+      // beehiivの購読ページへ遷移
+      const url = publicationUrl.replace(/\/$/, '') +
+        '/subscribe?email=' + encodeURIComponent(email);
+      window.open(url, '_blank', 'noopener');
+
+      // 確認メッセージ
+      const btn = form.querySelector('button');
+      const originalText = btn.textContent;
+      btn.textContent = 'beehiivで登録を完了してください →';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        form.querySelector('input[name="email"]').value = '';
+      }, 4000);
+    });
+  }
+
+  // ============================================================
+  // 出現アニメーション
+  // ============================================================
   function setupReveal() {
     const observer = new IntersectionObserver(entries => {
       entries.forEach((entry, i) => {
@@ -1208,6 +1548,7 @@
 
     // 各セクション描画
     renderIdeaList(APP_DATA.ideas, viewMap);
+    renderArchive(APP_DATA.ideas, viewMap);
     if (APP_DATA.noteConfig) {
       loadNoteFeed(APP_DATA.noteConfig.username, APP_DATA.noteConfig.displayCount || 3);
     }
@@ -1215,6 +1556,7 @@
       loadXEmbeds(APP_DATA.xPostsConfig);
     }
     await renderRanked(allArticles);
+    setupSubscribeForm(APP_DATA.beehiivConfig);
 
     setupReveal();
 

@@ -139,6 +139,61 @@ kuruhimotimes/
 
 ---
 
+## 📧 ニュースレター配信(beehiiv手動配信・週10分)
+
+毎週水曜の朝、編集長が10分以内で配信できる仕組み。**完全自動配信はbeehivのMaxプラン($109/月)が必要なため、無料プランでは手動運用**になります。
+
+### 仕組み
+
+サイトに **編集長専用画面**(`/#editor-tools`)があります。
+ここで「最新3本のアイデア」を、ニュースレター用テキストに**自動整形**します。
+
+サイトを公開した後、以下のURLをスマホ・PCのブックマークに入れておいてください:
+
+```
+https://kuruhitimes.pages.dev/#editor-tools
+```
+
+### 毎週水曜の朝のフロー(10分)
+
+#### 1. 編集長ツールを開く(30秒)
+ブックマークから `#editor-tools` を開く。
+最新3本のアイデアが、メール本文の形に自動で整形されています。
+
+#### 2. 件名と本文をコピー(1分)
+- 「件名をコピー」ボタンで件名をクリップボードへ
+- 「本文をコピー」ボタンで本文をクリップボードへ
+
+#### 3. beehiivで新規ポスト(5分)
+- [app.beehiiv.com](https://app.beehiiv.com) にログイン
+- 「+ New post」をクリック
+- 件名(Subject)欄に貼り付け
+- 本文エリアに貼り付け
+- リンクが青く表示されているか確認
+
+#### 4. 配信(2分)
+- 「Send & Publish」をクリック
+- 送信プレビューを確認
+- 「Send」で配信完了 ✉️
+
+合計**約10分**。慣れれば5分程度で終わります。
+
+### コツ
+
+- **テンプレートを保存**: 一度配信したポストをbeehivで「テンプレート保存」しておけば、次回以降はその雛形に貼り付けるだけで、ヘッダー画像や署名が自動で入ります
+- **配信前にプレビュー**: beehivの「Preview」機能で、PC表示・スマホ表示を確認できます
+- **テスト配信**: 自分宛にテスト送信してから本配信すると安心
+
+### 編集長画面の機能
+
+`#editor-tools` には以下が表示されます:
+- 件名(自動生成、その日の日付と最新記事タイトル入り)
+- 本文(タイトル・カテゴリ・抜粋・各記事へのリンク入り)
+- ワンクリックコピー
+- beehivと公開ページへのクイックリンク
+
+---
+
 ## 🚀 ローカル確認
 
 ```
@@ -149,87 +204,6 @@ python3 -m http.server 8000
 VS Codeなら拡張「Live Server」がラク。
 
 ---
-
-## 📧 ニュースレター配信(beehiiv連携・完全自動)
-
-毎週水曜の朝7時に、最新3本のアイデアが自動でメール配信される仕組みです。
-
-### 仕組み
-
-```
-あなた: data.jsonを編集 → GitHubにpush
-   ↓
-GitHub Actions: rss.xmlを自動生成
-   ↓
-Cloudflare Pages: サイトとRSSを公開
-   ↓
-beehiiv: 毎週水曜7時にRSSをチェックして配信 ✉️
-```
-
-普段の運用は変わりません。`data.json` を更新してpushするだけで、メールも自動配信されます。
-
-### 初回セットアップ(30分・一度だけ)
-
-#### 1. beehiivアカウントを作る
-
-1. [beehiiv.com](https://www.beehiiv.com) にアクセス
-2. Sign up → メールアドレスとパスワード
-3. パブリケーション名を「くるひもタイムズ」に
-4. URLを決める(例: `kuruhimotimes` → `kuruhimotimes.beehiiv.com`)
-
-#### 2. RSS to Email を設定
-
-1. 左サイドバー → **Settings**
-2. **Integrations** タブ
-3. **RSS to Email** を探して有効化
-4. RSS URL に `https://kuruhitimes.pages.dev/rss.xml` を入れる(自分のサイトURLに合わせる)
-5. 配信設定:
-   - 配信頻度: **Weekly**(毎週)
-   - 曜日: **Wednesday**(水曜)
-   - 時刻: **7:00 AM**(タイムゾーンを Asia/Tokyo に)
-
-#### 3. data.json に beehiiv URL を設定
-
-```json
-"beehiivConfig": {
-  "publicationUrl": "https://kuruhimotimes.beehiiv.com"
-}
-```
-
-これでサイトの購読フォームが、beehiivの登録ページに繋がります。
-
-#### 4. GitHub Actions を有効化
-
-リポジトリの **Settings → Actions → General**:
-- **Workflow permissions**: 「Read and write permissions」に変更
-- **Save**
-
-これでGitHub Actionsが`rss.xml`を自動更新できるようになります。
-
-#### 5. 確認
-
-`data.json` を編集してpushすると:
-- 数十秒後に GitHub Actions が動く
-- リポジトリに `rss.xml` が自動コミットされる
-- Cloudflareがサイトを再デプロイ
-- `https://kuruhitimes.pages.dev/rss.xml` でRSSが見られる
-
-### 日々の運用
-
-何もしなくてOK。普段通り `data.json` に新しいアイデアを追加するだけ。
-毎週水曜の朝7時に、最新3本が自動でメール配信されます。
-
-### beehiivのデザインを編集する
-
-1. beehiiv の **Design** メニューでメールテンプレートをカスタマイズ
-2. ヘッダー画像、ロゴ、フォントなどを設定
-3. RSS to Email の設定で、メール本文のテンプレートを選ぶ
-
-beehiivはミニマルな雑誌風のテンプレートが用意されているので、くるひもタイムズの世界観にも合わせやすいです。
-
----
-
-## 🌐 Cloudflare Pagesで公開
 
 ### 初回(15分)
 1. GitHub にリポジトリを作る

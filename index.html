@@ -1363,26 +1363,34 @@
   // X (Twitter) 投稿の埋め込み
   // ============================================================
   function loadXEmbeds(config) {
+    // Sveltia CMSでは postUrls が
+    // ["https://x.com/..."] ではなく [{ url: "https://x.com/..." }] で保存されるため、
+    // どちらの形式でも使えるようにURLだけを取り出す。
     const postUrls = ((config && config.postUrls) || [])
       .map(item => {
         if (typeof item === 'string') return item;
         if (item && item.url) return item.url;
         return null;
       })
-      .filter(Boolean);
+      .filter(Boolean)
+      .map(url => url.trim());
+
+    const grid = document.getElementById('x-grid');
+
     if (postUrls.length === 0) {
-      document.getElementById('x-grid').innerHTML =
+      grid.innerHTML =
         '<div class="x-error">data.jsonにX投稿のURLが設定されていません。</div>';
       return;
     }
 
     // プレースホルダーURL(PASTE_... または 1234567890... )が入っている場合
-    const isPlaceholder = postUrls.every(u =>
-      u.includes('PASTE_LATEST_POST_ID') || u.includes('1234567890')
+    const isPlaceholder = postUrls.every(url =>
+      url.includes('PASTE_LATEST_POST_ID') || url.includes('1234567890')
     );
+
     if (isPlaceholder) {
       const account = (config && config.accountUrl) || 'https://x.com/newbookforbiz';
-      document.getElementById('x-grid').innerHTML =
+      grid.innerHTML =
         '<div class="x-error">' +
         'Xの最新投稿URLを <code>data.json</code> の <code>postUrls</code> に貼り付けてください。<br>' +
         '<a href="' + account + '" target="_blank" rel="noopener" style="color:var(--vermilion);text-decoration:underline;">' +
@@ -1391,26 +1399,44 @@
       return;
     }
 
-    // 各URLに対して twitter-tweet タグを生成
-    document.getElementById('x-grid').innerHTML = postUrls.slice(0, 3).map(url =>
+    // まず、X公式埋め込み用のblockquoteを出す。
+    // 公式スクリプトがブラウザ拡張・広告ブロック・X側制限で失敗した場合でも、
+    // 下のフォールバックリンクカードが残るようにしている。
+    grid.innerHTML = postUrls.slice(0, 3).map(url =>
       '<div class="x-embed-wrap">' +
         '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none">' +
-        '<a href="' + url + '"></a>' +
+          '<a href="' + url + '"></a>' +
         '</blockquote>' +
+        '<a class="x-fallback-link" href="' + url + '" target="_blank" rel="noopener" ' +
+          'style="display:block;padding:22px 18px;text-decoration:none;color:var(--ink);font-family:\'Shippori Mincho\',serif;font-size:16px;line-height:1.6;">' +
+          'Xで投稿を見る →<br>' +
+          '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--ink-3);word-break:break-all;">' + url + '</span>' +
+        '</a>' +
       '</div>'
     ).join('');
 
+    function hideFallbacksIfEmbedded() {
+      grid.querySelectorAll('.x-embed-wrap').forEach(wrap => {
+        const iframe = wrap.querySelector('iframe');
+        const fallback = wrap.querySelector('.x-fallback-link');
+        if (iframe && fallback) fallback.style.display = 'none';
+      });
+    }
+
     // widgets.js が読み込まれていれば再描画
     if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load(document.getElementById('x-grid'));
+      window.twttr.widgets.load(grid).then(hideFallbacksIfEmbedded);
     } else {
       const checkInterval = setInterval(() => {
         if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load(document.getElementById('x-grid'));
+          window.twttr.widgets.load(grid).then(hideFallbacksIfEmbedded);
           clearInterval(checkInterval);
         }
       }, 200);
-      setTimeout(() => clearInterval(checkInterval), 8000);
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        hideFallbacksIfEmbedded();
+      }, 8000);
     }
   }
 

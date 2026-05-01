@@ -84,9 +84,9 @@
     "_comment": "きょう発売のビジネス書はXの投稿を埋め込み表示。投稿のURLを最大3つまで指定",
     "accountUrl": "https://x.com/newbookforbiz",
     "postUrls": [
-      "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_1",
-      "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_2",
-      "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_3"
+      "https://x.com/newbookforbiz/status/2050072455654543532?s=20",
+      "https://x.com/newbookforbiz/status/2050072348389454312?s=20",
+      "https://x.com/newbookforbiz/status/2050072218374467969?s=20"
     ],
     "_postUrls_help": "Xの投稿の「リンクをコピー」で取得したURLを貼り付け。3つまで表示されます。最新3投稿を取得する自動化はXのAPI仕様上、無料では不可"
   }

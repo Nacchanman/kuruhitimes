@@ -63,23 +63,13 @@
       "publishDate": "2026-04-25",
       "readTime": "5分",
       "body": "<p>マンションの管理組合がSlackを使い始めた、という話を最近よく聞く。回覧板の代わりではない。「水曜の夜、屋上でビール飲みませんか」「庭の植え替え、誰か手伝ってくれる人」——そんなやり取りが、毎日少しずつ流れている。</p><p>SNSが広く浅い「弱いつながり」を最適化した時代から、ふたたび狭く深い「近くの人」へ。ご近所3.0と呼びたい現象が、静かに各地で立ち上がっている。</p><h3>なぜ今、近くなのか</h3><p>遠くの人とつながる技術が成熟しきった今、私たちは皮肉にも「近くの人」と話す機会を失っていた。エレベーターで会っても挨拶しない、隣に住んでいる人の名前も知らない。それが当たり前だった。</p><p>でも、コロナ禍を経て、徒歩圏内の人間関係の重要性に気づいた人たちがいる。災害時の助け合い、子育ての協力、ちょっとした困りごとの解決。すべて「近く」が前提になる。</p><h3>具体例</h3><p>都内のあるマンションでは、住民専用のDiscordサーバーが運用されている。チャンネルは「日常雑談」「子育て」「ジム情報」「不要品譲ります」など20以上。月に1〜2回、有志でオフ会も開かれる。</p><p>地方では、商店街単位のLINEグループが機能している。お店の人と常連客が混ざって、新メニューの試食会や小さな勉強会を開く。</p><h3>編集長の視点</h3><p>「ご近所」という古い言葉が、デジタルツールを得て新しい意味を持ち始めている。次のSNSは、世界中とつながるものではなく、半径500メートルでつながるものになるかもしれない。</p>"
-    },
-    {
-      "id": "idea-21",
-      "category": "community",
-      "title": "com",
-      "summary": "commmu",
-      "tag": "tech",
-      "publishDate": "2026-05-01",
-      "readTime": "1",
-      "body": "aaa"
     }
   ],
   "xPostsConfig": {
     "postUrls": [
-      "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_1",
-      "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_2",
-      "https://x.com/newbookforbiz/status/PASTE_LATEST_POST_ID_3"
+      "https://x.com/newbookforbiz/status/2049784195304874359?s=20",
+      "https://x.com/newbookforbiz/status/2050072455654543532?s=20",
+      "https://x.com/newbookforbiz/status/2050072348389454312?s=20"
     ],
     "_comment": "きょう発売のビジネス書はXの投稿を埋め込み表示。投稿のURLを最大3つまで指定",
     "accountUrl": "https://x.com/newbookforbiz",

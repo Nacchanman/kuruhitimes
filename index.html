@@ -198,15 +198,28 @@
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
     margin-top: 24px;
-
-    /* スクロールしても画面上部に固定 */
-    position: sticky;
-    top: 0;
-    z-index: 999;
     background: rgba(246, 241, 231, 0.96);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 1px 0 var(--rule);
+    z-index: 999;
+  }
+
+  /* スクロール後にJSで付与。親要素の高さ制限を受けないため確実に固定される */
+  .navbar.nav-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+  }
+
+  .nav-spacer {
+    display: none;
+  }
+
+  .nav-spacer.active {
+    display: block;
   }
 
   .navbar a { color: var(--ink-2); text-decoration: none; font-family: 'Shippori Mincho', serif; font-weight: 500; font-size: 14px; letter-spacing: 0.05em; padding: 8px 24px; transition: all 0.3s; position: relative; cursor: pointer; }
@@ -1030,7 +1043,6 @@
     .masthead-rail .left, .masthead-rail .right { gap: 12px; }
     .navbar {
       padding: 14px 0 16px;
-      top: 0;
     }
     .navbar a { padding: 6px 12px; font-size: 12px; }
     .section-head { grid-template-columns: 1fr; gap: 16px; }
@@ -1118,6 +1130,7 @@
       <a href="#today">きょう発売</a>
       <a href="#archive" id="nav-archive">アーカイブ</a>
     </nav>
+    <div id="nav-spacer" class="nav-spacer" aria-hidden="true"></div>
   </header>
 
   <!-- ============== ホーム画面 ============== -->
@@ -1837,6 +1850,53 @@
   }
 
   // ============================================================
+  // 固定ナビ
+  // ============================================================
+  function setupStickyNav() {
+    const nav = document.querySelector('.navbar');
+    const spacer = document.getElementById('nav-spacer');
+    if (!nav || !spacer) return;
+
+    let navTop = 0;
+
+    function measure() {
+      const wasFixed = nav.classList.contains('nav-fixed');
+      if (wasFixed) nav.classList.remove('nav-fixed');
+
+      const rect = nav.getBoundingClientRect();
+      navTop = rect.top + window.scrollY;
+      spacer.style.height = nav.offsetHeight + 'px';
+
+      if (wasFixed) nav.classList.add('nav-fixed');
+    }
+
+    function update() {
+      if (window.scrollY >= navTop) {
+        nav.classList.add('nav-fixed');
+        spacer.classList.add('active');
+      } else {
+        nav.classList.remove('nav-fixed');
+        spacer.classList.remove('active');
+      }
+    }
+
+    measure();
+    update();
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', () => {
+      measure();
+      update();
+    });
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        measure();
+        update();
+      }, 250);
+    });
+  }
+
+  // ============================================================
   // 起動
   // ============================================================
   (async function init() {
@@ -1877,6 +1937,7 @@
     setupSubscribeForm(APP_DATA.beehiivConfig);
 
     setupReveal();
+    setupStickyNav();
 
     // URLハッシュに応じてルーティング
     handleHashChange();

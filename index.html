@@ -90,6 +90,76 @@
     vertical-align: middle;
   }
 
+
+  /* ============================================
+     トップ夕陽イラスト
+  ============================================ */
+  .sunset-hero {
+    position: relative;
+    height: clamp(120px, 18vw, 220px);
+    margin: 24px 0 20px;
+    border: 1px solid var(--rule);
+    border-left: none;
+    border-right: none;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(212,57,27,0.10) 0%, rgba(184,151,90,0.08) 42%, rgba(246,241,231,0) 100%);
+  }
+
+  .sunset-hero::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -42%;
+    width: clamp(150px, 24vw, 320px);
+    height: clamp(150px, 24vw, 320px);
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 42%,
+        rgba(212,57,27,0.88) 0%,
+        rgba(212,57,27,0.72) 36%,
+        rgba(232,138,115,0.42) 58%,
+        rgba(232,138,115,0.00) 72%);
+    opacity: 0.9;
+    filter: blur(0.2px);
+  }
+
+  .sunset-hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 34%;
+    height: 1px;
+    background: rgba(18,18,15,0.55);
+    box-shadow:
+      0 22px 0 rgba(18,18,15,0.16),
+      0 44px 0 rgba(18,18,15,0.10);
+  }
+
+  .sunset-hero svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    mix-blend-mode: multiply;
+  }
+
+  .sunset-caption {
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(18,18,15,0.48);
+    white-space: nowrap;
+  }
+
   /* マストヘッド */
   .masthead { padding: 24px 0 0; position: relative; }
   .masthead-rail { display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--ink-3); text-transform: uppercase; padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
@@ -876,6 +946,20 @@
 
   <!-- マストヘッド -->
   <header class="masthead">
+
+    <div class="sunset-hero" aria-hidden="true">
+      <svg viewBox="0 0 1200 220" preserveAspectRatio="none">
+        <path d="M0 150 C140 132 250 166 390 148 C530 130 650 162 805 144 C940 128 1050 148 1200 132"
+              fill="none" stroke="rgba(212,57,27,0.42)" stroke-width="2"/>
+        <path d="M0 178 C160 160 310 192 475 174 C630 158 780 188 940 170 C1060 156 1140 164 1200 154"
+              fill="none" stroke="rgba(184,151,90,0.34)" stroke-width="1.5"/>
+        <path d="M835 76 q18 -18 36 0" fill="none" stroke="rgba(18,18,15,0.52)" stroke-width="2"/>
+        <path d="M890 58 q14 -14 28 0" fill="none" stroke="rgba(18,18,15,0.42)" stroke-width="1.5"/>
+        <path d="M316 68 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.38)" stroke-width="1.5"/>
+      </svg>
+      <div class="sunset-caption">sunset editorial room</div>
+    </div>
+
     <div class="masthead-rail">
       <div class="left">
         <span class="vol-badge">VOL <span id="vol">042</span></span>
@@ -1363,33 +1447,20 @@
   // X (Twitter) 投稿の埋め込み
   // ============================================================
   function loadXEmbeds(config) {
-    // Sveltia CMSでは postUrls が
-    // ["https://x.com/..."] ではなく [{ url: "https://x.com/..." }] で保存されるため、
-    // どちらの形式でも使えるようにURLだけを取り出す。
-    const postUrls = ((config && config.postUrls) || [])
-      .map(item => {
-        if (typeof item === 'string') return item;
-        if (item && item.url) return item.url;
-        return null;
-      })
-      .filter(Boolean)
-      .map(url => normalizeTweetUrl(url));
-
-    const grid = document.getElementById('x-grid');
-
+    const postUrls = (config && config.postUrls) || [];
     if (postUrls.length === 0) {
-      grid.innerHTML =
+      document.getElementById('x-grid').innerHTML =
         '<div class="x-error">data.jsonにX投稿のURLが設定されていません。</div>';
       return;
     }
 
-    const isPlaceholder = postUrls.every(url =>
-      url.includes('PASTE_LATEST_POST_ID') || url.includes('1234567890')
+    // プレースホルダーURL(PASTE_... または 1234567890... )が入っている場合
+    const isPlaceholder = postUrls.every(u =>
+      u.includes('PASTE_LATEST_POST_ID') || u.includes('1234567890')
     );
-
     if (isPlaceholder) {
       const account = (config && config.accountUrl) || 'https://x.com/newbookforbiz';
-      grid.innerHTML =
+      document.getElementById('x-grid').innerHTML =
         '<div class="x-error">' +
         'Xの最新投稿URLを <code>data.json</code> の <code>postUrls</code> に貼り付けてください。<br>' +
         '<a href="' + account + '" target="_blank" rel="noopener" style="color:var(--vermilion);text-decoration:underline;">' +
@@ -1398,63 +1469,27 @@
       return;
     }
 
-    // X公式ウィジェットは x.com より twitter.com 形式の方が安定します。
-    // 例: https://x.com/user/status/123?s=20
-    // →  https://twitter.com/user/status/123
-    grid.innerHTML = postUrls.slice(0, 3).map(url =>
+    // 各URLに対して twitter-tweet タグを生成
+    document.getElementById('x-grid').innerHTML = postUrls.slice(0, 3).map(url =>
       '<div class="x-embed-wrap">' +
-        '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none" data-dnt="true">' +
-          '<a href="' + url + '"></a>' +
+        '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none">' +
+        '<a href="' + url + '"></a>' +
         '</blockquote>' +
       '</div>'
     ).join('');
 
-    loadTwitterWidgets();
-  }
-
-  function normalizeTweetUrl(rawUrl) {
-    try {
-      const u = new URL(String(rawUrl).trim());
-      const parts = u.pathname.split('/').filter(Boolean);
-      const statusIndex = parts.indexOf('status');
-
-      if (statusIndex > 0 && parts[statusIndex + 1]) {
-        const user = parts[statusIndex - 1];
-        const id = parts[statusIndex + 1];
-        return 'https://twitter.com/' + user + '/status/' + id;
-      }
-
-      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
-    } catch (e) {
-      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
-    }
-  }
-
-  function loadTwitterWidgets() {
-    function render() {
-      if (window.twttr && window.twttr.widgets) {
-        window.twttr.widgets.load(document.getElementById('x-grid'));
-      }
-    }
-
+    // widgets.js が読み込まれていれば再描画
     if (window.twttr && window.twttr.widgets) {
-      render();
-      return;
+      window.twttr.widgets.load(document.getElementById('x-grid'));
+    } else {
+      const checkInterval = setInterval(() => {
+        if (window.twttr && window.twttr.widgets) {
+          window.twttr.widgets.load(document.getElementById('x-grid'));
+          clearInterval(checkInterval);
+        }
+      }, 200);
+      setTimeout(() => clearInterval(checkInterval), 8000);
     }
-
-    const existing = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
-    if (existing) {
-      existing.addEventListener('load', render);
-      setTimeout(render, 1000);
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = 'https://platform.twitter.com/widgets.js';
-    script.async = true;
-    script.charset = 'utf-8';
-    script.onload = render;
-    document.body.appendChild(script);
   }
 
   // ============================================================

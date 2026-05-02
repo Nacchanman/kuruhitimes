@@ -189,12 +189,101 @@
   .tagline { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(15px, 1.5vw, 19px); color: var(--ink-2); margin-top: 24px; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 24px; }
   .tagline::before, .tagline::after { content: ''; width: 32px; height: 1px; background: var(--ink-3); }
 
-  .navbar { display: flex; justify-content: center; align-items: center; padding: 24px 0 32px; flex-wrap: wrap; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-top: 24px; }
+  .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 0 32px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-top: 24px;
+
+    /* 下にスクロールしても上部に固定 */
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(246, 241, 231, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
   .navbar a { color: var(--ink-2); text-decoration: none; font-family: 'Shippori Mincho', serif; font-weight: 500; font-size: 14px; letter-spacing: 0.05em; padding: 8px 24px; transition: all 0.3s; position: relative; cursor: pointer; }
   .navbar a::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 0; height: 1px; background: var(--vermilion); transition: all 0.3s; transform: translateX(-50%); }
   .navbar a:hover { color: var(--vermilion); }
   .navbar a:hover::after, .navbar a.active::after { width: 24px; }
   .navbar a.active { color: var(--vermilion); font-weight: 600; }
+
+
+  /* ============================================
+     各大項目用：細い夕陽イラスト
+  ============================================ */
+  .section-sunset {
+    position: relative;
+    height: 52px;
+    margin: -32px 0 56px;
+    overflow: hidden;
+    opacity: 0.95;
+  }
+
+  .section-sunset::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -36px;
+    width: 96px;
+    height: 96px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 40%,
+        rgba(212,57,27,0.68) 0%,
+        rgba(212,57,27,0.48) 42%,
+        rgba(232,138,115,0.16) 68%,
+        rgba(232,138,115,0) 76%);
+  }
+
+  .section-sunset::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    height: 1px;
+    background: rgba(18,18,15,0.38);
+    box-shadow:
+      0 9px 0 rgba(18,18,15,0.10),
+      0 18px 0 rgba(212,57,27,0.10);
+  }
+
+  .section-sunset svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    mix-blend-mode: multiply;
+  }
+
+  .reviews .section-sunset::after {
+    background: rgba(246,241,231,0.36);
+    box-shadow:
+      0 9px 0 rgba(246,241,231,0.10),
+      0 18px 0 rgba(232,138,115,0.14);
+  }
+
+  .reviews .section-sunset::before {
+    background:
+      radial-gradient(circle at 50% 40%,
+        rgba(232,138,115,0.72) 0%,
+        rgba(232,138,115,0.48) 42%,
+        rgba(212,57,27,0.16) 68%,
+        rgba(212,57,27,0) 76%);
+  }
+
+  .ranked .section-sunset {
+    max-width: 760px;
+    margin: -32px auto 56px;
+  }
 
   /* セクション共通 */
   .section { padding: 100px 0; position: relative; }
@@ -741,6 +830,38 @@
     border: none !important;
   }
 
+  .x-embed-wrap .twitter-tweet {
+    margin: 0 auto !important;
+  }
+  .x-embed-fallback {
+    display: none;
+    min-height: 220px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: var(--ink);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    background:
+      radial-gradient(circle at 50% 15%, rgba(212,57,27,0.12), transparent 45%),
+      var(--paper);
+  }
+  .x-embed-fallback small {
+    display: block;
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    word-break: break-all;
+    line-height: 1.6;
+  }
+  .x-embed-wrap.embed-failed .twitter-tweet {
+    display: none;
+  }
+  .x-embed-wrap.embed-failed .x-embed-fallback {
+    display: block;
+  }
+
   .x-loading, .x-error {
     grid-column: 1 / -1;
     text-align: center;
@@ -899,7 +1020,10 @@
     .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
     .masthead-rail { font-size: 9px; padding-bottom: 12px; }
     .masthead-rail .left, .masthead-rail .right { gap: 12px; }
-    .navbar { padding: 16px 0; }
+    .navbar {
+      padding: 14px 0 16px;
+      top: 0;
+    }
     .navbar a { padding: 6px 12px; font-size: 12px; }
     .section-head { grid-template-columns: 1fr; gap: 16px; }
     .section-num { font-size: 56px; }
@@ -998,6 +1122,14 @@
         <h2 class="section-h">あしたのアイデア<span class="en">Tomorrow's Ideas</span></h2>
         <a class="section-more" href="#archive">アーカイブ</a>
       </div>
+      <div class="section-sunset reveal" aria-hidden="true">
+        <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+          <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
+                fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+          <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+          <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+        </svg>
+      </div>
       <ul class="idea-list" id="idea-list"></ul>
       <div class="idea-archive-link reveal">
         <a href="#archive">過去のアイデアをすべて見る</a>
@@ -1011,6 +1143,14 @@
           <div class="section-num">02</div>
           <h2 class="section-h">テッキーズ・ブックレビュー<span class="en">Techies' Book Review</span></h2>
           <a class="section-more" id="note-more" target="_blank" rel="noopener">noteで全部読む</a>
+        </div>
+        <div class="section-sunset reveal" aria-hidden="true">
+          <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+            <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
+                  fill="none" stroke="rgba(232,138,115,0.32)" stroke-width="1.4"/>
+            <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(246,241,231,0.34)" stroke-width="1.2"/>
+            <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(246,241,231,0.30)" stroke-width="1.2"/>
+          </svg>
         </div>
         <div class="note-grid" id="note-grid">
           <div class="note-loading">noteから最新記事を読み込み中…</div>
@@ -1028,6 +1168,14 @@
         </div>
         <a class="section-more" id="x-more" target="_blank" rel="noopener">Xで見る</a>
       </div>
+      <div class="section-sunset reveal" aria-hidden="true">
+        <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+          <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
+                fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+          <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+          <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+        </svg>
+      </div>
       <div class="x-grid" id="x-grid">
         <div class="x-loading">Xの投稿を読み込み中…</div>
       </div>
@@ -1038,6 +1186,14 @@
       <div class="ranked-head reveal">
         <div class="ranked-eyebrow">— RANKED · TOP 5 —</div>
         <h2 class="ranked-h">よく読まれた<em>five</em></h2>
+      </div>
+      <div class="section-sunset reveal" aria-hidden="true">
+        <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+          <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
+                fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+          <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+          <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+        </svg>
       </div>
       <ul class="ranked-list" id="ranked-list">
         <li class="empty">
@@ -1069,6 +1225,14 @@
       <h1 class="archive-title">あしたのアイデア<br><em>Archive</em></h1>
       <p class="archive-desc">これまでに掲載された、次にくるアイデアの種たち。古い順から最新まで、一気に読み返せます。</p>
       <div class="archive-count">全 <strong id="archive-count-num">0</strong> 号</div>
+    </div>
+    <div class="section-sunset reveal" aria-hidden="true">
+      <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+        <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
+              fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+        <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+        <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+      </svg>
     </div>
     <ul class="archive-list" id="archive-list"></ul>
   </section>
@@ -1447,20 +1611,33 @@
   // X (Twitter) 投稿の埋め込み
   // ============================================================
   function loadXEmbeds(config) {
-    const postUrls = (config && config.postUrls) || [];
+    // Sveltia CMSでは postUrls が
+    // ["https://x.com/..."] ではなく [{ url: "https://x.com/..." }] で保存されるため、
+    // どちらの形式でも使えるようにURLだけを取り出す。
+    const postUrls = ((config && config.postUrls) || [])
+      .map(item => {
+        if (typeof item === 'string') return item;
+        if (item && item.url) return item.url;
+        return null;
+      })
+      .filter(Boolean)
+      .map(url => normalizeTweetUrl(url));
+
+    const grid = document.getElementById('x-grid');
+
     if (postUrls.length === 0) {
-      document.getElementById('x-grid').innerHTML =
+      grid.innerHTML =
         '<div class="x-error">data.jsonにX投稿のURLが設定されていません。</div>';
       return;
     }
 
-    // プレースホルダーURL(PASTE_... または 1234567890... )が入っている場合
-    const isPlaceholder = postUrls.every(u =>
-      u.includes('PASTE_LATEST_POST_ID') || u.includes('1234567890')
+    const isPlaceholder = postUrls.every(url =>
+      url.includes('PASTE_LATEST_POST_ID') || url.includes('1234567890')
     );
+
     if (isPlaceholder) {
       const account = (config && config.accountUrl) || 'https://x.com/newbookforbiz';
-      document.getElementById('x-grid').innerHTML =
+      grid.innerHTML =
         '<div class="x-error">' +
         'Xの最新投稿URLを <code>data.json</code> の <code>postUrls</code> に貼り付けてください。<br>' +
         '<a href="' + account + '" target="_blank" rel="noopener" style="color:var(--vermilion);text-decoration:underline;">' +
@@ -1469,27 +1646,76 @@
       return;
     }
 
-    // 各URLに対して twitter-tweet タグを生成
-    document.getElementById('x-grid').innerHTML = postUrls.slice(0, 3).map(url =>
-      '<div class="x-embed-wrap">' +
-        '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none">' +
-        '<a href="' + url + '"></a>' +
+    // X公式ウィジェットはモバイルSafariや一部ブラウザでは
+    // 読み込みが不安定になることがあります。
+    // まず公式埋め込みを試し、失敗したカードだけ投稿リンクを表示します。
+    grid.innerHTML = postUrls.slice(0, 3).map((url, index) =>
+      '<div class="x-embed-wrap" data-x-index="' + index + '">' +
+        '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none" data-dnt="true">' +
+          '<a href="' + url + '"></a>' +
         '</blockquote>' +
+        '<a class="x-embed-fallback" href="' + url + '" target="_blank" rel="noopener">' +
+          'Xで投稿を見る →' +
+          '<small>' + url + '</small>' +
+        '</a>' +
       '</div>'
     ).join('');
 
-    // widgets.js が読み込まれていれば再描画
-    if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load(document.getElementById('x-grid'));
-    } else {
-      const checkInterval = setInterval(() => {
-        if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load(document.getElementById('x-grid'));
-          clearInterval(checkInterval);
-        }
-      }, 200);
-      setTimeout(() => clearInterval(checkInterval), 8000);
+    loadTwitterWidgets();
+
+    // 公式埋め込みが失敗して空白のままになるのを防ぐ。
+    // iframeが作られなかったカードだけフォールバック表示に切り替える。
+    setTimeout(() => {
+      grid.querySelectorAll('.x-embed-wrap').forEach(wrap => {
+        const iframe = wrap.querySelector('iframe');
+        if (!iframe) wrap.classList.add('embed-failed');
+      });
+    }, 5500);
+  }
+
+  function normalizeTweetUrl(rawUrl) {
+    try {
+      const u = new URL(String(rawUrl).trim());
+      const parts = u.pathname.split('/').filter(Boolean);
+      const statusIndex = parts.indexOf('status');
+
+      if (statusIndex > 0 && parts[statusIndex + 1]) {
+        const user = parts[statusIndex - 1];
+        const id = parts[statusIndex + 1];
+        return 'https://twitter.com/' + user + '/status/' + id;
+      }
+
+      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
+    } catch (e) {
+      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
     }
+  }
+
+  function loadTwitterWidgets() {
+    function render() {
+      if (window.twttr && window.twttr.widgets) {
+        window.twttr.widgets.load(document.getElementById('x-grid'));
+      }
+    }
+
+    if (window.twttr && window.twttr.widgets) {
+      render();
+      return;
+    }
+
+    const existing = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
+    if (existing) {
+      existing.addEventListener('load', render, { once: true });
+      setTimeout(render, 1000);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://platform.twitter.com/widgets.js';
+    script.async = true;
+    script.charset = 'utf-8';
+    script.onload = render;
+    document.body.appendChild(script);
   }
 
   // ============================================================

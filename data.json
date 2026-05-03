@@ -15,25 +15,35 @@
       "body": "イラン情勢が緊迫化したことで、あらゆる石油由来の製品の価格が高騰している。化学反応を起こすために使う、溶媒という液体もそのひとつだ。新しい薬を生み出す創薬というプロセスにおいて、溶媒は化学反応を引き起こす重要な役割を果たす。原料の何十倍にもおよぶ溶媒を用意し、原料をその中に溶かしてかき混ぜることで、化学反応を起こしやすくするのだ。石油価格が上昇したことで、この溶媒が手に入りづらくなってきた。簡単にいうと、創薬に必要な実験がしづらくなったのだ。\nそこで再び注目を浴びているのが、溶媒がなくても化学反応を起こせる新たなテクノロジーだ。仕組みは古典的で、驚くほどシンプル。用意するのは、回転するポットのような容器と、たくさんのボールだ。容器の中に原料とボールを入れ、容器ごと回転させることで、ボールが原料をこすったり、ぶつかったりしながら原料を細かく砕く。そして砕かれてバラバラになった原料同士がぶつかって、化学反応が起こるというプロセスだ。\nこのボールを使ったミル（粉砕機）である「ボールミル」による「無溶媒反応」では、値段が高く使用後は廃棄物にもなる溶媒が発生しづらい。すなわり財布にも環境にもやさしい、グリーンケミストリーを実現するテクノロジーなのだ。\nとはいえこのテクノロジー自体は、仕組みがとてもシンプルなこともあり、古くは19世紀にはその原型が登場したのだとか。実際に創薬の現場で使われ出したのは1990年代後半から。それでもやはり、溶媒を使ったほうが簡単に安定して化学反応を起こすことができるため、ボールミルはなかなか普及してこなかった。ただ地政学的なクライシスの最中で、そうも言っていられなくなってきたのが実情だ。今後さらに研究が進めば、溶媒を使わずに創薬することが普通になるのかもしれない。"
     }
   ],
+  "quotes": [
+    {
+      "id": "quote-01",
+      "quote": "新しい発見というのは、長らく知られていながらもこれまでは散在し、一見すると無関係に見えた要素を結びつけることで、それまで無秩序だった場所に突然秩序をもたらすときに、価値を持つ。",
+      "author": "アンリ・ポアンカレ",
+      "source": "科学と方法",
+      "publishDate": "2026-05-03",
+      "editorNote": "どこかで得た知識が、別のどこかで思いもよらぬスパークを起こす。セレンディピティは古典的な知性の発現だ。"
+    }
+  ],
+  "noteConfig": {
+    "username": "techno_optimist",
+    "displayCount": 3,
+    "_comment": "テッキーズ・ブックレビューはNoteのRSSから最新3記事を取得して表示する",
+    "_username_help": "Noteのプロフィール画面でURLが https://note.com/xxxxx だった場合、xxxxx を入れる"
+  },
+  "beehiivConfig": {
+    "publicationUrl": "https://your-publication.beehiiv.com",
+    "_comment": "ニュースレター購読のbeehiiv連携。RSS自動配信を使うので、メール送信はbeehiiv側で完全自動",
+    "_publicationUrl_help": "beehiivで作成したパブリケーションのURL。例: https://kuruhimotimes.beehiiv.com",
+    "_setup_help": "beehiivのSettings > Integrations > RSS to Email で、サイトのrss.xmlを毎週水曜7時に配信するよう設定する"
+  },
   "xPostsConfig": {
+    "accountUrl": "https://x.com/newbookforbiz",
     "postUrls": [
       "https://x.com/newbookforbiz/status/2050564699847352347?s=20"
     ],
     "_comment": "きょう発売のビジネス書はXの投稿を埋め込み表示。投稿のURLを最大3つまで指定",
-    "accountUrl": "https://x.com/newbookforbiz",
     "_postUrls_help": "Xの投稿の「リンクをコピー」で取得したURLを貼り付け。3つまで表示されます。最新3投稿を取得する自動化はXのAPI仕様上、無料では不可"
-  },
-  "beehiivConfig": {
-    "_setup_help": "beehiivのSettings > Integrations > RSS to Email で、サイトのrss.xmlを毎週水曜7時に配信するよう設定する",
-    "_publicationUrl_help": "beehiivで作成したパブリケーションのURL。例: https://kuruhimotimes.beehiiv.com",
-    "publicationUrl": "https://your-publication.beehiiv.com",
-    "_comment": "ニュースレター購読のbeehiiv連携。RSS自動配信を使うので、メール送信はbeehiiv側で完全自動"
-  },
-  "noteConfig": {
-    "displayCount": 3,
-    "_username_help": "Noteのプロフィール画面でURLが https://note.com/xxxxx だった場合、xxxxx を入れる",
-    "username": "techno_optimist",
-    "_comment": "テッキーズ・ブックレビューはNoteのRSSから最新3記事を取得して表示する"
   },
   "_ideas_help": "配列の先頭が最新。新しいアイデアは配列の一番上に追加してください。ホームには先頭3件のみ表示され、4件目以降は自動的にアーカイブページに移動します"
 }

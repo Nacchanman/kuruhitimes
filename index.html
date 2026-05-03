@@ -591,14 +591,14 @@
   .quote-card::before {
     content: '“';
     position: absolute;
-    top: 18px;
-    left: 0;
+    top: -6px;
+    left: -8px;
     font-family: 'Fraunces', serif;
-    font-size: clamp(48px, 7vw, 96px);
+    font-size: clamp(96px, 14vw, 190px);
     font-style: italic;
     font-weight: 200;
     line-height: 1;
-    color: rgba(212,57,27,0.13);
+    color: rgba(212,57,27,0.18);
     pointer-events: none;
   }
 
@@ -609,16 +609,23 @@
     line-height: 1.5;
     letter-spacing: -0.02em;
     max-width: 880px;
+    padding-left: clamp(22px, 4vw, 56px);
     position: relative;
     z-index: 1;
   }
 
   .quote-author {
-    margin-top: 18px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.20em;
-    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 8px 14px;
+    border-left: 3px solid var(--vermilion);
+    background: rgba(212,57,27,0.07);
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(15px, 1.5vw, 19px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
     color: var(--vermilion);
   }
 
@@ -683,11 +690,15 @@
   }
 
   .quote-list-meta {
-    margin-top: 14px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    display: inline-flex;
+    margin-top: 16px;
+    padding: 5px 10px;
+    border-left: 2px solid var(--vermilion);
+    background: rgba(212,57,27,0.06);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     color: var(--vermilion);
   }
 
@@ -1325,7 +1336,9 @@
     .archive-list-views { font-size: 9px; }
     .quote-card { padding: 32px 0; }
     .quote-card:hover { padding-left: 0; }
-    .quote-text { font-size: 22px; line-height: 1.55; }
+    .quote-text { font-size: 22px; line-height: 1.55; padding-left: 28px; }
+    .quote-card::before { font-size: 96px; left: -6px; top: 2px; }
+    .quote-author { font-size: 15px; padding: 7px 12px; }
     .quote-note { font-size: 13px; }
     .archive-page { padding: 32px 0 80px; }
     .archive-title { font-size: 36px; }

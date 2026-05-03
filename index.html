@@ -1833,6 +1833,36 @@
   // 直前のページを記憶(記事から戻るときに使う)
   let previousView = 'home'; // 'home' | 'archive'
 
+  function escapeHTML(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function formatArticleBody(body) {
+    if (!body) return '<p>本文を準備中です。</p>';
+
+    const text = String(body).trim();
+    if (!text) return '<p>本文を準備中です。</p>';
+
+    // すでにHTMLで書かれている本文は、そのまま活かす
+    if (/<\/?[a-z][\s\S]*>/i.test(text)) {
+      return text;
+    }
+
+    // CMSで普通の文章として入力した場合:
+    // 空行 → 段落、単独改行 → <br> として本番画面に反映
+    return text
+      .split(/\n\s*\n/g)
+      .map(paragraph =>
+        '<p>' + escapeHTML(paragraph).replace(/\n/g, '<br>') + '</p>'
+      )
+      .join('');
+  }
+
   function showArticle(ideaId) {
     const idea = APP_DATA.ideas.find(i => i.id === ideaId);
     if (!idea) {
@@ -1864,7 +1894,7 @@
       }
     }
 
-    document.getElementById('article-body').innerHTML = idea.body || '<p>本文を準備中です。</p>';
+    document.getElementById('article-body').innerHTML = formatArticleBody(idea.body);
 
     window.scrollTo({ top: 0, behavior: 'instant' });
     ViewCounter.increment(ideaId);

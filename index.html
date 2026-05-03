@@ -578,7 +578,7 @@
   .quote-card {
     border-top: 1px solid var(--rule-strong);
     border-bottom: 1px solid var(--rule);
-    padding: 56px 0;
+    padding: 40px 0;
     cursor: pointer;
     transition: padding-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
@@ -591,42 +591,42 @@
   .quote-card::before {
     content: '“';
     position: absolute;
-    top: 24px;
+    top: 18px;
     left: 0;
     font-family: 'Fraunces', serif;
-    font-size: clamp(72px, 11vw, 148px);
+    font-size: clamp(48px, 7vw, 96px);
     font-style: italic;
     font-weight: 200;
     line-height: 1;
-    color: rgba(212,57,27,0.16);
+    color: rgba(212,57,27,0.13);
     pointer-events: none;
   }
 
   .quote-text {
     font-family: 'Shippori Mincho', serif;
-    font-size: clamp(28px, 4.2vw, 56px);
+    font-size: clamp(22px, 2.8vw, 36px);
     font-weight: 700;
-    line-height: 1.35;
-    letter-spacing: -0.03em;
-    max-width: 980px;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    max-width: 880px;
     position: relative;
     z-index: 1;
   }
 
   .quote-author {
-    margin-top: 24px;
+    margin-top: 18px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.22em;
+    font-size: 10px;
+    letter-spacing: 0.20em;
     text-transform: uppercase;
     color: var(--vermilion);
   }
 
   .quote-note {
-    max-width: 760px;
-    margin-top: 28px;
-    font-size: 15px;
-    line-height: 1.9;
+    max-width: 720px;
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.85;
     color: var(--ink-3);
   }
 
@@ -676,10 +676,10 @@
 
   .quote-list-text {
     font-family: 'Shippori Mincho', serif;
-    font-size: clamp(22px, 3vw, 34px);
+    font-size: clamp(20px, 2.4vw, 30px);
     font-weight: 700;
-    line-height: 1.45;
-    letter-spacing: -0.02em;
+    line-height: 1.55;
+    letter-spacing: -0.018em;
   }
 
   .quote-list-meta {
@@ -1323,6 +1323,10 @@
     .archive-list li { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
     .archive-list-date { order: -1; }
     .archive-list-views { font-size: 9px; }
+    .quote-card { padding: 32px 0; }
+    .quote-card:hover { padding-left: 0; }
+    .quote-text { font-size: 22px; line-height: 1.55; }
+    .quote-note { font-size: 13px; }
     .archive-page { padding: 32px 0 80px; }
     .archive-title { font-size: 36px; }
     /* 個別記事 */

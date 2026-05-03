@@ -397,9 +397,9 @@
 
   .idea-row {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 112px 1fr auto auto;
     gap: 32px;
-    align-items: baseline;
+    align-items: center;
     padding: 32px 0;
     border-bottom: 1px solid var(--rule);
     cursor: pointer;
@@ -480,6 +480,63 @@
     transition: transform 0.3s, color 0.3s;
   }
 
+
+  .idea-row-thumb {
+    width: 112px;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--rule);
+    background:
+      radial-gradient(circle at 50% 30%, rgba(212,57,27,0.12), transparent 45%),
+      var(--paper-2);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .idea-row-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .idea-row:hover .idea-row-thumb img {
+    transform: scale(1.06);
+  }
+
+  .idea-row-thumb.no-image::before {
+    content: 'idea';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-3);
+    opacity: 0.45;
+  }
+
+  .article-image {
+    display: none;
+    margin: 0 0 40px;
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+
+  .article-image.active {
+    display: block;
+  }
+
+  .article-image img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
   /* アーカイブを見るリンク */
   .idea-archive-link {
     display: flex;
@@ -512,6 +569,142 @@
   }
   .idea-archive-link a:hover::after {
     transform: translateX(6px);
+  }
+
+
+  /* ============================================
+     きょうのクオート
+  ============================================ */
+  .quote-card {
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule);
+    padding: 56px 0;
+    cursor: pointer;
+    transition: padding-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+
+  .quote-card:hover {
+    padding-left: 24px;
+  }
+
+  .quote-card::before {
+    content: '“';
+    position: absolute;
+    top: 24px;
+    left: 0;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(72px, 11vw, 148px);
+    font-style: italic;
+    font-weight: 200;
+    line-height: 1;
+    color: rgba(212,57,27,0.16);
+    pointer-events: none;
+  }
+
+  .quote-text {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(28px, 4.2vw, 56px);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+    max-width: 980px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .quote-author {
+    margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+  }
+
+  .quote-note {
+    max-width: 760px;
+    margin-top: 28px;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--ink-3);
+  }
+
+  .quote-archive-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+
+  .quote-archive-link a {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 16px;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 12px 32px;
+    border: 1px solid var(--ink);
+    transition: all 0.3s;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .quote-archive-link a:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .quote-archive-link a::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+
+  .quote-archive-link a:hover::after {
+    transform: translateX(6px);
+  }
+
+  .quote-list {
+    list-style: none;
+  }
+
+  .quote-list li {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .quote-list-text {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+  }
+
+  .quote-list-meta {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+  }
+
+  .quote-list-note {
+    margin-top: 18px;
+    max-width: 760px;
+    color: var(--ink-3);
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  .quote-empty {
+    text-align: center;
+    padding: 64px 0;
+    color: var(--ink-3);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
   }
 
   /* ============================================
@@ -1122,7 +1315,8 @@
     .site-title { white-space: normal; }
     .site-title .word { display: block; }
     /* アイデアリスト:スマホ用に再構成 */
-    .idea-row { grid-template-columns: 1fr auto; gap: 16px; padding: 24px 0; }
+    .idea-row { grid-template-columns: 76px 1fr auto; gap: 16px; padding: 24px 0; }
+    .idea-row-thumb { width: 76px; }
     .idea-row-meta { display: none; }
     .idea-row-arrow { font-size: 20px; }
     /* アーカイブリスト:スマホ用 */
@@ -1198,6 +1392,7 @@
     <nav class="navbar">
       <a onclick="navigateHome()" id="nav-home" class="active">ホーム</a>
       <a href="#ideas">あしたのアイデア</a>
+      <a href="#quote">きょうのクオート</a>
       <a href="#reviews">ブックレビュー</a>
       <a href="#today">きょう発売</a>
       <a href="#archive" id="nav-archive">アーカイブ</a>
@@ -1229,11 +1424,34 @@
       </div>
     </section>
 
+    <!-- きょうのクオート -->
+    <section class="section" id="quote">
+      <div class="section-head reveal">
+        <div class="section-num">02</div>
+        <h2 class="section-h">きょうのクオート<span class="en">Today's Quote</span></h2>
+        <a class="section-more" href="#quote-archive">クオート一覧</a>
+      </div>
+      <div id="quote-latest">
+        <div class="quote-empty">きょうのクオートを読み込み中…</div>
+      </div>
+      <div class="quote-archive-link reveal">
+        <a href="#quote-archive">過去のクオートをすべて見る</a>
+      </div>
+      <div class="section-sunset reveal" aria-hidden="true">
+        <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+          <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
+                fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+          <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+          <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+        </svg>
+      </div>
+    </section>
+
     <!-- テッキーズ・ブックレビュー(NoteのRSS) -->
     <section class="reviews" id="reviews">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-num">02</div>
+          <div class="section-num">03</div>
           <h2 class="section-h">テッキーズ・ブックレビュー<span class="en">Techies' Book Review</span></h2>
           <a class="section-more" id="note-more" target="_blank" rel="noopener">noteで全部読む</a>
         </div>
@@ -1254,7 +1472,7 @@
     <!-- きょう発売(X埋め込み) -->
     <section class="section" id="today">
       <div class="section-head reveal">
-        <div class="section-num">03</div>
+        <div class="section-num">04</div>
         <div>
           <div class="release-eyebrow" id="release-date">— 発売日 —</div>
           <h2 class="section-h">きょう発売のビジネス書<span class="en">Today's Releases · X</span></h2>
@@ -1330,12 +1548,33 @@
     </div>
   </section>
 
+  <!-- ============== クオートアーカイブページ ============== -->
+  <section id="quote-archive-view" class="archive-page">
+    <button class="article-back" onclick="navigateHome()">ホームに戻る</button>
+    <div class="archive-head">
+      <div class="archive-eyebrow">— QUOTE ARCHIVE · 過去のすべての言葉 —</div>
+      <h1 class="archive-title">きょうのクオート<br><em>Archive</em></h1>
+      <p class="archive-desc">偉人の言葉、古典の一節、編集長の所感。毎日の思考を少しだけ遠くへ運ぶための引用集です。</p>
+      <div class="archive-count">全 <strong id="quote-archive-count-num">0</strong> 句</div>
+    </div>
+    <ul class="quote-list" id="quote-archive-list"></ul>
+    <div class="section-sunset reveal" aria-hidden="true">
+      <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+        <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
+              fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+        <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+        <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+      </svg>
+    </div>
+  </section>
+
   <!-- ============== 個別記事ページ ============== -->
   <article id="article-view" class="article-page">
     <button class="article-back" onclick="goBackFromArticle()">戻る</button>
     <div class="article-eyebrow" id="article-eyebrow"></div>
     <h1 class="article-title" id="article-title"></h1>
     <div class="article-meta" id="article-meta"></div>
+    <div class="article-image" id="article-image"></div>
     <div class="article-body" id="article-body"></div>
     <div class="article-footer">— くるひもタイムズ 編集部 —</div>
   </article>
@@ -1476,10 +1715,16 @@
   // ============================================================
   function renderIdeaList(ideas, viewMap) {
     // ホームには最新3件だけ
+    ideas = Array.isArray(ideas) ? ideas : [];
     const latest = ideas.slice(0, 3);
     document.getElementById('idea-list').innerHTML = latest.map(idea => {
       const views = viewMap[idea.id] || 0;
+      const thumb = idea.image
+        ? '<div class="idea-row-thumb"><img src="' + idea.image + '" alt="" loading="lazy"></div>'
+        : '<div class="idea-row-thumb no-image"></div>';
+
       return '<li class="idea-row reveal" data-idea-id="' + idea.id + '">' +
+        thumb +
         '<div class="idea-row-main">' +
           '<div class="idea-row-cat">' + idea.category + ' · ' + idea.tag + '</div>' +
           '<h3 class="idea-row-title">' + idea.title + '</h3>' +
@@ -1535,6 +1780,52 @@
     });
   }
 
+  // ============================================================
+  // きょうのクオート(最新1件+アーカイブ)
+  // ============================================================
+  function renderQuoteLatest(quotes) {
+    quotes = Array.isArray(quotes) ? quotes : [];
+    const wrap = document.getElementById('quote-latest');
+    if (!wrap) return;
+
+    if (quotes.length === 0) {
+      wrap.innerHTML = '<div class="quote-empty">まだクオートがありません。CMSから追加してください。</div>';
+      return;
+    }
+
+    const q = quotes[0];
+    wrap.innerHTML =
+      '<article class="quote-card reveal" onclick="location.hash=\'quote-archive\'">' +
+        '<div class="quote-text">' + (q.quote || '') + '</div>' +
+        '<div class="quote-author">— ' + (q.author || 'Unknown') + (q.source ? ' · ' + q.source : '') + '</div>' +
+        '<p class="quote-note">' + (q.editorNote || '') + '</p>' +
+      '</article>';
+  }
+
+  function renderQuoteArchive(quotes) {
+    quotes = Array.isArray(quotes) ? quotes : [];
+    const list = document.getElementById('quote-archive-list');
+    const count = document.getElementById('quote-archive-count-num');
+    if (!list || !count) return;
+
+    count.textContent = quotes.length;
+
+    if (quotes.length === 0) {
+      list.innerHTML = '<li class="quote-empty">まだクオートがありません</li>';
+      return;
+    }
+
+    list.innerHTML = quotes.map(q =>
+      '<li>' +
+        '<div class="quote-list-text">' + (q.quote || '') + '</div>' +
+        '<div class="quote-list-meta">' +
+          (q.publishDate || '') + ' · ' + (q.author || 'Unknown') + (q.source ? ' · ' + q.source : '') +
+        '</div>' +
+        '<div class="quote-list-note">' + (q.editorNote || '') + '</div>' +
+      '</li>'
+    ).join('');
+  }
+
   // 直前のページを記憶(記事から戻るときに使う)
   let previousView = 'home'; // 'home' | 'archive'
 
@@ -1547,6 +1838,7 @@
 
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
+    document.getElementById('quote-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.add('active');
     document.getElementById('article-eyebrow').textContent =
       'あしたのアイデア · ' + idea.category;
@@ -1556,6 +1848,18 @@
       '<span>✎ 編集部</span>' +
       '<span># ' + (idea.tag || '') + '</span>' +
       '<span>' + (idea.publishDate || '') + '</span>';
+
+    const articleImage = document.getElementById('article-image');
+    if (articleImage) {
+      if (idea.image) {
+        articleImage.classList.add('active');
+        articleImage.innerHTML = '<img src="' + idea.image + '" alt="">';
+      } else {
+        articleImage.classList.remove('active');
+        articleImage.innerHTML = '';
+      }
+    }
+
     document.getElementById('article-body').innerHTML = idea.body || '<p>本文を準備中です。</p>';
 
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -1568,6 +1872,7 @@
   function showHome() {
     document.getElementById('home-view').classList.remove('hidden');
     document.getElementById('archive-view').classList.remove('active');
+    document.getElementById('quote-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.add('active');
     document.getElementById('nav-archive').classList.remove('active');
@@ -1577,11 +1882,23 @@
   function showArchive() {
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.add('active');
+    document.getElementById('quote-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.remove('active');
     document.getElementById('nav-archive').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
     previousView = 'archive';
+  }
+
+  function showQuoteArchive() {
+    document.getElementById('home-view').classList.add('hidden');
+    document.getElementById('archive-view').classList.remove('active');
+    document.getElementById('quote-archive-view').classList.add('active');
+    document.getElementById('article-view').classList.remove('active');
+    document.getElementById('nav-home').classList.remove('active');
+    document.getElementById('nav-archive').classList.remove('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    previousView = 'quote-archive';
   }
 
   function navigateHome() {
@@ -1608,6 +1925,8 @@
       showArticle(hash);
     } else if (hash === 'archive') {
       showArchive();
+    } else if (hash === 'quote-archive') {
+      showQuoteArchive();
     } else {
       showHome();
       // セクションスクロール
@@ -1850,7 +2169,7 @@
     data.ideas.forEach(i => all.push({
       id: i.id,
       title: i.title,
-      source: 'あしたのアイデア・第' + i.num + '号'
+      source: 'あしたのアイデア'
     }));
     return all;
   }
@@ -1975,6 +2294,9 @@
     APP_DATA = await loadData();
     if (!APP_DATA) return;
 
+    APP_DATA.ideas = Array.isArray(APP_DATA.ideas) ? APP_DATA.ideas : [];
+    APP_DATA.quotes = Array.isArray(APP_DATA.quotes) ? APP_DATA.quotes : [];
+
     setMastheadDate(APP_DATA.site.startDate);
     document.getElementById('weather').textContent = APP_DATA.site.weather;
 
@@ -1986,7 +2308,9 @@
         if (APP_DATA.xPostsConfig.accountUrl) {
           xMore.href = APP_DATA.xPostsConfig.accountUrl;
         } else if (APP_DATA.xPostsConfig.postUrls && APP_DATA.xPostsConfig.postUrls.length > 0) {
-          const match = APP_DATA.xPostsConfig.postUrls[0].match(/(?:twitter\.com|x\.com)\/([^\/]+)/);
+          const firstPost = APP_DATA.xPostsConfig.postUrls[0];
+          const firstUrl = typeof firstPost === 'string' ? firstPost : firstPost.url;
+          const match = firstUrl && firstUrl.match(/(?:twitter\.com|x\.com)\/([^\/]+)/);
           if (match) xMore.href = 'https://x.com/' + match[1];
         }
       }
@@ -1999,6 +2323,8 @@
     // 各セクション描画
     renderIdeaList(APP_DATA.ideas, viewMap);
     renderArchive(APP_DATA.ideas, viewMap);
+    renderQuoteLatest(APP_DATA.quotes);
+    renderQuoteArchive(APP_DATA.quotes);
     if (APP_DATA.noteConfig) {
       loadNoteFeed(APP_DATA.noteConfig.username, APP_DATA.noteConfig.displayCount || 3);
     }

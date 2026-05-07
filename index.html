@@ -1158,38 +1158,237 @@
   }
 
 
+  /* ============================================
+     よく読まれた Five 再構築
+  ============================================ */
+
+  .ranked {
+    position: relative;
+    margin: clamp(92px, 12vw, 168px) 0;
+    padding: clamp(58px, 8vw, 96px) clamp(22px, 4vw, 56px);
+    border-top: 1px solid rgba(18,18,15,0.44);
+    border-bottom: 1px solid rgba(18,18,15,0.16);
+    background:
+      linear-gradient(135deg, rgba(246,241,231,0.82), rgba(239,232,217,0.94)),
+      radial-gradient(circle at 16% 24%, rgba(212,57,27,0.12), transparent 34%),
+      radial-gradient(circle at 86% 76%, rgba(184,151,90,0.15), transparent 38%);
+    overflow: hidden;
+  }
+
+  .ranked::before {
+    content: 'TOP FIVE';
+    position: absolute;
+    right: -0.08em;
+    top: -0.18em;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(86px, 18vw, 236px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -0.09em;
+    color: rgba(18,18,15,0.045);
+    pointer-events: none;
+  }
+
+  .ranked::after {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(18,18,15,0.08);
+    pointer-events: none;
+  }
+
+  .ranked-head {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: end;
+    margin-bottom: clamp(34px, 5vw, 64px);
+  }
+
+  .ranked-head::after {
+    content: '読まれた記事の、静かな熱量。';
+    justify-self: end;
+    max-width: 260px;
+    padding: 10px 0 0 22px;
+    border-left: 1px solid rgba(18,18,15,0.26);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink-3);
+  }
+
+  .ranked-eyebrow {
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    color: var(--vermilion);
+    text-transform: uppercase;
+  }
+
+  .ranked-h {
+    margin: 0;
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(42px, 7vw, 96px);
+    font-weight: 900;
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+  }
+
+  .ranked-h em {
+    margin-left: 0.08em;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--vermilion);
+  }
+
   .ranked-list {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(12px, 1.7vw, 22px);
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
   .ranked-list li {
-    list-style: none;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 300px;
+    padding: clamp(20px, 2.3vw, 30px);
+    border: 1px solid rgba(18,18,15,0.18);
+    background:
+      linear-gradient(180deg, rgba(246,241,231,0.96), rgba(239,232,217,0.92));
+    box-shadow: 0 22px 54px rgba(18,18,15,0.075);
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.34s ease,
+      border-color 0.34s ease,
+      background 0.34s ease;
   }
 
-  .ranked-list li::marker {
+  .ranked-list li::before {
     content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgba(18,18,15,0.08);
+    pointer-events: none;
+  }
+
+  .ranked-list li::after {
+    content: 'READ';
+    position: absolute;
+    right: 18px;
+    bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: rgba(18,18,15,0.28);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+  }
+
+  .ranked-list li:hover {
+    transform: translateY(-8px);
+    border-color: rgba(212,57,27,0.42);
+    background:
+      linear-gradient(180deg, rgba(250,247,239,0.98), rgba(239,232,217,0.96));
+    box-shadow: 0 34px 76px rgba(18,18,15,0.13);
+  }
+
+  .ranked-list li:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ranked-list li.empty {
+    grid-column: 1 / -1;
+    min-height: 180px;
+    cursor: default;
+  }
+
+  .ranked-list li.empty:hover {
+    transform: none;
   }
 
   .ranked-num {
     display: block;
-    white-space: nowrap;
+    margin-bottom: clamp(26px, 4vw, 54px);
+    font-family: 'Fraunces', serif;
+    font-size: clamp(44px, 6vw, 82px);
+    font-weight: 200;
+    font-style: italic;
+    line-height: 0.86;
+    letter-spacing: -0.08em;
+    color: var(--vermilion);
   }
 
   .ranked-text {
     display: block;
+    align-self: end;
+    min-width: 0;
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(19px, 1.95vw, 28px);
+    font-weight: 800;
+    line-height: 1.38;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    word-break: keep-all;
+    overflow-wrap: anywhere;
   }
 
   .ranked-text small {
-    display: block;
+    display: inline-flex;
+    width: fit-content;
+    margin-top: 18px;
+    padding: 5px 9px;
+    border-left: 2px solid var(--vermilion);
+    background: rgba(212,57,27,0.06);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
   }
 
   .ranked-views {
+    align-self: end;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(18,18,15,0.18);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
     white-space: nowrap;
+    text-transform: uppercase;
   }
 
-
+  .ranked-views::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--vermilion);
+    box-shadow: 0 0 0 5px rgba(212,57,27,0.10);
+  }
 
   /* ============================================
      テッキーズ・ブックレビュー / NOTEカード再構築
@@ -2001,147 +2200,6 @@
     text-transform: uppercase;
   }
 
-  /* ============================================
-     購読フォーム再設計
-  ============================================ */
-  .subscribe {
-    position: relative;
-    margin: clamp(78px, 10vw, 140px) 0;
-    padding: clamp(46px, 7vw, 76px);
-    border: 1px solid rgba(18,18,15,0.14);
-    background:
-      linear-gradient(135deg, rgba(246,241,231,0.92), rgba(239,232,217,0.96)),
-      radial-gradient(circle at 12% 28%, rgba(212,57,27,0.16), transparent 36%);
-    box-shadow: 0 30px 80px rgba(18,18,15,0.08);
-    overflow: hidden;
-  }
-
-  .subscribe::before {
-    content: 'LETTER';
-    position: absolute;
-    right: -0.06em;
-    bottom: -0.23em;
-    font-family: 'Fraunces', serif;
-    font-size: clamp(76px, 17vw, 220px);
-    line-height: 1;
-    letter-spacing: -0.08em;
-    color: rgba(18,18,15,0.045);
-    pointer-events: none;
-  }
-
-  .subscribe-eyebrow {
-    position: relative;
-    z-index: 1;
-    margin-bottom: 18px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.28em;
-    color: var(--vermilion);
-    text-transform: uppercase;
-  }
-
-  .subscribe h2 {
-    position: relative;
-    z-index: 1;
-    max-width: 780px;
-    margin: 0 0 20px;
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(34px, 6vw, 78px);
-    font-weight: 800;
-    line-height: 1.08;
-    letter-spacing: -0.05em;
-  }
-
-  .subscribe h2 em {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    color: var(--vermilion);
-  }
-
-  .subscribe p {
-    position: relative;
-    z-index: 1;
-    max-width: 620px;
-    margin-bottom: 28px;
-    color: var(--ink-3);
-    font-size: 16px;
-    line-height: 1.9;
-  }
-
-  .subscribe-form {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: minmax(220px, 1fr) auto;
-    gap: 10px;
-    max-width: 660px;
-    padding: 8px;
-    border: 1px solid rgba(18,18,15,0.13);
-    border-radius: 999px;
-    background: rgba(246,241,231,0.82);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3), 0 16px 42px rgba(18,18,15,0.07);
-  }
-
-  .subscribe-form input {
-    min-width: 0;
-    height: 54px;
-    padding: 0 22px;
-    border: none;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--ink);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    outline: none;
-  }
-
-  .subscribe-form input::placeholder {
-    color: rgba(90,86,78,0.62);
-  }
-
-  .subscribe-form button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    min-width: 150px;
-    height: 54px;
-    padding: 0 24px;
-    border: none;
-    border-radius: 999px;
-    background: var(--ink);
-    color: var(--paper);
-    font-family: 'Zen Kaku Gothic Antique', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: transform 0.28s ease, background 0.28s ease, box-shadow 0.28s ease;
-  }
-
-  .subscribe-form button::after {
-    content: '→';
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--vermilion-soft);
-  }
-
-  .subscribe-form button:hover {
-    transform: translateY(-2px);
-    background: var(--vermilion);
-    box-shadow: 0 16px 34px rgba(212,57,27,0.22);
-  }
-
-  .subscribe-form button:hover::after {
-    color: var(--paper);
-  }
-
-  .subscribe-form button:disabled {
-    cursor: default;
-    opacity: 0.72;
-    transform: none;
-  }
-
   @media (max-width: 760px) {
     body.is-article-route .container {
       padding: 0 22px;
@@ -2169,18 +2227,50 @@
       font-size: 3.3em;
     }
 
-    .subscribe {
-      padding: 34px 24px;
+  }
+
+
+  @media (max-width: 1100px) {
+    .ranked-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .subscribe-form {
+    .ranked-list li:first-child {
+      grid-column: 1 / -1;
+      min-height: 240px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .ranked {
+      margin: 70px -22px;
+      padding: 44px 22px;
+    }
+
+    .ranked::after {
+      inset: 10px;
+    }
+
+    .ranked-head {
       grid-template-columns: 1fr;
-      border-radius: 28px;
     }
 
-    .subscribe-form button,
-    .subscribe-form input {
-      width: 100%;
+    .ranked-head::after {
+      justify-self: start;
+      max-width: none;
+      padding-left: 0;
+      border-left: none;
+    }
+
+    .ranked-list {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .ranked-list li,
+    .ranked-list li:first-child {
+      grid-column: auto;
+      min-height: 220px;
     }
   }
 
@@ -2375,16 +2465,7 @@
       </div>
     </section>
 
-    <!-- 購読 -->
-    <section class="subscribe">
-      <div class="subscribe-eyebrow">— 無料ニュースレター —</div>
-      <h2>明日のヒントを、<br><em>あなたの朝に</em>届けます。</h2>
-      <p>毎週水曜日の朝7時、編集長が選ぶ「次に来るアイデア」を一通の手紙にして。</p>
-      <form class="subscribe-form" id="subscribe-form" action="#" method="post" target="_blank">
-        <input type="email" name="email" placeholder="your@email.com" required>
-        <button type="submit">購読する</button>
-      </form>
-    </section>
+
 
   </div>
 
@@ -2500,7 +2581,6 @@
         <h4>Editorial</h4>
         <ul>
           <li><a href="/#about">このメディアについて</a></li>
-          <li><a href="/#subscribe">ニュースレター</a></li>
           <li><a href="mailto:hello@example.com">お問合せ</a></li>
         </ul>
       </nav>
@@ -2859,23 +2939,6 @@
       .join('');
   }
 
-  function getNewsletterUrl() {
-    const raw = APP_DATA && APP_DATA.beehiivConfig ? APP_DATA.beehiivConfig.publicationUrl : '';
-    if (raw && /^https?:\/\//.test(raw) && !raw.includes('your-publication')) {
-      return raw.replace(/\/$/, '') + '/subscribe';
-    }
-    return '';
-  }
-
-  function openSubscribeFromArticle() {
-    const url = getNewsletterUrl();
-    if (url) {
-      window.open(url, '_blank', 'noopener');
-      return;
-    }
-    window.location.href = '/#subscribe';
-  }
-
   async function copyShareUrl(url) {
     const status = document.getElementById('article-copy-status');
     const btn = document.getElementById('article-copy-button');
@@ -2934,9 +2997,6 @@
         '<div class="article-actions">' +
           '<button id="article-copy-button" class="article-action article-action-primary" type="button" onclick="copyShareUrl(\'' + shareUrl + '\')">' +
             '<span>投稿リンクをコピー</span><small>Copy URL</small>' +
-          '</button>' +
-          '<button class="article-action article-action-secondary" type="button" onclick="openSubscribeFromArticle()">' +
-            '<span>購読する</span><small>Newsletter</small>' +
           '</button>' +
         '</div>' +
         '<div class="article-copy-status" id="article-copy-status" aria-live="polite"></div>';
@@ -3254,8 +3314,8 @@
     list.innerHTML = top5.map((a, i) =>
       '<li data-article-id="' + a.id + '">' +
         '<span class="ranked-num">' + String(i+1).padStart(2,'0') + '</span>' +
-        '<div class="ranked-text">' + a.title +
-        '<small>' + a.source + '</small></div>' +
+        '<div class="ranked-text">' + escapeHTML(a.title) +
+        '<small>' + escapeHTML(a.source || 'article') + '</small></div>' +
         '<span class="ranked-views">' + a.views + ' views</span>' +
         '</li>'
     ).join('');
@@ -3296,47 +3356,6 @@
   // ============================================================
   // 出現アニメーション
   // ============================================================
-  // ============================================================
-  // ニュースレター購読(beehiiv連携)
-  // ============================================================
-  function setupSubscribeForm(beehiivConfig) {
-    const form = document.getElementById('subscribe-form');
-    if (!form) return;
-
-    const publicationUrl = beehiivConfig && beehiivConfig.publicationUrl;
-
-    if (!publicationUrl || publicationUrl.includes('your-publication')) {
-      // 未設定の場合
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        alert('購読フォームはまだセットアップ中です。\n\n編集長へ: data.json の beehiivConfig.publicationUrl を設定してください。');
-      });
-      return;
-    }
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const email = form.querySelector('input[name="email"]').value;
-      if (!email) return;
-
-      // beehiivの購読ページへ遷移
-      const url = publicationUrl.replace(/\/$/, '') +
-        '/subscribe?email=' + encodeURIComponent(email);
-      window.open(url, '_blank', 'noopener');
-
-      // 確認メッセージ
-      const btn = form.querySelector('button');
-      const originalText = btn.textContent;
-      btn.textContent = 'beehiivで登録を完了してください →';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.disabled = false;
-        form.querySelector('input[name="email"]').value = '';
-      }, 4000);
-    });
-  }
-
   // ============================================================
   // 出現アニメーション
   // ============================================================
@@ -3456,7 +3475,6 @@
       loadXEmbeds(APP_DATA.xPostsConfig);
     }
     await renderRanked(allArticles);
-    setupSubscribeForm(APP_DATA.beehiivConfig);
 
     setupReveal();
     setupStickyNav();

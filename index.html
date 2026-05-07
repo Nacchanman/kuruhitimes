@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -1189,6 +1190,468 @@
     white-space: nowrap;
   }
 
+
+
+  /* ============================================
+     テッキーズ・ブックレビュー / NOTEカード再構築
+  ============================================ */
+
+  .reviews {
+    position: relative;
+    margin: clamp(72px, 10vw, 140px) 0;
+    padding: clamp(56px, 8vw, 96px) 0;
+    background:
+      linear-gradient(135deg, rgba(18,18,15,0.94), rgba(42,40,37,0.92)),
+      radial-gradient(circle at 12% 20%, rgba(212,57,27,0.22), transparent 34%),
+      radial-gradient(circle at 88% 80%, rgba(184,151,90,0.18), transparent 38%);
+    color: var(--paper);
+    overflow: hidden;
+  }
+
+  .reviews::before {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(246,241,231,0.18);
+    pointer-events: none;
+  }
+
+  .reviews::after {
+    content: 'READING ROOM';
+    position: absolute;
+    right: clamp(18px, 4vw, 56px);
+    bottom: clamp(20px, 4vw, 48px);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(44px, 10vw, 128px);
+    line-height: 1;
+    letter-spacing: -0.08em;
+    color: rgba(246,241,231,0.045);
+    pointer-events: none;
+  }
+
+  .reviews .section-head {
+    position: relative;
+    z-index: 2;
+    border-bottom-color: rgba(246,241,231,0.34);
+  }
+
+  .reviews .section-num { color: var(--vermilion-soft); }
+  .reviews .section-h { color: var(--paper); }
+  .reviews .section-h .en { color: rgba(246,241,231,0.58); }
+
+  .reviews .section-more {
+    color: var(--paper);
+    border-color: rgba(246,241,231,0.28);
+  }
+
+  .reviews .section-more::after {
+    content: '→';
+    margin-left: 0.7em;
+    color: var(--vermilion-soft);
+  }
+
+  .reviews .section-more:hover {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+
+  .note-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(22px, 3vw, 36px);
+    margin-top: clamp(40px, 6vw, 72px);
+  }
+
+  .note-card,
+  .note-card:visited {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    color: inherit;
+    text-decoration: none;
+    background: linear-gradient(180deg, rgba(246,241,231,0.98), rgba(239,232,217,0.96));
+    border: 1px solid rgba(246,241,231,0.46);
+    box-shadow: 0 24px 56px rgba(0,0,0,0.24), inset 0 0 0 1px rgba(18,18,15,0.05);
+    overflow: hidden;
+    transform: translateY(0);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  .note-card::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(18,18,15,0.12);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .note-card::after {
+    content: 'NOTE';
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: rgba(246,241,231,0.84);
+    background: rgba(18,18,15,0.46);
+    padding: 5px 8px;
+    backdrop-filter: blur(6px);
+  }
+
+  .note-card:hover {
+    color: inherit;
+    text-decoration: none;
+    transform: translateY(-8px);
+    border-color: rgba(232,138,115,0.72);
+    box-shadow: 0 36px 78px rgba(0,0,0,0.34), 0 0 0 1px rgba(212,57,27,0.18);
+  }
+
+  .note-card-image {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(212,57,27,0.62), transparent 36%),
+      linear-gradient(135deg, rgba(18,18,15,0.88), rgba(90,86,78,0.44)),
+      var(--paper-2);
+  }
+
+  .note-card-image::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 33%;
+    height: 1px;
+    background: rgba(246,241,231,0.62);
+    box-shadow: 0 18px 0 rgba(246,241,231,0.26), 0 36px 0 rgba(246,241,231,0.14);
+    z-index: 1;
+  }
+
+  .note-card-image.no-image::after {
+    content: 'Techies’ Book Review';
+    position: absolute;
+    left: 22px;
+    bottom: 20px;
+    z-index: 2;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: rgba(246,241,231,0.82);
+    letter-spacing: 0.04em;
+  }
+
+  .note-card-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    filter: saturate(0.9) contrast(1.04);
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .note-card:hover .note-card-image img { transform: scale(1.055); }
+
+  .note-card-body {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: clamp(24px, 3vw, 34px);
+    color: var(--ink);
+  }
+
+  .note-card-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--vermilion);
+    margin-bottom: 18px;
+  }
+
+  .note-card-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(22px, 2.5vw, 30px);
+    font-weight: 800;
+    line-height: 1.42;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+  }
+
+  .note-card-excerpt {
+    font-size: 15px;
+    line-height: 1.95;
+    color: var(--ink-3);
+    margin: 0 0 28px;
+  }
+
+  .note-card-foot {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid rgba(18,18,15,0.14);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+  }
+
+  .note-card-foot span {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .note-card-foot span::after {
+    content: '→';
+    color: var(--vermilion);
+    transform: translateX(0);
+    transition: transform 0.28s ease;
+  }
+
+  .note-card:hover .note-card-foot span::after { transform: translateX(5px); }
+
+  .note-loading,
+  .note-error {
+    grid-column: 1 / -1;
+    padding: 36px;
+    border: 1px solid rgba(246,241,231,0.28);
+    background: rgba(246,241,231,0.08);
+    color: rgba(246,241,231,0.82);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 18px;
+  }
+
+  .note-error a {
+    color: var(--paper);
+    text-underline-offset: 0.22em;
+  }
+
+  /* ============================================
+     フッター再構築
+  ============================================ */
+
+  footer {
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(80px, 12vw, 150px);
+    padding: clamp(56px, 8vw, 96px) 0 34px;
+    background:
+      linear-gradient(180deg, rgba(246,241,231,0), rgba(239,232,217,0.96) 16%),
+      radial-gradient(circle at 15% 15%, rgba(212,57,27,0.10), transparent 30%),
+      radial-gradient(circle at 82% 72%, rgba(184,151,90,0.13), transparent 36%),
+      var(--paper-2);
+    border-top: 1px solid rgba(18,18,15,0.34);
+    overflow: hidden;
+  }
+
+  footer::before {
+    content: 'KURUHIMO TIMES';
+    position: absolute;
+    right: -0.08em;
+    top: -0.22em;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(72px, 17vw, 220px);
+    font-weight: 300;
+    letter-spacing: -0.09em;
+    line-height: 1;
+    color: rgba(18,18,15,0.045);
+    pointer-events: none;
+  }
+
+  footer::after {
+    content: '';
+    position: absolute;
+    left: 48px;
+    right: 48px;
+    top: 22px;
+    height: 1px;
+    background: rgba(18,18,15,0.16);
+    box-shadow: 0 8px 0 rgba(18,18,15,0.06), 0 16px 0 rgba(18,18,15,0.035);
+  }
+
+  .footer-mark {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(22px, 4vw, 44px);
+    align-items: end;
+    padding-bottom: clamp(28px, 4vw, 44px);
+    border-bottom: 1px solid rgba(18,18,15,0.24);
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(34px, 6vw, 76px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.06em;
+  }
+
+  .footer-mark em {
+    display: block;
+    max-width: 520px;
+    justify-self: end;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(16px, 2vw, 24px);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    line-height: 1.45;
+    color: var(--ink-3);
+  }
+
+  .footer-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(260px, 1.45fr) repeat(3, minmax(150px, 0.75fr));
+    gap: clamp(24px, 4vw, 56px);
+    padding: clamp(32px, 5vw, 58px) 0;
+  }
+
+  .footer-brand {
+    position: relative;
+    padding-right: clamp(18px, 4vw, 48px);
+  }
+
+  .footer-brand::before {
+    content: '編集室より';
+    display: inline-block;
+    margin-bottom: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--vermilion);
+    text-transform: uppercase;
+  }
+
+  .footer-brand p {
+    max-width: 620px;
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(19px, 2vw, 27px);
+    line-height: 1.95;
+    letter-spacing: 0.01em;
+    color: var(--ink-2);
+  }
+
+  .footer-col {
+    border-left: 1px solid rgba(18,18,15,0.16);
+    padding-left: clamp(18px, 2vw, 28px);
+  }
+
+  .footer-col h4 {
+    margin: 0 0 20px;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .footer-col ul {
+    list-style: none;
+    display: grid;
+    gap: 13px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-col li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-col a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+
+  .footer-col a::before {
+    content: '';
+    width: 0;
+    height: 1px;
+    background: var(--vermilion);
+    transition: width 0.25s ease;
+  }
+
+  .footer-col a:hover { color: var(--vermilion); }
+  .footer-col a:hover::before { width: 18px; }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(18,18,15,0.18);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 1100px) {
+    .note-grid { grid-template-columns: 1fr; }
+
+    .note-card {
+      display: grid;
+      grid-template-columns: minmax(220px, 38%) 1fr;
+    }
+
+    .note-card-image {
+      height: 100%;
+      min-height: 260px;
+      aspect-ratio: auto;
+    }
+
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; padding-right: 0; }
+  }
+
+  @media (max-width: 760px) {
+    .reviews {
+      margin: 64px 0;
+      padding: 48px 0;
+    }
+
+    .reviews::before { inset: 10px; }
+    .note-card { display: flex; }
+
+    .note-card-image {
+      min-height: auto;
+      aspect-ratio: 16 / 10;
+    }
+
+    .note-card-body { padding: 24px; }
+
+    .footer-mark { grid-template-columns: 1fr; }
+    .footer-mark em { justify-self: start; }
+    .footer-grid { grid-template-columns: 1fr; }
+
+    .footer-col {
+      border-left: none;
+      border-top: 1px solid rgba(18,18,15,0.14);
+      padding-left: 0;
+      padding-top: 22px;
+    }
+
+    .footer-bottom { flex-direction: column; }
+  }
+
 </style>
 
 <!-- X (Twitter) 公式埋め込みスクリプト -->
@@ -1237,11 +1700,11 @@
 
     <nav class="navbar">
       <a onclick="navigateHome()" id="nav-home" class="active">ホーム</a>
-      <a href="#ideas">あしたのアイデア</a>
-      <a href="#quote">きょうのクオート</a>
-      <a href="#lunch">きょうのランチ</a>
-      <a href="#reviews">ブックレビュー</a>
-      <a href="#today">きょう発売</a>
+      <a href="/#ideas">あしたのアイデア</a>
+      <a href="/#quote">きょうのクオート</a>
+      <a href="/#lunch">きょうのランチ</a>
+      <a href="/#reviews">ブックレビュー</a>
+      <a href="/#today">きょう発売</a>
     </nav>
     <div id="nav-spacer" class="nav-spacer" aria-hidden="true"></div>
   </header>
@@ -1254,11 +1717,11 @@
       <div class="section-head reveal">
         <div class="section-num">01</div>
         <h2 class="section-h">あしたのアイデア<span class="en">Tomorrow's Ideas</span></h2>
-        <a class="section-more" href="#archive">アーカイブ</a>
+        <a class="section-more" href="/#archive">アーカイブ</a>
       </div>
       <ul class="idea-list" id="idea-list"></ul>
       <div class="idea-archive-link reveal">
-        <a href="#archive">過去のアイデアをすべて見る</a>
+        <a href="/#archive">過去のアイデアをすべて見る</a>
       </div>
       <div class="section-sunset reveal" aria-hidden="true">
         <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
@@ -1275,13 +1738,13 @@
       <div class="section-head reveal">
         <div class="section-num">02</div>
         <h2 class="section-h">きょうのクオート<span class="en">Today's Quote</span></h2>
-        <a class="section-more" href="#quote-archive">クオート一覧</a>
+        <a class="section-more" href="/#quote-archive">クオート一覧</a>
       </div>
       <div id="quote-latest">
         <div class="quote-empty">きょうのクオートを読み込み中…</div>
       </div>
       <div class="quote-archive-link reveal">
-        <a href="#quote-archive">過去のクオートをすべて見る</a>
+        <a href="/#quote-archive">過去のクオートをすべて見る</a>
       </div>
       <div class="section-sunset reveal" aria-hidden="true">
         <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
@@ -1298,10 +1761,10 @@
       <div class="section-head reveal">
         <div class="section-num">03</div>
         <h2 class="section-h">きょうのランチ<span class="en">Today's Lunch</span></h2>
-        <a class="section-more" href="#lunch-archive">ランチ一覧</a>
+        <a class="section-more" href="/#lunch-archive">ランチ一覧</a>
       </div>
       <div id="lunch-latest"><div class="lunch-empty">きょうのランチを読み込み中…</div></div>
-      <div class="lunch-archive-link reveal"><a href="#lunch-archive">過去のランチをすべて見る</a></div>
+      <div class="lunch-archive-link reveal"><a href="/#lunch-archive">過去のランチをすべて見る</a></div>
       <div class="section-sunset reveal" aria-hidden="true">
         <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
           <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22" fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
@@ -1471,36 +1934,45 @@
       くるひもタイムズ
       <em>The Kuruhimo Times · 2026</em>
     </div>
+
     <div class="footer-grid">
       <div class="footer-brand">
-        <p>次にくるアイデアと、それを支える本を、毎日少しずつ届ける編集室。テクノロジーと暮らしのあいだを、誰かより少し早く歩く、そんな小さなメディアです。</p>
+        <p>
+          次にくるアイデアと、それを支える本を、毎日少しずつ届ける編集室。
+          テクノロジーと暮らしのあいだを、誰かより少し早く歩く。
+          そんな小さなメディアです。
+        </p>
       </div>
-      <div class="footer-col">
+
+      <nav class="footer-col" aria-label="Series">
         <h4>Series</h4>
         <ul>
-          <li><a href="#ideas">あしたのアイデア</a></li>
-          <li><a href="#reviews">ブックレビュー</a></li>
-          <li><a href="#today">きょう発売</a></li>
+          <li><a href="/#ideas">あしたのアイデア</a></li>
+          <li><a href="/#reviews">ブックレビュー</a></li>
+          <li><a href="/#lunch">きょうのランチ</a></li>
+          <li><a href="/#today">きょう発売</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Topics</h4>
+      </nav>
+
+      <nav class="footer-col" aria-label="Archive">
+        <h4>Archive</h4>
         <ul>
-          <li><a href="#">テクノロジー</a></li>
-          <li><a href="#">暮らし</a></li>
-          <li><a href="#">経済</a></li>
-          <li><a href="#">文化</a></li>
+          <li><a href="/#archive">アイデア一覧</a></li>
+          <li><a href="/#lunch-archive">ランチ一覧</a></li>
+          <li><a href="/#ranked">よく読まれた five</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
+      </nav>
+
+      <nav class="footer-col" aria-label="Editorial">
         <h4>Editorial</h4>
         <ul>
-          <li><a href="#">編集方針</a></li>
-          <li><a href="#">寄稿について</a></li>
-          <li><a href="#">お問合せ</a></li>
+          <li><a href="/#about">このメディアについて</a></li>
+          <li><a href="/#subscribe">ニュースレター</a></li>
+          <li><a href="mailto:hello@example.com">お問合せ</a></li>
         </ul>
-      </div>
+      </nav>
     </div>
+
     <div class="footer-bottom">
       <span>© 2026 The Kuruhimo Times</span>
       <span>Made with curiosity, in Tokyo</span>
@@ -1516,7 +1988,7 @@
 
   async function loadData() {
     try {
-      const res = await fetch('data.json?t=' + Date.now());
+      const res = await fetch('/data.json?t=' + Date.now());
       if (!res.ok) throw new Error('読み込み失敗');
       return await res.json();
     } catch (err) {
@@ -1592,6 +2064,24 @@
     }
   };
 
+
+  // ============================================================
+  // 記事URL / ルーティング
+  // ============================================================
+  function articleUrl(id) {
+    return '/article/' + encodeURIComponent(id) + '/';
+  }
+
+  function getArticleIdFromPath() {
+    const match = location.pathname.match(/^\/article\/([^\/]+)\/?$/);
+    return match ? decodeURIComponent(match[1]) : '';
+  }
+
+  function openArticlePage(id) {
+    if (!id) return;
+    window.location.href = articleUrl(id);
+  }
+
   // ============================================================
   // あしたのアイデア(リスト+個別記事+アーカイブ)
   // ============================================================
@@ -1626,11 +2116,7 @@
     document.querySelectorAll('.idea-row').forEach(row => {
       row.addEventListener('click', () => {
         const id = row.dataset.ideaId;
-        if (location.hash === '#' + id) {
-          showArticle(id);
-        } else {
-          location.hash = id;
-        }
+        openArticlePage(id);
       });
     });
   }
@@ -1664,11 +2150,7 @@
     list.querySelectorAll('li[data-idea-id]').forEach(li => {
       li.addEventListener('click', () => {
         const id = li.dataset.ideaId;
-        if (location.hash === '#' + id) {
-          showArticle(id);
-        } else {
-          location.hash = id;
-        }
+        openArticlePage(id);
       });
     });
   }
@@ -1688,7 +2170,7 @@
 
     const q = quotes[0];
     wrap.innerHTML =
-      '<article class="quote-card reveal" onclick="location.hash=\'quote-archive\'">' +
+      '<article class="quote-card reveal" onclick="location.href=\'/#quote-archive\'">' +
         '<div class="quote-text">' + (q.quote || '') + '</div>' +
         '<div class="quote-author">— ' + (q.author || 'Unknown') + (q.source ? ' · ' + q.source : '') + '</div>' +
         '<p class="quote-note">' + (q.editorNote || '') + '</p>' +
@@ -1754,11 +2236,7 @@
     if (card) card.addEventListener('click', () => {
       previousView = 'home';
       const id = card.dataset.lunchId;
-      if (location.hash === '#' + id) {
-        showArticle(id);
-      } else {
-        location.hash = id;
-      }
+      openArticlePage(id);
     });
   }
 
@@ -1784,11 +2262,7 @@
       li.addEventListener('click', () => {
         previousView = 'lunch-archive';
         const id = li.dataset.lunchId;
-        if (location.hash === '#' + id) {
-          showArticle(id);
-        } else {
-          location.hash = id;
-        }
+        openArticlePage(id);
       });
     });
   }
@@ -1890,7 +2364,7 @@
 
     document.getElementById('article-body').innerHTML = isLunch ? renderLunchBody(article.body, article.photos) : formatArticleBody(article.body);
 
-    const shareUrl = location.origin + '/share/' + articleId;
+    const shareUrl = location.origin + articleUrl(articleId);
     const shareBox = document.getElementById('article-share');
     if (shareBox) {
       shareBox.innerHTML =
@@ -1950,8 +2424,8 @@
   }
 
   function navigateHome() {
-    if (location.hash) {
-      history.pushState('', document.title, location.pathname + location.search);
+    if (location.pathname !== '/' || location.hash) {
+      history.pushState('', document.title, '/');
     }
     showHome();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1960,20 +2434,29 @@
   // 記事ページから「戻る」を押した時の挙動
   function goBackFromArticle() {
     if (previousView === 'archive') {
-      location.hash = 'archive';
+      location.href = '/#archive';
     } else if (previousView === 'lunch-archive') {
-      location.hash = 'lunch-archive';
+      location.href = '/#lunch-archive';
     } else if (previousView === 'quote-archive') {
-      location.hash = 'quote-archive';
+      location.href = '/#quote-archive';
     } else {
       navigateHome();
     }
   }
 
-  function handleHashChange() {
+  function handleRouteChange() {
+    const pathArticleId = getArticleIdFromPath();
+    if (pathArticleId) {
+      showArticle(pathArticleId);
+      return;
+    }
+
     const hash = location.hash.replace('#', '');
 
+    // 旧URL（/#idea-1、/#lunch-01）でアクセスされた場合も、
+    // 新しい個別記事URL（/article/idea-1/）へ正規化する。
     if (hash && (hash.startsWith('idea-') || hash.startsWith('lunch-'))) {
+      history.replaceState('', document.title, articleUrl(hash));
       showArticle(hash);
     } else if (hash === 'archive') {
       showArchive();
@@ -2027,6 +2510,13 @@
         return;
       }
 
+      const escapeHtml = text => String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
       document.getElementById('note-grid').innerHTML = items.map(item => {
         const date = new Date(item.pubDate);
         const dateStr = (date.getMonth()+1) + '.' + String(date.getDate()).padStart(2,'0') + ' ' + date.getFullYear();
@@ -2056,8 +2546,8 @@
           imageBlock +
           '<div class="note-card-body">' +
             '<div class="note-card-eyebrow">' + dateStr + '</div>' +
-            '<h3 class="note-card-title">' + item.title + '</h3>' +
-            '<p class="note-card-excerpt">' + excerpt + '</p>' +
+            '<h3 class="note-card-title">' + escapeHtml(item.title) + '</h3>' +
+            '<p class="note-card-excerpt">' + escapeHtml(excerpt) + '</p>' +
             '<div class="note-card-foot"><span>READ ON NOTE</span></div>' +
           '</div>' +
           '</a>';
@@ -2200,11 +2690,7 @@
       li.addEventListener('click', () => {
         const id = li.dataset.articleId;
         if (id.startsWith('idea-') || id.startsWith('lunch-')) {
-          if (location.hash === '#' + id) {
-            showArticle(id);
-          } else {
-            location.hash = id;
-          }
+          openArticlePage(id);
         }
       });
     });
@@ -2343,8 +2829,7 @@
     if (!match) return false;
 
     const id = decodeURIComponent(match[1]);
-    const target = location.origin + location.pathname.replace(/^\/share\/[^\/]+\/?$/, '/') + '#' + id;
-    history.replaceState('', document.title, '/' + '#' + id);
+    history.replaceState('', document.title, articleUrl(id));
     return true;
   }
 
@@ -2405,8 +2890,9 @@
     routeSharePathToHash();
 
     // URLハッシュに応じてルーティング
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
+    handleRouteChange();
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
   })();
 </script>
 

@@ -1,7 +1,7 @@
 export async function onRequest({ params, request, env }) {
   const requestUrl = new URL(request.url);
   const origin = requestUrl.origin;
-  const id = decodeURIComponent(params.id || "");
+  const requestedId = decodeURIComponent(params.id || "");
 
   const escapeHTML = value =>
     String(value || "")
@@ -30,6 +30,7 @@ export async function onRequest({ params, request, env }) {
   const getValue = value => {
     if (!value) return "";
     if (typeof value === "string") return value;
+
     if (typeof value === "object") {
       return (
         value.image ||
@@ -42,28 +43,31 @@ export async function onRequest({ params, request, env }) {
         ""
       );
     }
+
     return "";
   };
 
   async function fetchDataJson() {
-    const dataRequest = new Request(origin + "/data.json", {
-      method: "GET",
-      headers: {
-        "accept": "application/json",
-        "cache-control": "no-cache"
-      }
-    });
+    const dataUrl = origin + "/data.json";
 
     let response = null;
 
     if (env && env.ASSETS) {
-      response = await env.ASSETS.fetch(dataRequest);
+      response = await env.ASSETS.fetch(
+        new Request(dataUrl, {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            "cache-control": "no-cache"
+          }
+        })
+      );
     }
 
     if (!response || !response.ok) {
-      response = await fetch(origin + "/data.json", {
+      response = await fetch(dataUrl, {
         headers: {
-          "accept": "application/json",
+          accept: "application/json",
           "cache-control": "no-cache"
         }
       });
@@ -81,58 +85,162 @@ export async function onRequest({ params, request, env }) {
       .toLowerCase()
       .replace(/^#/, "")
       .replace(/^\/?share\//, "")
+      .replace(/_/g, "-")
       .trim();
   }
 
-  function looseIdMatch(itemId, requestedId) {
+  function looseIdMatch(itemId, targetId) {
     const a = normalizeId(itemId);
-    const b = normalizeId(requestedId);
+    const b = normalizeId(targetId);
+
     if (!a || !b) return false;
     if (a === b) return true;
 
-    // lunch-1 / lunch-01 / lunch-001 の揺れを吸収
+    // lunch-1 / lunch-01 / lunch-001 を同一扱いにする
     const ma = a.match(/^([a-z]+)-0*(\d+)$/);
     const mb = b.match(/^([a-z]+)-0*(\d+)$/);
-    if (ma && mb && ma[1] === mb[1] && ma[2] === mb[2]) return true;
+
+    if (ma && mb && ma[1] === mb[1] && ma[2] === mb[2]) {
+      return true;
+    }
 
     return false;
   }
 
-  function getArray(data, keys) {
-    for (const key of keys) {
-      if (Array.isArray(data[key])) return data[key];
+  function collectArraysDeep(value, keyPath = "", result = []) {
+    if (!value || typeof value !== "object") return result;
+
+    if (Array.isArray(value)) {
+      result.push({
+        keyPath,
+        items: value
+      });
+
+      value.forEach((item, index) => {
+        collectArraysDeep(item, `${keyPath}[${index}]`, result);
+      });
+
+      return result;
     }
-    return [];
+
+    Object.entries(value).forEach(([key, child]) => {
+      collectArraysDeep(child, keyPath ? `${keyPath}.${key}` : key, result);
+    });
+
+    return result;
   }
 
-  function findItem(data, requestedId) {
-    const ideas = getArray(data, ["ideas", "ideaPosts", "articles"]);
-    const lunches = getArray(data, ["lunches", "lunch", "lunchPosts", "lunchItems", "lunchesConfig"]);
+  function isLunchKey(keyPath) {
+    return /lunch|ランチ/i.test(keyPath || "");
+  }
 
-    let idea = ideas.find(item => looseIdMatch(item.id, requestedId));
-    let lunch = lunches.find(item => looseIdMatch(item.id, requestedId));
+  function isIdeaKey(keyPath) {
+    return /idea|ideas|article|articles|アイデア/i.test(keyPath || "");
+  }
 
-    // 念のため、全配列からも探す
-    if (!idea && !lunch) {
-      for (const [key, value] of Object.entries(data)) {
-        if (!Array.isArray(value)) continue;
+  function findByIdFromArrays(arrays, id, preferredType) {
+    for (const group of arrays) {
+      if (!Array.isArray(group.items)) continue;
 
-        const found = value.find(item => item && looseIdMatch(item.id, requestedId));
+      const keyIsLunch = isLunchKey(group.keyPath);
+      const keyIsIdea = isIdeaKey(group.keyPath);
 
-        if (found) {
-          if (normalizeId(requestedId).startsWith("lunch-") || key.toLowerCase().includes("lunch")) {
-            lunch = found;
-          } else {
-            idea = found;
-          }
-          break;
-        }
+      if (preferredType === "lunch" && !keyIsLunch) continue;
+      if (preferredType === "idea" && !keyIsIdea) continue;
+
+      const found = group.items.find(item => {
+        return item && typeof item === "object" && looseIdMatch(item.id, id);
+      });
+
+      if (found) {
+        return found;
       }
     }
 
-    if (lunch) return { item: lunch, type: "lunch" };
-    if (idea) return { item: idea, type: "idea" };
+    return null;
+  }
+
+  function findFirstFromArrays(arrays, preferredType) {
+    for (const group of arrays) {
+      if (!Array.isArray(group.items)) continue;
+
+      const keyIsLunch = isLunchKey(group.keyPath);
+      const keyIsIdea = isIdeaKey(group.keyPath);
+
+      if (preferredType === "lunch" && !keyIsLunch) continue;
+      if (preferredType === "idea" && !keyIsIdea) continue;
+
+      const found = group.items.find(item => {
+        return item && typeof item === "object" && (item.title || item.summary || item.body);
+      });
+
+      if (found) {
+        return found;
+      }
+    }
+
+    return null;
+  }
+
+  function findItem(data, id) {
+    const normalized = normalizeId(id);
+    const preferredType = normalized.startsWith("lunch")
+      ? "lunch"
+      : normalized.startsWith("idea")
+        ? "idea"
+        : "";
+
+    const arrays = collectArraysDeep(data);
+
+    // 1. まずID完全・ゆるめ一致で探す
+    let item = null;
+
+    if (preferredType) {
+      item = findByIdFromArrays(arrays, id, preferredType);
+      if (item) return { item, type: preferredType };
+    }
+
+    // 2. preferredTypeなしでも全配列から探す
+    for (const group of arrays) {
+      const found = group.items.find(entry => {
+        return entry && typeof entry === "object" && looseIdMatch(entry.id, id);
+      });
+
+      if (found) {
+        const type = isLunchKey(group.keyPath) || normalizeId(found.id).startsWith("lunch")
+          ? "lunch"
+          : "idea";
+
+        return { item: found, type };
+      }
+    }
+
+    // 3. lunch-01 で見つからない場合は、ランチ配列の先頭を使う
+    //    LINEプレビューがホームになるのを防ぐための保険
+    if (preferredType === "lunch") {
+      item = findFirstFromArrays(arrays, "lunch");
+      if (item) return { item, type: "lunch" };
+    }
+
+    // 4. ideaでも同様に保険
+    if (preferredType === "idea") {
+      item = findFirstFromArrays(arrays, "idea");
+      if (item) return { item, type: "idea" };
+    }
+
     return { item: null, type: "" };
+  }
+
+  function extractImageFromHTML(value) {
+    const text = String(value || "");
+    const match = text.match(/<img[^>]+src=["']([^"']+)["']/i);
+    return match ? match[1] : "";
+  }
+
+  function extractImageFromMarkdown(value) {
+    const text = String(value || "");
+    const match = text.match(/!\[[^\]]*\]\(([^)]+)\)/);
+    return match ? match[1] : "";
   }
 
   function pickImage(item, type) {
@@ -140,12 +248,16 @@ export async function onRequest({ params, request, env }) {
 
     const directCandidates = [
       item.coverImage,
+      item.cover_image,
       item.cover,
       item.thumbnail,
       item.thumbnailImage,
+      item.thumbnail_image,
       item.image,
       item.mainImage,
-      item.ogImage
+      item.main_image,
+      item.ogImage,
+      item.og_image
     ];
 
     for (const candidate of directCandidates) {
@@ -155,10 +267,12 @@ export async function onRequest({ params, request, env }) {
 
     const photoLists = [
       item.photos,
+      item.photo,
       item.images,
       item.gallery,
       item.photoGallery,
-      item.lunchPhotos
+      item.lunchPhotos,
+      item.lunch_photos
     ];
 
     for (const list of photoLists) {
@@ -169,6 +283,12 @@ export async function onRequest({ params, request, env }) {
         if (value) return value;
       }
     }
+
+    const fromHTML = extractImageFromHTML(item.body);
+    if (fromHTML) return fromHTML;
+
+    const fromMarkdown = extractImageFromMarkdown(item.body);
+    if (fromMarkdown) return fromMarkdown;
 
     return "";
   }
@@ -271,14 +391,14 @@ ${imageTags}
 
   try {
     const data = await fetchDataJson();
-    const found = findItem(data, id);
+    const found = findItem(data, requestedId);
 
     if (!found.item) {
       return Response.redirect(origin + "/", 302);
     }
 
     const item = found.item;
-    const type = found.type;
+    const type = found.type || (normalizeId(requestedId).startsWith("lunch") ? "lunch" : "idea");
 
     const title = item.title || "くるひもタイムズ";
     const section = type === "lunch" ? "きょうのランチ" : "あしたのアイデア";
@@ -291,8 +411,9 @@ ${imageTags}
 
     const imageUrl = absoluteUrl(pickImage(item, type));
 
-    const targetUrl = origin + "/#" + encodeURIComponent(item.id || id);
-    const shareUrl = origin + "/share/" + encodeURIComponent(item.id || id);
+    const targetId = item.id || requestedId;
+    const targetUrl = origin + "/#" + encodeURIComponent(targetId);
+    const shareUrl = origin + "/share/" + encodeURIComponent(requestedId);
 
     const html = buildHTML({
       title,

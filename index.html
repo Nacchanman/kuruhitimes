@@ -43,10 +43,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .home-view.hidden {
-    display: none;
-  }
-
   body::before {
     content: '';
     position: fixed;
@@ -1162,38 +1158,237 @@
   }
 
 
+  /* ============================================
+     よく読まれた Five 再構築
+  ============================================ */
+
+  .ranked {
+    position: relative;
+    margin: clamp(92px, 12vw, 168px) 0;
+    padding: clamp(58px, 8vw, 96px) clamp(22px, 4vw, 56px);
+    border-top: 1px solid rgba(18,18,15,0.44);
+    border-bottom: 1px solid rgba(18,18,15,0.16);
+    background:
+      linear-gradient(135deg, rgba(246,241,231,0.82), rgba(239,232,217,0.94)),
+      radial-gradient(circle at 16% 24%, rgba(212,57,27,0.12), transparent 34%),
+      radial-gradient(circle at 86% 76%, rgba(184,151,90,0.15), transparent 38%);
+    overflow: hidden;
+  }
+
+  .ranked::before {
+    content: 'TOP FIVE';
+    position: absolute;
+    right: -0.08em;
+    top: -0.18em;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(86px, 18vw, 236px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -0.09em;
+    color: rgba(18,18,15,0.045);
+    pointer-events: none;
+  }
+
+  .ranked::after {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(18,18,15,0.08);
+    pointer-events: none;
+  }
+
+  .ranked-head {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: end;
+    margin-bottom: clamp(34px, 5vw, 64px);
+  }
+
+  .ranked-head::after {
+    content: '読まれた記事の、静かな熱量。';
+    justify-self: end;
+    max-width: 260px;
+    padding: 10px 0 0 22px;
+    border-left: 1px solid rgba(18,18,15,0.26);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink-3);
+  }
+
+  .ranked-eyebrow {
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    color: var(--vermilion);
+    text-transform: uppercase;
+  }
+
+  .ranked-h {
+    margin: 0;
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(42px, 7vw, 96px);
+    font-weight: 900;
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+  }
+
+  .ranked-h em {
+    margin-left: 0.08em;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--vermilion);
+  }
+
   .ranked-list {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(12px, 1.7vw, 22px);
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
   .ranked-list li {
-    list-style: none;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 300px;
+    padding: clamp(20px, 2.3vw, 30px);
+    border: 1px solid rgba(18,18,15,0.18);
+    background:
+      linear-gradient(180deg, rgba(246,241,231,0.96), rgba(239,232,217,0.92));
+    box-shadow: 0 22px 54px rgba(18,18,15,0.075);
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.34s ease,
+      border-color 0.34s ease,
+      background 0.34s ease;
   }
 
-  .ranked-list li::marker {
+  .ranked-list li::before {
     content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgba(18,18,15,0.08);
+    pointer-events: none;
+  }
+
+  .ranked-list li::after {
+    content: 'READ';
+    position: absolute;
+    right: 18px;
+    bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: rgba(18,18,15,0.28);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+  }
+
+  .ranked-list li:hover {
+    transform: translateY(-8px);
+    border-color: rgba(212,57,27,0.42);
+    background:
+      linear-gradient(180deg, rgba(250,247,239,0.98), rgba(239,232,217,0.96));
+    box-shadow: 0 34px 76px rgba(18,18,15,0.13);
+  }
+
+  .ranked-list li:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ranked-list li.empty {
+    grid-column: 1 / -1;
+    min-height: 180px;
+    cursor: default;
+  }
+
+  .ranked-list li.empty:hover {
+    transform: none;
   }
 
   .ranked-num {
     display: block;
-    white-space: nowrap;
+    margin-bottom: clamp(26px, 4vw, 54px);
+    font-family: 'Fraunces', serif;
+    font-size: clamp(44px, 6vw, 82px);
+    font-weight: 200;
+    font-style: italic;
+    line-height: 0.86;
+    letter-spacing: -0.08em;
+    color: var(--vermilion);
   }
 
   .ranked-text {
     display: block;
+    align-self: end;
+    min-width: 0;
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(19px, 1.95vw, 28px);
+    font-weight: 800;
+    line-height: 1.38;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    word-break: keep-all;
+    overflow-wrap: anywhere;
   }
 
   .ranked-text small {
-    display: block;
+    display: inline-flex;
+    width: fit-content;
+    margin-top: 18px;
+    padding: 5px 9px;
+    border-left: 2px solid var(--vermilion);
+    background: rgba(212,57,27,0.06);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
   }
 
   .ranked-views {
+    align-self: end;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(18,18,15,0.18);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
     white-space: nowrap;
+    text-transform: uppercase;
   }
 
-
+  .ranked-views::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--vermilion);
+    box-shadow: 0 0 0 5px rgba(212,57,27,0.10);
+  }
 
   /* ============================================
      テッキーズ・ブックレビュー / NOTEカード再構築
@@ -1655,6 +1850,431 @@
     .footer-bottom { flex-direction: column; }
   }
 
+
+  /* ============================================
+     記事ページ専用表示 / CTA 再設計
+     /article/{id}/ ではホーム面を完全に隠し、本文だけを読む画面にする
+  ============================================ */
+  .home-view.hidden { display: none !important; }
+
+  body.is-article-route .sunset-hero,
+  body.is-article-route .masthead-rail,
+  body.is-article-route .tagline,
+  body.is-article-route .navbar,
+  body.is-article-route .nav-spacer,
+  body.is-article-route footer {
+    display: none !important;
+  }
+
+  body.is-article-route .container {
+    max-width: 1120px;
+  }
+
+  body.is-article-route .masthead {
+    padding: 0;
+    border-bottom: 1px solid rgba(18,18,15,0.14);
+  }
+
+  body.is-article-route .title-block {
+    text-align: left;
+    padding: 22px 0 18px;
+  }
+
+  body.is-article-route .title-block::before {
+    display: none;
+  }
+
+  body.is-article-route .site-title {
+    font-size: clamp(24px, 4vw, 42px);
+    line-height: 1;
+    letter-spacing: -0.06em;
+  }
+
+  body.is-article-route .site-title .char:hover,
+  body.is-article-route .site-title:hover .char {
+    transform: none;
+  }
+
+  body.is-article-route .site-en {
+    display: inline-block;
+    margin: 0 0 0 14px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    vertical-align: middle;
+  }
+
+  body.is-article-route .side-marker {
+    opacity: 0.32;
+  }
+
+  .article-page {
+    position: relative;
+    display: none;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: clamp(42px, 7vw, 86px) 0 clamp(80px, 10vw, 150px);
+  }
+
+  .article-page.active {
+    display: block;
+  }
+
+  .article-page::before {
+    content: '';
+    position: absolute;
+    top: clamp(96px, 13vw, 156px);
+    left: 50%;
+    width: min(58vw, 520px);
+    height: min(58vw, 520px);
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(212,57,27,0.09), rgba(212,57,27,0.025) 46%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .article-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 42px;
+    margin-bottom: clamp(30px, 5vw, 54px);
+    padding: 0 16px;
+    border: 1px solid rgba(18,18,15,0.18);
+    border-radius: 999px;
+    background: rgba(246,241,231,0.68);
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(18,18,15,0.04);
+    transition: transform 0.28s ease, color 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+  }
+
+  .article-back::before {
+    content: '←';
+    color: var(--vermilion);
+    transition: transform 0.28s ease;
+  }
+
+  .article-back:hover {
+    color: var(--ink);
+    border-color: rgba(212,57,27,0.38);
+    background: rgba(246,241,231,0.94);
+    transform: translateY(-2px);
+  }
+
+  .article-back:hover::before {
+    transform: translateX(-4px);
+  }
+
+  .article-eyebrow {
+    width: fit-content;
+    margin-bottom: 22px;
+    padding: 6px 10px;
+    border-left: 2px solid var(--vermilion);
+    background: rgba(212,57,27,0.055);
+    color: var(--vermilion);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  .article-title {
+    max-width: 880px;
+    margin: 0 0 26px;
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(38px, 6.4vw, 76px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 28px;
+    padding: 0;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+  }
+
+  .article-meta span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 31px;
+    padding: 0 11px;
+    border: 1px solid rgba(18,18,15,0.11);
+    border-radius: 999px;
+    background: rgba(239,232,217,0.52);
+  }
+
+  .article-share {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 clamp(34px, 5vw, 58px);
+  }
+
+  .article-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .article-action {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    min-width: min(100%, 230px);
+    min-height: 58px;
+    padding: 13px 16px 13px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(18,18,15,0.14);
+    overflow: hidden;
+    font-family: 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 18px 42px rgba(18,18,15,0.08);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .article-action::after {
+    content: '→';
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+  }
+
+  .article-action span {
+    display: block;
+  }
+
+  .article-action small {
+    display: block;
+    margin-top: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.68;
+  }
+
+  .article-action-primary {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .article-action-primary::after {
+    content: '⌘';
+    background: rgba(246,241,231,0.12);
+    color: var(--paper);
+  }
+
+  .article-action-primary.is-copied::after {
+    content: '✓';
+    background: var(--vermilion);
+  }
+
+  .article-action-secondary {
+    background: rgba(246,241,231,0.74);
+    color: var(--ink);
+    border-color: rgba(212,57,27,0.26);
+  }
+
+  .article-action-secondary::after {
+    background: rgba(212,57,27,0.10);
+    color: var(--vermilion);
+  }
+
+  .article-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 54px rgba(18,18,15,0.13);
+  }
+
+  .article-action:hover::after {
+    transform: translateX(3px);
+  }
+
+  .article-copy-status {
+    min-height: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--vermilion);
+  }
+
+  .article-image {
+    display: none;
+    margin: 0 0 clamp(42px, 6vw, 72px);
+    border: 1px solid rgba(18,18,15,0.14);
+    background: var(--paper-2);
+    overflow: hidden;
+    box-shadow: 0 26px 70px rgba(18,18,15,0.11);
+  }
+
+  .article-image.active {
+    display: block;
+  }
+
+  .article-image img {
+    width: 100%;
+    display: block;
+    max-height: 680px;
+    object-fit: cover;
+  }
+
+  .article-body {
+    max-width: 760px;
+    margin: 0 auto;
+    font-family: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+    font-size: clamp(18px, 1.7vw, 21px);
+    line-height: 2.18;
+    letter-spacing: 0.025em;
+    color: rgba(18,18,15,0.78);
+    font-weight: 500;
+  }
+
+  .article-body p {
+    margin-bottom: 1.85em;
+  }
+
+  .article-body p:first-child::first-letter {
+    font-family: 'Fraunces', serif;
+    float: left;
+    padding: 0.14em 0.08em 0 0;
+    font-size: 4.1em;
+    line-height: 0.78;
+    color: var(--vermilion);
+  }
+
+  .article-body h2,
+  .article-body h3 {
+    font-family: 'Shippori Mincho', serif;
+    color: var(--ink);
+  }
+
+  .article-body a {
+    color: var(--vermilion);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+  }
+
+  .article-footer {
+    max-width: 760px;
+    margin: clamp(56px, 8vw, 92px) auto 0;
+    padding-top: 26px;
+    border-top: 1px solid rgba(18,18,15,0.16);
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 760px) {
+    body.is-article-route .container {
+      padding: 0 22px;
+    }
+
+    body.is-article-route .site-en {
+      display: block;
+      margin: 8px 0 0;
+    }
+
+    .article-page {
+      padding-top: 34px;
+    }
+
+    .article-actions,
+    .article-action {
+      width: 100%;
+    }
+
+    .article-action {
+      min-width: 0;
+    }
+
+    .article-body p:first-child::first-letter {
+      font-size: 3.3em;
+    }
+
+  }
+
+
+  @media (max-width: 1100px) {
+    .ranked-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ranked-list li:first-child {
+      grid-column: 1 / -1;
+      min-height: 240px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .ranked {
+      margin: 70px -22px;
+      padding: 44px 22px;
+    }
+
+    .ranked::after {
+      inset: 10px;
+    }
+
+    .ranked-head {
+      grid-template-columns: 1fr;
+    }
+
+    .ranked-head::after {
+      justify-self: start;
+      max-width: none;
+      padding-left: 0;
+      border-left: none;
+    }
+
+    .ranked-list {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .ranked-list li,
+    .ranked-list li:first-child {
+      grid-column: auto;
+      min-height: 220px;
+    }
+  }
+
+
 </style>
 
 <!-- X (Twitter) 公式埋め込みスクリプト -->
@@ -1764,10 +2384,10 @@
       <div class="section-head reveal">
         <div class="section-num">03</div>
         <h2 class="section-h">きょうのランチ<span class="en">Today's Lunch</span></h2>
-        <a class="section-more" href="/#lunch-archive" onclick="goToLunchArchive(event)">ランチ一覧</a>
+        <a class="section-more" href="/#lunch-archive">ランチ一覧</a>
       </div>
       <div id="lunch-latest"><div class="lunch-empty">きょうのランチを読み込み中…</div></div>
-      <div class="lunch-archive-link reveal"><a href="/#lunch-archive" onclick="goToLunchArchive(event)">過去のランチをすべて見る</a></div>
+      <div class="lunch-archive-link reveal"><a href="/#lunch-archive">過去のランチをすべて見る</a></div>
       <div class="section-sunset reveal" aria-hidden="true">
         <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
           <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22" fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
@@ -1845,16 +2465,7 @@
       </div>
     </section>
 
-    <!-- 購読 -->
-    <section class="subscribe">
-      <div class="subscribe-eyebrow">— 無料ニュースレター —</div>
-      <h2>明日のヒントを、<br><em>あなたの朝に</em>届けます。</h2>
-      <p>毎週水曜日の朝7時、編集長が選ぶ「次に来るアイデア」を一通の手紙にして。</p>
-      <form class="subscribe-form" id="subscribe-form" action="#" method="post" target="_blank">
-        <input type="email" name="email" placeholder="your@email.com" required>
-        <button type="submit">購読する</button>
-      </form>
-    </section>
+
 
   </div>
 
@@ -1961,7 +2572,7 @@
         <h4>Archive</h4>
         <ul>
           <li><a href="/#archive">アイデア一覧</a></li>
-          <li><a href="/#lunch-archive" onclick="goToLunchArchive(event)">ランチ一覧</a></li>
+          <li><a href="/#lunch-archive">ランチ一覧</a></li>
           <li><a href="/#ranked">よく読まれた five</a></li>
         </ul>
       </nav>
@@ -1970,7 +2581,6 @@
         <h4>Editorial</h4>
         <ul>
           <li><a href="/#about">このメディアについて</a></li>
-          <li><a href="/#subscribe">ニュースレター</a></li>
           <li><a href="mailto:hello@example.com">お問合せ</a></li>
         </ul>
       </nav>
@@ -2330,9 +2940,21 @@
   }
 
   async function copyShareUrl(url) {
+    const status = document.getElementById('article-copy-status');
+    const btn = document.getElementById('article-copy-button');
     try {
       await navigator.clipboard.writeText(url);
-      alert('投稿リンクをコピーしました。\n' + url);
+      if (status) status.textContent = 'リンクをコピーしました。';
+      if (btn) {
+        btn.classList.add('is-copied');
+        const label = btn.querySelector('span');
+        if (label) label.textContent = 'コピーしました';
+        setTimeout(() => {
+          btn.classList.remove('is-copied');
+          if (label) label.textContent = '投稿リンクをコピー';
+          if (status) status.textContent = '';
+        }, 2200);
+      }
     } catch (e) {
       prompt('このURLをコピーしてください', url);
     }
@@ -2343,6 +2965,7 @@
     const article = isLunch ? APP_DATA.lunches.find(i => i.id === articleId) : APP_DATA.ideas.find(i => i.id === articleId);
     if (!article) { navigateHome(); return; }
 
+    document.body.classList.add('is-article-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -2371,7 +2994,12 @@
     const shareBox = document.getElementById('article-share');
     if (shareBox) {
       shareBox.innerHTML =
-        '<button type="button" onclick="copyShareUrl(\'' + shareUrl + '\')">投稿リンクをコピー</button>';
+        '<div class="article-actions">' +
+          '<button id="article-copy-button" class="article-action article-action-primary" type="button" onclick="copyShareUrl(\'' + shareUrl + '\')">' +
+            '<span>投稿リンクをコピー</span><small>Copy URL</small>' +
+          '</button>' +
+        '</div>' +
+        '<div class="article-copy-status" id="article-copy-status" aria-live="polite"></div>';
     }
 
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -2381,6 +3009,7 @@
   }
 
   function showHome() {
+    document.body.classList.remove('is-article-route');
     document.getElementById('home-view').classList.remove('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -2392,6 +3021,7 @@
   }
 
   function showArchive() {
+    document.body.classList.remove('is-article-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.add('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -2404,6 +3034,7 @@
   }
 
   function showQuoteArchive() {
+    document.body.classList.remove('is-article-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.add('active');
@@ -2415,6 +3046,7 @@
   }
 
   function showLunchArchive() {
+    document.body.classList.remove('is-article-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -2424,14 +3056,6 @@
     document.getElementById('nav-archive')?.classList.remove('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
     previousView = 'lunch-archive';
-  }
-
-  function goToLunchArchive(event) {
-    if (event) event.preventDefault();
-    if (location.pathname !== '/' || location.hash !== '#lunch-archive') {
-      history.pushState('', document.title, '/#lunch-archive');
-    }
-    showLunchArchive();
   }
 
   function navigateHome() {
@@ -2690,8 +3314,8 @@
     list.innerHTML = top5.map((a, i) =>
       '<li data-article-id="' + a.id + '">' +
         '<span class="ranked-num">' + String(i+1).padStart(2,'0') + '</span>' +
-        '<div class="ranked-text">' + a.title +
-        '<small>' + a.source + '</small></div>' +
+        '<div class="ranked-text">' + escapeHTML(a.title) +
+        '<small>' + escapeHTML(a.source || 'article') + '</small></div>' +
         '<span class="ranked-views">' + a.views + ' views</span>' +
         '</li>'
     ).join('');
@@ -2732,47 +3356,6 @@
   // ============================================================
   // 出現アニメーション
   // ============================================================
-  // ============================================================
-  // ニュースレター購読(beehiiv連携)
-  // ============================================================
-  function setupSubscribeForm(beehiivConfig) {
-    const form = document.getElementById('subscribe-form');
-    if (!form) return;
-
-    const publicationUrl = beehiivConfig && beehiivConfig.publicationUrl;
-
-    if (!publicationUrl || publicationUrl.includes('your-publication')) {
-      // 未設定の場合
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        alert('購読フォームはまだセットアップ中です。\n\n編集長へ: data.json の beehiivConfig.publicationUrl を設定してください。');
-      });
-      return;
-    }
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const email = form.querySelector('input[name="email"]').value;
-      if (!email) return;
-
-      // beehiivの購読ページへ遷移
-      const url = publicationUrl.replace(/\/$/, '') +
-        '/subscribe?email=' + encodeURIComponent(email);
-      window.open(url, '_blank', 'noopener');
-
-      // 確認メッセージ
-      const btn = form.querySelector('button');
-      const originalText = btn.textContent;
-      btn.textContent = 'beehiivで登録を完了してください →';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.disabled = false;
-        form.querySelector('input[name="email"]').value = '';
-      }, 4000);
-    });
-  }
-
   // ============================================================
   // 出現アニメーション
   // ============================================================
@@ -2892,7 +3475,6 @@
       loadXEmbeds(APP_DATA.xPostsConfig);
     }
     await renderRanked(allArticles);
-    setupSubscribeForm(APP_DATA.beehiivConfig);
 
     setupReveal();
     setupStickyNav();

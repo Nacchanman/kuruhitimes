@@ -1,1 +1,2 @@
-/share/* /index.html 200
+# Cloudflare Pages Functions が /article/{id}/ と /share/{id}/ を処理します。
+# 以前のような /article/* /index.html 200 は残さないでください。

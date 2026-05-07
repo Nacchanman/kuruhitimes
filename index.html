@@ -1877,7 +1877,11 @@
     document.querySelectorAll('.idea-row').forEach(row => {
       row.addEventListener('click', () => {
         const id = row.dataset.ideaId;
-        location.hash = id;
+        if (location.hash === '#' + id) {
+          showArticle(id);
+        } else {
+          location.hash = id;
+        }
       });
     });
   }
@@ -1910,7 +1914,12 @@
 
     list.querySelectorAll('li[data-idea-id]').forEach(li => {
       li.addEventListener('click', () => {
-        location.hash = li.dataset.ideaId;
+        const id = li.dataset.ideaId;
+        if (location.hash === '#' + id) {
+          showArticle(id);
+        } else {
+          location.hash = id;
+        }
       });
     });
   }
@@ -1993,7 +2002,15 @@
       '<p class="lunch-summary">' + (lunch.summary || '') + '</p></div>' +
       '<span class="lunch-arrow">→</span></article>';
     const card = wrap.querySelector('[data-lunch-id]');
-    if (card) card.addEventListener('click', () => { previousView = 'home'; location.hash = card.dataset.lunchId; });
+    if (card) card.addEventListener('click', () => {
+      previousView = 'home';
+      const id = card.dataset.lunchId;
+      if (location.hash === '#' + id) {
+        showArticle(id);
+      } else {
+        location.hash = id;
+      }
+    });
   }
 
   function renderLunchArchive(lunches) {
@@ -2015,7 +2032,15 @@
         '<p class="lunch-list-summary">' + (lunch.summary || '') + '</p></div><span class="lunch-list-arrow">→</span></li>';
     }).join('');
     list.querySelectorAll('li[data-lunch-id]').forEach(li => {
-      li.addEventListener('click', () => { previousView = 'lunch-archive'; location.hash = li.dataset.lunchId; });
+      li.addEventListener('click', () => {
+        previousView = 'lunch-archive';
+        const id = li.dataset.lunchId;
+        if (location.hash === '#' + id) {
+          showArticle(id);
+        } else {
+          location.hash = id;
+        }
+      });
     });
   }
 
@@ -2109,7 +2134,7 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
     ViewCounter.increment(articleId);
     document.getElementById('nav-home').classList.remove('active');
-    document.getElementById('nav-archive').classList.remove('active');
+    document.getElementById('nav-archive')?.classList.remove('active');
   }
 
   function showHome() {
@@ -2119,7 +2144,7 @@
     document.getElementById('lunch-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.add('active');
-    document.getElementById('nav-archive').classList.remove('active');
+    document.getElementById('nav-archive')?.classList.remove('active');
     previousView = 'home';
   }
 
@@ -2130,7 +2155,7 @@
     document.getElementById('lunch-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.remove('active');
-    document.getElementById('nav-archive').classList.add('active');
+    document.getElementById('nav-archive')?.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
     previousView = 'archive';
   }
@@ -2141,7 +2166,7 @@
     document.getElementById('quote-archive-view').classList.add('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.remove('active');
-    document.getElementById('nav-archive').classList.remove('active');
+    document.getElementById('nav-archive')?.classList.remove('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
     previousView = 'quote-archive';
   }
@@ -2153,7 +2178,7 @@
     document.getElementById('lunch-archive-view').classList.add('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.remove('active');
-    document.getElementById('nav-archive').classList.remove('active');
+    document.getElementById('nav-archive')?.classList.remove('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
     previousView = 'lunch-archive';
   }
@@ -2408,7 +2433,13 @@
     list.querySelectorAll('li[data-article-id]').forEach(li => {
       li.addEventListener('click', () => {
         const id = li.dataset.articleId;
-        if (id.startsWith('idea-') || id.startsWith('lunch-')) location.hash = id;
+        if (id.startsWith('idea-') || id.startsWith('lunch-')) {
+          if (location.hash === '#' + id) {
+            showArticle(id);
+          } else {
+            location.hash = id;
+          }
+        }
       });
     });
   }

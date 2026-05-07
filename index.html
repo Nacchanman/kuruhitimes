@@ -1441,6 +1441,30 @@
   /* トップ画面と記事画面の切り替え */
   .home-view { display: block; }
   .home-view.hidden { display: none; }
+
+  .article-share {
+    margin: 24px 0 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .article-share button {
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .article-share button:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
 </style>
 
 <!-- X (Twitter) 公式埋め込みスクリプト -->
@@ -1709,6 +1733,7 @@
     <div class="article-eyebrow" id="article-eyebrow"></div>
     <h1 class="article-title" id="article-title"></h1>
     <div class="article-meta" id="article-meta"></div>
+    <div class="article-share" id="article-share"></div>
     <div class="article-image" id="article-image"></div>
     <div class="article-body" id="article-body"></div>
     <div class="article-footer">— くるひもタイムズ 編集部 —</div>
@@ -2103,6 +2128,15 @@
       .join('');
   }
 
+  async function copyShareUrl(url) {
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('投稿リンクをコピーしました。\n' + url);
+    } catch (e) {
+      prompt('このURLをコピーしてください', url);
+    }
+  }
+
   function showArticle(articleId) {
     const isLunch = articleId && articleId.startsWith('lunch-');
     const article = isLunch ? APP_DATA.lunches.find(i => i.id === articleId) : APP_DATA.ideas.find(i => i.id === articleId);
@@ -2131,6 +2165,14 @@
     }
 
     document.getElementById('article-body').innerHTML = isLunch ? renderLunchBody(article.body, article.photos) : formatArticleBody(article.body);
+
+    const shareUrl = location.origin + '/share/' + articleId;
+    const shareBox = document.getElementById('article-share');
+    if (shareBox) {
+      shareBox.innerHTML =
+        '<button type="button" onclick="copyShareUrl(\'' + shareUrl + '\')">投稿リンクをコピー</button>';
+    }
+
     window.scrollTo({ top: 0, behavior: 'instant' });
     ViewCounter.increment(articleId);
     document.getElementById('nav-home').classList.remove('active');
@@ -2572,6 +2614,16 @@
     });
   }
 
+  function routeSharePathToHash() {
+    const match = location.pathname.match(/^\/share\/([^\/]+)\/?$/);
+    if (!match) return false;
+
+    const id = decodeURIComponent(match[1]);
+    const target = location.origin + location.pathname.replace(/^\/share\/[^\/]+\/?$/, '/') + '#' + id;
+    history.replaceState('', document.title, '/' + '#' + id);
+    return true;
+  }
+
   // ============================================================
   // 起動
   // ============================================================
@@ -2624,6 +2676,9 @@
 
     setupReveal();
     setupStickyNav();
+
+    // /share/{id} が通常ページとして開かれた場合の保険
+    routeSharePathToHash();
 
     // URLハッシュに応じてルーティング
     handleHashChange();

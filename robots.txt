@@ -1,0 +1,28 @@
+User-agent: Twitterbot
+Allow: /
+
+User-agent: XBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Line
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://kuruhitimes.pages.dev/rss.xml

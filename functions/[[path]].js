@@ -2,22 +2,45 @@ const SITE = {
   name: 'くるひもタイムズ / Kuruhimo Times',
   shortName: 'くるひもタイムズ',
   originFallback: 'https://kuruhitimes.pages.dev',
+  domainFallback: 'kuruhitimes.pages.dev',
   defaultOgImage: '/images/og/kuruhimo-times.png',
+  xAccount: '@KuruhimoTimes',
   description: '次にくるアイデアと、それを支える本を、毎日少しずつ届ける編集室。テクノロジーと暮らしのあいだを、誰かより少し早く歩く小さなメディアです。'
 };
+
+const CRAWLER_RE = /(Twitterbot|facebookexternalhit|Facebot|Slackbot|Discordbot|LinkedInBot|Line|LINE|WhatsApp|TelegramBot|Pinterest|Googlebot|bingbot|DuckDuckBot)/i;
 
 export async function onRequest(context) {
   const { request } = context;
   const url = new URL(request.url);
   const path = normalizePath(url.pathname);
+  const userAgent = request.headers.get('user-agent') || '';
+
+  if (path === '/' && CRAWLER_RE.test(userAgent)) {
+    return new Response(renderHomePreviewPage(url), {
+      status: 200,
+      headers: htmlHeaders()
+    });
+  }
 
   const match = path.match(/^\/(article|share)\/([^/]+)\/?$/);
+
   if (!match) {
     return context.next();
   }
 
   const slug = decodeURIComponent(match[2]);
-  const data = await loadData(request);
+
+  let data;
+  try {
+    data = await loadData(request);
+  } catch (error) {
+    return new Response(renderFallbackArticlePage({ requestUrl: url, slug }), {
+      status: 200,
+      headers: htmlHeaders()
+    });
+  }
+
   const post = findPost(data, slug);
 
   if (!post) {
@@ -27,7 +50,8 @@ export async function onRequest(context) {
     });
   }
 
-  const html = renderArticlePage({ post, data, requestUrl: url });
+  const html = renderArticlePage({ post, requestUrl: url });
+
   return new Response(html, {
     status: 200,
     headers: htmlHeaders()
@@ -37,7 +61,10 @@ export async function onRequest(context) {
 async function loadData(request) {
   const dataUrl = new URL('/data.json', request.url);
   const res = await fetch(dataUrl.toString(), {
-    headers: { accept: 'application/json' }
+    headers: {
+      accept: 'application/json',
+      'user-agent': 'KuruhimoTimes-OGP-Renderer/1.0'
+    }
   });
 
   if (!res.ok) {
@@ -51,7 +78,7 @@ function findPost(data, slug) {
   const collections = [
     { key: 'ideas', label: 'あしたのアイデア', type: 'idea' },
     { key: 'lunches', label: 'きょうのランチ', type: 'lunch' },
-    { key: 'quotes', label: 'ことばの標本', type: 'quote' },
+    { key: 'quotes', label: 'きょうのクオート', type: 'quote' },
     { key: 'posts', label: '記事', type: 'post' },
     { key: 'articles', label: '記事', type: 'post' }
   ];
@@ -74,6 +101,40 @@ function findPost(data, slug) {
   return null;
 }
 
+function renderHomePreviewPage(requestUrl) {
+  const origin = requestUrl.origin || SITE.originFallback;
+  const canonicalUrl = absoluteUrl('/', origin);
+  const imageUrl = versionedImageUrl(absoluteUrl(SITE.defaultOgImage, origin), 'home-2026');
+  const title = 'くるひもタイムズ｜次にくるアイデアの編集室';
+  const description = SITE.description;
+
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeAttr(description)}">
+<link rel="canonical" href="${escapeAttr(canonicalUrl)}">
+
+${socialMeta({
+  title,
+  description,
+  canonicalUrl,
+  imageUrl,
+  type: 'website',
+  imageAlt: '夕陽と「く」の字をあしらった、くるひもタイムズのプレビュー画像',
+  domain: requestUrl.hostname || SITE.domainFallback
+})}
+
+<meta http-equiv="refresh" content="0; url=/">
+</head>
+<body>
+<p><a href="/">くるひもタイムズを開く</a></p>
+</body>
+</html>`;
+}
+
 function renderArticlePage({ post, requestUrl }) {
   const origin = requestUrl.origin || SITE.originFallback;
   const canonicalPath = '/article/' + encodeURIComponent(post.id) + '/';
@@ -89,7 +150,8 @@ function renderArticlePage({ post, requestUrl }) {
     SITE.description
   );
 
-  const imageUrl = absoluteUrl(selectOgImage(post), origin);
+  const rawImageUrl = absoluteUrl(selectOgImage(post), origin);
+  const imageUrl = versionedImageUrl(rawImageUrl, post.updatedAt || post.modifiedDate || post.date || post.id);
   const published = post.publishDate || post.date || '';
   const updated = post.updatedAt || post.modifiedDate || published;
   const bodyHtml = renderBody(post);
@@ -103,6 +165,7 @@ function renderArticlePage({ post, requestUrl }) {
 
   const rawCategory = post.category || post.tag || '';
   const category = rawCategory && rawCategory !== post.collectionLabel ? rawCategory : '';
+  const imageAlt = title + '｜' + SITE.shortName;
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -113,21 +176,15 @@ function renderArticlePage({ post, requestUrl }) {
 <meta name="description" content="${escapeAttr(description)}">
 <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
 
-<meta property="og:locale" content="ja_JP">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="${escapeAttr(SITE.name)}">
-<meta property="og:title" content="${escapeAttr(title)}">
-<meta property="og:description" content="${escapeAttr(description)}">
-<meta property="og:url" content="${escapeAttr(canonicalUrl)}">
-<meta property="og:image" content="${escapeAttr(imageUrl)}">
-<meta property="og:image:secure_url" content="${escapeAttr(imageUrl)}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${escapeAttr(title)}">
-<meta name="twitter:description" content="${escapeAttr(description)}">
-<meta name="twitter:image" content="${escapeAttr(imageUrl)}">
+${socialMeta({
+  title,
+  description,
+  canonicalUrl,
+  imageUrl,
+  type: 'article',
+  imageAlt,
+  domain: requestUrl.hostname || SITE.domainFallback
+})}
 
 ${published ? `<meta property="article:published_time" content="${escapeAttr(published)}">` : ''}
 ${updated ? `<meta property="article:modified_time" content="${escapeAttr(updated)}">` : ''}
@@ -231,7 +288,89 @@ ${updated ? `<meta property="article:modified_time" content="${escapeAttr(update
 </html>`;
 }
 
+function renderFallbackArticlePage({ requestUrl, slug }) {
+  const origin = requestUrl.origin || SITE.originFallback;
+  const canonicalUrl = absoluteUrl('/article/' + encodeURIComponent(slug) + '/', origin);
+  const title = SITE.shortName + 'の記事';
+  const description = SITE.description;
+  const imageUrl = versionedImageUrl(absoluteUrl(SITE.defaultOgImage, origin), 'fallback-2026');
+
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeAttr(description)}">
+<link rel="canonical" href="${escapeAttr(canonicalUrl)}">
+${socialMeta({
+  title,
+  description,
+  canonicalUrl,
+  imageUrl,
+  type: 'article',
+  imageAlt: SITE.shortName,
+  domain: requestUrl.hostname || SITE.domainFallback
+})}
+<style>
+body {
+  margin: 0;
+  padding: 48px;
+  background: #f6f1e7;
+  color: #12120f;
+  font-family: serif;
+  line-height: 1.8;
+}
+a {
+  color: #d4391b;
+}
+</style>
+</head>
+<body>
+<h1>${escapeHtml(title)}</h1>
+<p>${escapeHtml(description)}</p>
+<p><a href="/">トップへ戻る</a></p>
+</body>
+</html>`;
+}
+
+function socialMeta({ title, description, canonicalUrl, imageUrl, type, imageAlt, domain }) {
+  return `
+<meta property="og:locale" content="ja_JP">
+<meta property="og:type" content="${escapeAttr(type)}">
+<meta property="og:site_name" content="${escapeAttr(SITE.name)}">
+<meta property="og:title" content="${escapeAttr(title)}">
+<meta property="og:description" content="${escapeAttr(description)}">
+<meta property="og:url" content="${escapeAttr(canonicalUrl)}">
+<meta property="og:image" content="${escapeAttr(imageUrl)}">
+<meta property="og:image:secure_url" content="${escapeAttr(imageUrl)}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${escapeAttr(imageAlt || title)}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="${escapeAttr(SITE.xAccount)}">
+<meta name="twitter:creator" content="${escapeAttr(SITE.xAccount)}">
+<meta name="twitter:domain" content="${escapeAttr(domain || SITE.domainFallback)}">
+<meta name="twitter:url" content="${escapeAttr(canonicalUrl)}">
+<meta name="twitter:title" content="${escapeAttr(title)}">
+<meta name="twitter:description" content="${escapeAttr(description)}">
+<meta name="twitter:image" content="${escapeAttr(imageUrl)}">
+<meta name="twitter:image:src" content="${escapeAttr(imageUrl)}">
+<meta name="twitter:image:alt" content="${escapeAttr(imageAlt || title)}">
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="${escapeAttr(title)}">
+<meta property="twitter:description" content="${escapeAttr(description)}">
+<meta property="twitter:image" content="${escapeAttr(imageUrl)}">`;
+}
+
 function renderNotFound(url, slug) {
+  const origin = url.origin || SITE.originFallback;
+  const canonicalUrl = absoluteUrl('/article/' + encodeURIComponent(slug) + '/', origin);
+  const imageUrl = versionedImageUrl(absoluteUrl(SITE.defaultOgImage, origin), 'not-found-2026');
+
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -239,6 +378,15 @@ function renderNotFound(url, slug) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>記事が見つかりません｜くるひもタイムズ</title>
 <meta name="robots" content="noindex">
+${socialMeta({
+  title: '記事が見つかりません｜くるひもタイムズ',
+  description: SITE.description,
+  canonicalUrl,
+  imageUrl,
+  type: 'article',
+  imageAlt: SITE.shortName,
+  domain: url.hostname || SITE.domainFallback
+})}
 <style>
 body {
   margin: 0;
@@ -371,12 +519,15 @@ function firstPhoto(post) {
 }
 
 function normalizeDescription(value) {
-  return String(value || '')
+  const text = String(value || '')
     .replace(/\[\[photo:\d+\]\]/g, '')
     .replace(/<[^>]+>/g, '')
     .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 150);
+    .trim();
+
+  if (!text) return SITE.description;
+
+  return text.slice(0, 150);
 }
 
 function absoluteUrl(path, origin) {
@@ -395,6 +546,16 @@ function absoluteUrl(path, origin) {
   }
 
   return new URL(value.startsWith('/') ? value : '/' + value, origin).toString();
+}
+
+function versionedImageUrl(imageUrl, version) {
+  const url = new URL(imageUrl);
+  const key = String(version || '2026')
+    .replace(/[^\w-]/g, '')
+    .slice(0, 40) || '2026';
+
+  url.searchParams.set('x-card', key);
+  return url.toString();
 }
 
 function normalizePath(pathname) {
@@ -419,7 +580,8 @@ function formatDate(value) {
 function htmlHeaders() {
   return {
     'content-type': 'text/html; charset=UTF-8',
-    'cache-control': 'public, max-age=120'
+    'cache-control': 'public, max-age=60, s-maxage=60',
+    'x-robots-tag': 'index, follow'
   };
 }
 

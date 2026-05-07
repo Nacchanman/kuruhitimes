@@ -981,490 +981,52 @@
   }
 
   .article-body {
-    font-family: 'Zen Kaku Gothic Antique', sans-serif;
-    font-size: 17px;
-    line-height: 1.95;
-    color: var(--ink-2);
+    max-width: 860px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Noto Sans JP', sans-serif;
+    font-size: clamp(16px, 1.45vw, 19px);
+    line-height: 2.05;
+    letter-spacing: 0.035em;
+    color: rgba(18, 18, 15, 0.66);
     font-weight: 400;
   }
 
-  .article-body p { margin-bottom: 28px; }
-  .article-body p:first-of-type::first-letter {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 4em;
-    float: left;
-    line-height: 0.85;
-    margin: 8px 12px 0 0;
-    color: var(--vermilion);
+  .article-body p {
+    margin-bottom: 30px;
   }
+
+  .article-body h2,
   .article-body h3 {
     font-family: 'Shippori Mincho', serif;
-    font-size: 24px;
-    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    line-height: 1.45;
     margin: 56px 0 20px;
-    letter-spacing: -0.01em;
   }
+
+  .article-body h2 {
+    font-size: clamp(24px, 3vw, 36px);
+  }
+
+  .article-body h3 {
+    font-size: clamp(21px, 2.4vw, 28px);
+  }
+
   .article-body h3::before {
     content: '— ';
     color: var(--vermilion);
   }
-  .article-body a { color: var(--vermilion); }
 
-  .article-footer {
-    margin-top: 80px;
-    padding-top: 32px;
-    border-top: 1px solid var(--rule);
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--ink-3);
-    text-align: center;
-  }
-
-  /* ============================================
-     ブックレビュー(Note)- ダーク反転
-  ============================================ */
-  .reviews { background: var(--ink); color: var(--paper); padding: 100px 48px; margin: 0 -48px; position: relative; overflow: hidden; }
-  .reviews::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--vermilion) 50%, transparent); }
-  .reviews .container { padding: 0; max-width: 1224px; }
-  .reviews .section-head { border-bottom-color: rgba(246,241,231,0.15); }
-  .reviews .section-h { color: var(--paper); }
-  .reviews .section-h .en { color: var(--vermilion-soft); }
-  .reviews .section-num { color: var(--vermilion-soft); }
-  .reviews .section-more { color: var(--paper); }
-  .reviews .section-more:hover { color: var(--vermilion-soft); }
-
-  .note-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-  }
-
-  .note-card {
-    background: rgba(246,241,231,0.04);
-    border: 1px solid rgba(246,241,231,0.1);
-    text-decoration: none;
-    color: var(--paper);
-    display: flex;
-    flex-direction: column;
-    transition: background 0.3s, transform 0.4s, border-color 0.3s;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .note-card:hover {
-    background: rgba(246,241,231,0.08);
-    transform: translateY(-4px);
-    border-color: var(--vermilion);
-  }
-
-  .note-card:hover .note-card-image img {
-    transform: scale(1.05);
-  }
-
-  .note-card-image {
-    aspect-ratio: 16/9;
-    background: rgba(246,241,231,0.08);
-    overflow: hidden;
-    position: relative;
-  }
-
-  .note-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    display: block;
-  }
-
-  .note-card-image.no-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(246,241,231,0.3);
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 13px;
-  }
-
-  .note-card-image.no-image::before {
-    content: 'no image';
-  }
-
-  .note-card-body {
-    padding: 28px 28px 24px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-
-  .note-card-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
-    color: var(--vermilion-soft);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .note-card-eyebrow::before {
-    content: 'note';
-    background: var(--paper);
+  .article-body strong {
     color: var(--ink);
-    padding: 2px 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
     font-weight: 700;
-    letter-spacing: 0.1em;
   }
 
-  .note-card-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 21px;
-    font-weight: 700;
-    line-height: 1.45;
-    margin-bottom: 16px;
-    letter-spacing: -0.01em;
-  }
-
-  .note-card-excerpt {
-    font-size: 13px;
-    line-height: 1.7;
-    color: rgba(246,241,231,0.65);
-    font-weight: 300;
-    margin-bottom: 24px;
-    flex-grow: 1;
-  }
-
-  .note-card-foot {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--vermilion-soft);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    display: flex;
-    justify-content: space-between;
-    padding-top: 16px;
-    border-top: 1px solid rgba(246,241,231,0.15);
-  }
-
-  .note-card-foot::after {
-    content: '↗';
-    transition: transform 0.3s;
-  }
-  .note-card:hover .note-card-foot::after {
-    transform: translate(4px, -4px);
-  }
-
-  .note-loading, .note-error {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 48px;
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    color: rgba(246,241,231,0.5);
-  }
-  .note-error { color: var(--vermilion-soft); }
-  .note-error a { color: var(--paper); text-decoration: underline; }
-
-  /* ============================================
-     X埋め込み(きょう発売のビジネス書)
-  ============================================ */
-  .x-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-
-  .x-embed-wrap {
-    background: var(--paper);
-    border: 1px solid var(--rule);
-    padding: 8px;
-    transition: transform 0.3s, border-color 0.3s;
-    overflow: hidden;
-  }
-  .x-embed-wrap:hover {
-    transform: translateY(-4px);
-    border-color: var(--vermilion);
-  }
-.x-embed-wrap iframe {
-    width: 100% !important;
-    border: none !important;
-  }
-
-  .x-embed-wrap .twitter-tweet {
-    margin: 0 auto !important;
-  }
-  .x-embed-fallback {
-    display: none;
-    min-height: 220px;
-    padding: 28px 24px;
-    text-decoration: none;
-    color: var(--ink);
-    font-family: 'Shippori Mincho', serif;
-    font-size: 18px;
-    line-height: 1.7;
-    background:
-      radial-gradient(circle at 50% 15%, rgba(212,57,27,0.12), transparent 45%),
-      var(--paper);
-  }
-  .x-embed-fallback small {
-    display: block;
-    margin-top: 18px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--ink-3);
-    word-break: break-all;
-    line-height: 1.6;
-  }
-  .x-embed-wrap.embed-failed .twitter-tweet {
-    display: none;
-  }
-  .x-embed-wrap.embed-failed .x-embed-fallback {
-    display: block;
-  }
-
-  .x-loading, .x-error {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 48px;
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    color: var(--ink-3);
-  }
-  .x-error { color: var(--vermilion); }
-
-  .release-eyebrow { font-family: 'Fraunces', serif; font-style: italic; font-size: 16px; color: var(--vermilion); margin-bottom: 8px; font-weight: 400; letter-spacing: 0.05em; }
-
-  /* ============================================
-     よく読まれた Five (末尾)
-  ============================================ */
-  .ranked {
-    padding: 100px 0;
-    background:
-      radial-gradient(ellipse at center, var(--paper-2) 0%, transparent 70%);
-    border-top: 1px solid var(--rule);
-  }
-
-  .ranked-head {
-    text-align: center;
-    margin-bottom: 64px;
-  }
-
-  .ranked-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.4em;
+  .article-body a {
     color: var(--vermilion);
-    margin-bottom: 20px;
-    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
   }
-
-  .ranked-h {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(32px, 5vw, 56px);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.025em;
-  }
-  .ranked-h em {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 300;
-    color: var(--vermilion);
-  }
-
-  .ranked-list {
-    list-style: none;
-    max-width: 760px;
-    margin: 0 auto;
-  }
-
-  .ranked-list li {
-    padding: 24px 0;
-    border-bottom: 1px solid var(--rule);
-    display: grid;
-    grid-template-columns: 56px 1fr auto;
-    gap: 24px;
-    align-items: center;
-    cursor: pointer;
-    transition: padding-left 0.3s;
-  }
-  .ranked-list li:last-child { border-bottom: none; }
-  .ranked-list li:hover { padding-left: 16px; }
-  .ranked-list li:hover .ranked-num { color: var(--vermilion); }
-  .ranked-list li.empty { opacity: 0.4; cursor: default; }
-  .ranked-list li.empty:hover { padding-left: 0; }
-
-  .ranked-num {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 200;
-    font-size: 48px;
-    color: var(--ink);
-    line-height: 0.85;
-    transition: color 0.3s;
-  }
-
-  .ranked-text {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 17px;
-    line-height: 1.4;
-    font-weight: 600;
-  }
-  .ranked-text small {
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--ink-3);
-    margin-top: 6px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    font-weight: 400;
-  }
-
-  .ranked-views {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--vermilion);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  /* 購読 */
-  .subscribe { padding: 120px 0; text-align: center; position: relative; }
-  .subscribe::before { content: ''; position: absolute; top: 50%; left: 50%; width: 120px; height: 120px; border: 1px solid var(--vermilion); border-radius: 50%; transform: translate(-50%, -50%); opacity: 0.15; z-index: 0; }
-  .subscribe::after { content: '✦'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--vermilion); font-size: 24px; z-index: 0; opacity: 0.3; }
-  .subscribe-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4em; color: var(--vermilion); margin-bottom: 32px; position: relative; z-index: 1; font-weight: 500; }
-  .subscribe h2 { font-family: 'Shippori Mincho', serif; font-size: clamp(36px, 6vw, 72px); font-weight: 700; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.03em; position: relative; z-index: 1; }
-  .subscribe h2 em { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; color: var(--vermilion); }
-  .subscribe p { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(16px, 1.6vw, 19px); color: var(--ink-2); margin-bottom: 48px; max-width: 540px; margin-left: auto; margin-right: auto; line-height: 1.7; position: relative; z-index: 1; }
-  .subscribe-form { display: flex; max-width: 520px; margin: 0 auto; border-bottom: 1px solid var(--ink); background: transparent; position: relative; z-index: 1; }
-  .subscribe-form input { flex: 1; padding: 16px 4px; border: none; background: transparent; font-family: 'Fraunces', serif; font-style: italic; font-size: 16px; color: var(--ink); outline: none; }
-  .subscribe-form input::placeholder { color: var(--ink-3); font-style: italic; }
-  .subscribe-form button { background: transparent; color: var(--ink); border: none; padding: 0 4px 0 24px; font-family: 'Shippori Mincho', serif; font-weight: 600; font-size: 14px; cursor: pointer; letter-spacing: 0.1em; transition: color 0.3s; display: flex; align-items: center; gap: 12px; }
-  .subscribe-form button::after { content: '→'; transition: transform 0.3s; }
-  .subscribe-form button:hover { color: var(--vermilion); }
-  .subscribe-form button:hover::after { transform: translateX(8px); }
-
-  /* フッター */
-  footer { padding: 96px 0 48px; background: var(--ink); color: var(--paper); margin: 0 -48px; padding-left: 48px; padding-right: 48px; }
-  footer .container { padding: 0; }
-  .footer-mark { font-family: 'Shippori Mincho', serif; font-size: clamp(48px, 8vw, 96px); font-weight: 800; line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 64px; color: var(--paper); }
-  .footer-mark em { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; color: var(--vermilion-soft); font-size: 0.5em; letter-spacing: 0.15em; display: block; margin-top: 12px; }
-  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; padding-top: 48px; border-top: 1px solid rgba(246,241,231,0.15); }
-  .footer-brand p { font-size: 13px; line-height: 1.85; color: rgba(246,241,231,0.7); max-width: 360px; font-weight: 300; }
-  .footer-col h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3em; color: var(--vermilion-soft); margin-bottom: 24px; font-weight: 500; }
-  .footer-col ul { list-style: none; }
-  .footer-col li { padding: 6px 0; }
-  .footer-col a { color: var(--paper); text-decoration: none; font-family: 'Shippori Mincho', serif; font-size: 14px; transition: color 0.3s, padding-left 0.3s; display: inline-block; cursor: pointer; }
-  .footer-col a:hover { color: var(--vermilion-soft); padding-left: 6px; }
-  .footer-bottom { padding-top: 32px; border-top: 1px solid rgba(246,241,231,0.15); display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: rgba(246,241,231,0.5); }
-
-  /* レスポンシブ */
-  @media (max-width: 1024px) {
-    .container { padding: 0 32px; }
-    .reviews, footer { margin: 0 -32px; padding-left: 32px; padding-right: 32px; }
-    .note-grid, .x-grid { grid-template-columns: repeat(2, 1fr); }
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
-    .side-marker { display: none; }
-  }
-
-  @media (max-width: 720px) {
-    .container { padding: 0 24px; }
-    .reviews, footer { margin: 0 -24px; padding-left: 24px; padding-right: 24px; }
-    .reviews { padding: 80px 24px; }
-    .section { padding: 80px 0; }
-    .note-grid, .x-grid { grid-template-columns: 1fr; }
-    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-    .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
-    .masthead-rail { font-size: 9px; padding-bottom: 12px; }
-    .masthead-rail .left, .masthead-rail .right { gap: 12px; }
-    .navbar {
-      padding: 14px 0 16px;
-    }
-    .navbar a { padding: 6px 12px; font-size: 12px; }
-    .section-head { grid-template-columns: 1fr; gap: 16px; }
-    .section-num { font-size: 56px; }
-    .site-title {
-      white-space: nowrap;
-      font-size: clamp(40px, 10vw, 92px);
-    }
-    .site-title .word {
-      display: inline-block;
-      white-space: nowrap;
-    }
-    /* アイデアリスト:スマホ用に再構成 */
-    .idea-row { grid-template-columns: 76px 1fr auto; gap: 16px; padding: 24px 0; }
-    .idea-row-thumb { width: 76px; }
-    .idea-row-meta { display: none; }
-    .idea-row-arrow { font-size: 20px; }
-    /* アーカイブリスト:スマホ用 */
-    .archive-list li { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
-    .archive-list-date { order: -1; }
-    .archive-list-views { font-size: 9px; }
-    .lunch-card { grid-template-columns: 1fr; gap: 20px; padding: 32px 0; }
-    .lunch-card:hover { padding-left: 0; }
-    .lunch-list li { grid-template-columns: 96px 1fr; gap: 16px; align-items: start; }
-    .lunch-list-arrow { display: none; }
-    .lunch-list-title { font-size: 19px; }
-    .lunch-gallery-grid { grid-template-columns: 1fr; }
-    .quote-card { padding: 32px 0; }
-    .quote-card:hover { padding-left: 0; }
-    .quote-text { font-size: 22px; line-height: 1.55; padding-left: 28px; }
-    .quote-card::before { font-size: 96px; left: -6px; top: 2px; }
-    .quote-author { font-size: 15px; padding: 7px 12px; }
-    .quote-note { font-size: 13px; }
-    .archive-page { padding: 32px 0 80px; }
-    .archive-title { font-size: 36px; }
-    /* 個別記事 */
-    .article-page { padding: 32px 0 80px; }
-    .article-body { font-size: 16px; line-height: 1.85; }
-  }
-
-  @media (max-width: 480px) {
-    .container { padding: 0 20px; }
-    .reviews, footer { margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
-    .title-block { padding: 32px 0 16px; }
-    .footer-mark { font-size: 48px; }
-  }
-
-  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* トップ画面と記事画面の切り替え */
-  .home-view { display: block; }
-  .home-view.hidden { display: none; }
-
-  .article-share {
-    margin: 24px 0 40px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .article-share button {
-    border: 1px solid var(--ink);
-    background: transparent;
-    color: var(--ink);
-    font-family: 'Shippori Mincho', serif;
-    font-size: 15px;
-    letter-spacing: 0.08em;
-    padding: 10px 24px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .article-share button:hover {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
 </style>
 
 <!-- X (Twitter) 公式埋め込みスクリプト -->

@@ -50,6 +50,27 @@ collections:
               - { label: "公開日", name: "publishDate", widget: "string", hint: "例: 2026-05-02" }
               - { label: "編集長の所感", name: "editorNote", widget: "text" }
 
+          - label: "きょうのランチ"
+            name: "lunches"
+            widget: "list"
+            add_to_top: true
+            fields:
+              - { label: "ID", name: "id", widget: "string", hint: "例: lunch-001。他のランチ記事と重複しないIDにしてください。" }
+              - { label: "タイトル", name: "title", widget: "string" }
+              - { label: "お店・場所", name: "place", widget: "string", required: false }
+              - { label: "公開日", name: "publishDate", widget: "string", hint: "例: 2026-05-03" }
+              - { label: "要約", name: "summary", widget: "text" }
+              - { label: "カバー画像", name: "coverImage", widget: "image", required: false, hint: "未設定の場合は写真リストの1枚目が使われます。" }
+              - label: "写真"
+                name: "photos"
+                widget: "list"
+                required: false
+                add_to_top: false
+                fields:
+                  - { label: "写真", name: "image", widget: "image" }
+                  - { label: "キャプション", name: "caption", widget: "string", required: false }
+              - { label: "本文", name: "body", widget: "text", hint: "本文中の好きな場所に [[photo:1]]、[[photo:2]] のように書くと、その番号の写真が挿入されます。指定しなかった写真は本文末尾にまとめて表示されます。" }
+
           - label: "note連携"
             name: "noteConfig"
             widget: "object"

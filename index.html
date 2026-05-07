@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="20" fill="%23f6f1e7"/>
+  <circle cx="50" cy="64" r="26" fill="%23d4391b" opacity="0.9"/>
+  <path d="M18 64 H82" stroke="%2312120f" stroke-width="4"/>
+  <text x="50" y="47" text-anchor="middle" font-size="34" font-family="serif" font-weight="700" fill="%2312120f">く</text>
+</svg>'>
 <title>くるひもタイムズ / Kuruhimo Times — 次にくるアイデアの編集室</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -180,7 +187,10 @@
     position: relative;
     white-space: nowrap;
   }
-  .site-title .word { display: inline-block; }
+  .site-title .word {
+    display: inline-block;
+    white-space: nowrap;
+  }
   .site-title .char { display: inline-block; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
   .site-title:hover .char { transform: translateY(-4px); }
   .site-title .char:hover { color: var(--vermilion); }
@@ -1181,22 +1191,7 @@
     transform: translateY(-4px);
     border-color: var(--vermilion);
   }
-
-  .x-link-card {
-    text-decoration: none;
-    color: inherit;
-    background:
-      radial-gradient(circle at 50% 0%, rgba(212,57,27,0.10), transparent 48%),
-      var(--paper);
-    transition: transform 0.3s, border-color 0.3s;
-  }
-
-  .x-link-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--vermilion);
-  }
-
-  .x-embed-wrap iframe {
+.x-embed-wrap iframe {
     width: 100% !important;
     border: none !important;
   }
@@ -1397,8 +1392,14 @@
     .navbar a { padding: 6px 12px; font-size: 12px; }
     .section-head { grid-template-columns: 1fr; gap: 16px; }
     .section-num { font-size: 56px; }
-    .site-title { white-space: normal; }
-    .site-title .word { display: block; }
+    .site-title {
+      white-space: nowrap;
+      font-size: clamp(40px, 10vw, 92px);
+    }
+    .site-title .word {
+      display: inline-block;
+      white-space: nowrap;
+    }
     /* アイデアリスト:スマホ用に再構成 */
     .idea-row { grid-template-columns: 76px 1fr auto; gap: 16px; padding: 24px 0; }
     .idea-row-thumb { width: 76px; }
@@ -1442,6 +1443,8 @@
   .home-view.hidden { display: none; }
 </style>
 
+<!-- X (Twitter) 公式埋め込みスクリプト -->
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -1491,7 +1494,6 @@
       <a href="#lunch">きょうのランチ</a>
       <a href="#reviews">ブックレビュー</a>
       <a href="#today">きょう発売</a>
-      <a href="#archive" id="nav-archive">アーカイブ</a>
     </nav>
     <div id="nav-spacer" class="nav-spacer" aria-hidden="true"></div>
   </header>
@@ -2284,9 +2286,9 @@
   // X (Twitter) 投稿の埋め込み
   // ============================================================
   function loadXEmbeds(config) {
-    // ネットワーク許可ダイアログを出さないため、
-    // platform.twitter.com の公式埋め込みスクリプトは読み込まない。
-    // 代わりに、X投稿へのリンクカードとして表示する。
+    // Sveltia CMSでは postUrls が
+    // ["https://x.com/..."] ではなく [{ url: "https://x.com/..." }] で保存されるため、
+    // どちらの形式でも使えるようにURLだけを取り出す。
     const postUrls = ((config && config.postUrls) || [])
       .map(item => {
         if (typeof item === 'string') return item;
@@ -2294,7 +2296,7 @@
         return null;
       })
       .filter(Boolean)
-      .map(url => String(url).trim());
+      .map(url => normalizeTweetUrl(url));
 
     const grid = document.getElementById('x-grid');
 
@@ -2319,17 +2321,62 @@
       return;
     }
 
+    // X公式ウィジェットで投稿を埋め込む。
+    // x.com URLは twitter.com 形式に正規化した方が埋め込みが安定します。
     grid.innerHTML = postUrls.slice(0, 3).map((url, index) =>
-      '<a class="x-embed-wrap x-link-card" href="' + url + '" target="_blank" rel="noopener">' +
-        '<div style="padding:28px 24px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between;">' +
-          '<div>' +
-            '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;letter-spacing:.18em;color:var(--vermilion);text-transform:uppercase;margin-bottom:18px;">X POST · ' + String(index + 1).padStart(2, '0') + '</div>' +
-            '<div style="font-family:\'Shippori Mincho\',serif;font-size:22px;line-height:1.6;color:var(--ink);">Xで投稿を見る</div>' +
-          '</div>' +
-          '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;line-height:1.6;color:var(--ink-3);word-break:break-all;">' + url + '</div>' +
-        '</div>' +
-      '</a>'
+      '<div class="x-embed-wrap" data-x-index="' + index + '">' +
+        '<blockquote class="twitter-tweet" data-theme="light" data-conversation="none" data-dnt="true">' +
+          '<a href="' + url + '"></a>' +
+        '</blockquote>' +
+      '</div>'
     ).join('');
+
+    loadTwitterWidgets();
+  }
+
+  function normalizeTweetUrl(rawUrl) {
+    try {
+      const u = new URL(String(rawUrl).trim());
+      const parts = u.pathname.split('/').filter(Boolean);
+      const statusIndex = parts.indexOf('status');
+
+      if (statusIndex > 0 && parts[statusIndex + 1]) {
+        const user = parts[statusIndex - 1];
+        const id = parts[statusIndex + 1];
+        return 'https://twitter.com/' + user + '/status/' + id;
+      }
+
+      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
+    } catch (e) {
+      return String(rawUrl).trim().replace('https://x.com/', 'https://twitter.com/');
+    }
+  }
+
+  function loadTwitterWidgets() {
+    function render() {
+      if (window.twttr && window.twttr.widgets) {
+        window.twttr.widgets.load(document.getElementById('x-grid'));
+      }
+    }
+
+    if (window.twttr && window.twttr.widgets) {
+      render();
+      return;
+    }
+
+    const existing = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]');
+    if (existing) {
+      existing.addEventListener('load', render, { once: true });
+      setTimeout(render, 1000);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://platform.twitter.com/widgets.js';
+    script.async = true;
+    script.charset = 'utf-8';
+    script.onload = render;
+    document.body.appendChild(script);
   }
 
   // ============================================================

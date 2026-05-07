@@ -100,7 +100,9 @@ function renderArticlePage({ post, requestUrl }) {
 
   const place = post.place ? `<span>${escapeHtml(post.place)}</span>` : '';
   const readTime = post.readTime ? `<span>読了 ${escapeHtml(post.readTime)}</span>` : '';
-  const category = post.category || post.tag || post.collectionLabel;
+
+  const rawCategory = post.category || post.tag || '';
+  const category = rawCategory && rawCategory !== post.collectionLabel ? rawCategory : '';
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -137,7 +139,7 @@ ${updated ? `<meta property="article:modified_time" content="${escapeAttr(update
 <script type="application/ld+json">${jsonLd({ post, title, description, imageUrl, canonicalUrl, published, updated })}</script>
 <style>${articleCss()}</style>
 </head>
-<body>
+<body class="post-${escapeAttr(post.type)}">
 <div class="paper-grain" aria-hidden="true"></div>
 
 <header class="article-header">
@@ -575,12 +577,20 @@ body {
 }
 
 h1 {
+  max-width: 980px;
   font-family: 'Shippori Mincho', serif;
-  font-size: clamp(38px, 7vw, 78px);
+  font-size: clamp(34px, 5.4vw, 62px);
   font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: -.055em;
+  line-height: 1.25;
+  letter-spacing: -.045em;
   margin: 0 0 24px;
+}
+
+.post-lunch h1 {
+  max-width: 900px;
+  font-size: clamp(32px, 4.7vw, 54px);
+  line-height: 1.32;
+  letter-spacing: -.035em;
 }
 
 .article-meta {
@@ -795,6 +805,16 @@ figcaption {
 @media (max-width: 760px) {
   .article-shell {
     padding-top: 42px;
+  }
+
+  h1 {
+    font-size: clamp(30px, 10vw, 42px);
+    line-height: 1.32;
+  }
+
+  .post-lunch h1 {
+    font-size: clamp(28px, 9.2vw, 38px);
+    line-height: 1.38;
   }
 
   .share-panel {

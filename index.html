@@ -1027,6 +1027,168 @@
     text-decoration: underline;
     text-underline-offset: 0.18em;
   }
+
+  /* ============================================
+     中幅画面の崩れ対策
+     2画面表示などで横幅が狭くなった時に、
+     ランチ・note・ランキングが読みやすくなるよう補正
+  ============================================ */
+  @media (max-width: 1100px) {
+    .lunch-card {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .lunch-card:hover {
+      padding-left: 0;
+    }
+
+    .lunch-thumb {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .lunch-title {
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.25;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .lunch-summary {
+      max-width: 720px;
+      font-size: 15px;
+      line-height: 1.9;
+      word-break: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .lunch-arrow {
+      justify-self: end;
+    }
+
+    .note-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .note-card {
+      display: grid;
+      grid-template-columns: minmax(180px, 280px) 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .note-thumb {
+      min-height: 180px;
+      height: 100%;
+    }
+
+    .ranked-list li {
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+    }
+
+    .ranked-text {
+      min-width: 0;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .note-card {
+      display: block;
+    }
+
+    .note-thumb {
+      height: 220px;
+    }
+
+    .ranked-list li {
+      grid-template-columns: auto 1fr;
+      align-items: start;
+    }
+
+    .ranked-views {
+      grid-column: 2;
+      justify-self: start;
+      margin-top: 8px;
+    }
+  }
+
+
+  .note-card,
+  .note-card:visited,
+  .note-card:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .note-card a,
+  .note-card a:visited,
+  .note-card a:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .note-date,
+  .note-date:visited {
+    color: var(--vermilion);
+    text-decoration: none;
+  }
+
+  .note-title,
+  .note-title:visited {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .note-excerpt,
+  .note-excerpt:visited {
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+
+  .note-link,
+  .note-link:visited {
+    color: var(--vermilion);
+    text-decoration: none;
+  }
+
+
+  .ranked-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ranked-list li {
+    list-style: none;
+  }
+
+  .ranked-list li::marker {
+    content: '';
+  }
+
+  .ranked-num {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .ranked-text {
+    display: block;
+  }
+
+  .ranked-text small {
+    display: block;
+  }
+
+  .ranked-views {
+    white-space: nowrap;
+  }
+
 </style>
 
 <!-- X (Twitter) 公式埋め込みスクリプト -->

@@ -572,6 +572,65 @@
   }
 
 
+
+  /* ============================================
+     きょうのランチ
+  ============================================ */
+  .lunch-card {
+    display: grid;
+    grid-template-columns: minmax(240px, 420px) 1fr auto;
+    gap: 40px;
+    align-items: center;
+    padding: 40px 0;
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: padding-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .lunch-card:hover { padding-left: 24px; }
+  .lunch-card:hover .lunch-thumb img { transform: scale(1.06); }
+  .lunch-thumb {
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--rule);
+    background: radial-gradient(circle at 50% 30%, rgba(212,57,27,0.12), transparent 45%), var(--paper-2);
+    overflow: hidden;
+    position: relative;
+  }
+  .lunch-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+  .lunch-thumb.no-image::before {
+    content: 'lunch'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-style: italic; color: var(--ink-3); opacity: 0.45;
+  }
+  .lunch-title { font-family: 'Shippori Mincho', serif; font-size: clamp(28px, 3.6vw, 48px); font-weight: 800; line-height: 1.18; letter-spacing: -0.025em; margin-bottom: 12px; }
+  .lunch-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.20em; text-transform: uppercase; color: var(--vermilion); margin-bottom: 16px; }
+  .lunch-summary { max-width: 620px; color: var(--ink-3); font-size: 14px; line-height: 1.85; }
+  .lunch-arrow { font-family: 'Fraunces', serif; font-size: 28px; color: var(--ink-3); transition: transform 0.3s, color 0.3s; }
+  .lunch-card:hover .lunch-arrow { transform: translateX(8px); color: var(--vermilion); }
+  .lunch-archive-link { display: flex; justify-content: center; margin-top: 40px; }
+  .lunch-archive-link a {
+    font-family: 'Shippori Mincho', serif; font-size: 16px; color: var(--ink); text-decoration: none; padding: 12px 32px;
+    border: 1px solid var(--ink); transition: all 0.3s; letter-spacing: 0.05em; cursor: pointer; display: inline-flex; align-items: center; gap: 12px;
+  }
+  .lunch-archive-link a:hover { background: var(--ink); color: var(--paper); }
+  .lunch-archive-link a::after { content: '→'; transition: transform 0.3s; }
+  .lunch-archive-link a:hover::after { transform: translateX(6px); }
+  .lunch-empty { text-align: center; padding: 64px 0; color: var(--ink-3); font-family: 'Fraunces', serif; font-style: italic; }
+  .lunch-list { list-style: none; }
+  .lunch-list li { display: grid; grid-template-columns: 160px 1fr auto; gap: 28px; align-items: center; padding: 28px 0; border-bottom: 1px solid var(--rule); cursor: pointer; transition: padding-left 0.3s; }
+  .lunch-list li:hover { padding-left: 16px; }
+  .lunch-list-thumb { aspect-ratio: 4 / 3; border: 1px solid var(--rule); background: var(--paper-2); overflow: hidden; }
+  .lunch-list-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lunch-list-thumb.no-image::before { content: 'lunch'; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-style: italic; color: var(--ink-3); opacity: 0.45; }
+  .lunch-list-title { font-family: 'Shippori Mincho', serif; font-size: 24px; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .lunch-list-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--vermilion); margin-bottom: 8px; }
+  .lunch-list-summary { font-size: 13px; color: var(--ink-3); line-height: 1.75; }
+  .lunch-gallery-image { margin: 36px 0; border: 1px solid var(--rule); background: var(--paper-2); overflow: hidden; }
+  .lunch-gallery-image img { width: 100%; display: block; max-height: 620px; object-fit: cover; }
+  .lunch-gallery-image figcaption { padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--ink-3); border-top: 1px solid var(--rule); }
+  .lunch-gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin: 40px 0; }
+  .lunch-gallery-grid .lunch-gallery-image { margin: 0; }
+  .lunch-gallery-grid .lunch-gallery-image img { aspect-ratio: 4 / 3; }
+
   /* ============================================
      きょうのクオート
   ============================================ */
@@ -1334,6 +1393,12 @@
     .archive-list li { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
     .archive-list-date { order: -1; }
     .archive-list-views { font-size: 9px; }
+    .lunch-card { grid-template-columns: 1fr; gap: 20px; padding: 32px 0; }
+    .lunch-card:hover { padding-left: 0; }
+    .lunch-list li { grid-template-columns: 96px 1fr; gap: 16px; align-items: start; }
+    .lunch-list-arrow { display: none; }
+    .lunch-list-title { font-size: 19px; }
+    .lunch-gallery-grid { grid-template-columns: 1fr; }
     .quote-card { padding: 32px 0; }
     .quote-card:hover { padding-left: 0; }
     .quote-text { font-size: 22px; line-height: 1.55; padding-left: 28px; }
@@ -1410,6 +1475,7 @@
       <a onclick="navigateHome()" id="nav-home" class="active">ホーム</a>
       <a href="#ideas">あしたのアイデア</a>
       <a href="#quote">きょうのクオート</a>
+      <a href="#lunch">きょうのランチ</a>
       <a href="#reviews">ブックレビュー</a>
       <a href="#today">きょう発売</a>
       <a href="#archive" id="nav-archive">アーカイブ</a>
@@ -1464,11 +1530,29 @@
       </div>
     </section>
 
+    <!-- きょうのランチ -->
+    <section class="section" id="lunch">
+      <div class="section-head reveal">
+        <div class="section-num">03</div>
+        <h2 class="section-h">きょうのランチ<span class="en">Today's Lunch</span></h2>
+        <a class="section-more" href="#lunch-archive">ランチ一覧</a>
+      </div>
+      <div id="lunch-latest"><div class="lunch-empty">きょうのランチを読み込み中…</div></div>
+      <div class="lunch-archive-link reveal"><a href="#lunch-archive">過去のランチをすべて見る</a></div>
+      <div class="section-sunset reveal" aria-hidden="true">
+        <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+          <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22" fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+          <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+          <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+        </svg>
+      </div>
+    </section>
+
     <!-- テッキーズ・ブックレビュー(NoteのRSS) -->
     <section class="reviews" id="reviews">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-num">03</div>
+          <div class="section-num">04</div>
           <h2 class="section-h">テッキーズ・ブックレビュー<span class="en">Techies' Book Review</span></h2>
           <a class="section-more" id="note-more" target="_blank" rel="noopener">noteで全部読む</a>
         </div>
@@ -1489,7 +1573,7 @@
     <!-- きょう発売(X埋め込み) -->
     <section class="section" id="today">
       <div class="section-head reveal">
-        <div class="section-num">04</div>
+        <div class="section-num">05</div>
         <div>
           <div class="release-eyebrow" id="release-date">— 発売日 —</div>
           <h2 class="section-h">きょう発売のビジネス書<span class="en">Today's Releases · X</span></h2>
@@ -1579,6 +1663,25 @@
       <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
         <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22"
               fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
+        <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
+        <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============== ランチアーカイブページ ============== -->
+  <section id="lunch-archive-view" class="archive-page">
+    <button class="article-back" onclick="navigateHome()">ホームに戻る</button>
+    <div class="archive-head">
+      <div class="archive-eyebrow">— LUNCH ARCHIVE · 過去のすべての昼食 —</div>
+      <h1 class="archive-title">きょうのランチ<br><em>Archive</em></h1>
+      <p class="archive-desc">食べたもの、店の空気、午後に残った余韻。日々のランチを小さな記録として残します。</p>
+      <div class="archive-count">全 <strong id="lunch-archive-count-num">0</strong> 食</div>
+    </div>
+    <ul class="lunch-list" id="lunch-archive-list"></ul>
+    <div class="section-sunset reveal" aria-hidden="true">
+      <svg viewBox="0 0 1200 52" preserveAspectRatio="none">
+        <path d="M0 28 C160 22 260 34 400 28 C540 22 660 34 820 28 C960 22 1080 28 1200 22" fill="none" stroke="rgba(212,57,27,0.24)" stroke-width="1.4"/>
         <path d="M250 16 q10 -10 20 0" fill="none" stroke="rgba(18,18,15,0.34)" stroke-width="1.2"/>
         <path d="M900 12 q12 -12 24 0" fill="none" stroke="rgba(18,18,15,0.30)" stroke-width="1.2"/>
       </svg>
@@ -1843,6 +1946,90 @@
     ).join('');
   }
 
+  // ============================================================
+  // きょうのランチ(最新1件+アーカイブ+複数写真)
+  // ============================================================
+  function getLunchCover(lunch) {
+    const photos = Array.isArray(lunch && lunch.photos) ? lunch.photos : [];
+    if (lunch && lunch.coverImage) return lunch.coverImage;
+    if (photos.length > 0) {
+      const first = photos[0];
+      if (typeof first === 'string') return first;
+      if (first && first.image) return first.image;
+    }
+    return '';
+  }
+
+  function renderLunchLatest(lunches) {
+    lunches = Array.isArray(lunches) ? lunches : [];
+    const wrap = document.getElementById('lunch-latest');
+    if (!wrap) return;
+    if (lunches.length === 0) {
+      wrap.innerHTML = '<div class="lunch-empty">まだランチ記事がありません。CMSから追加してください。</div>';
+      return;
+    }
+    const lunch = lunches[0];
+    const cover = getLunchCover(lunch);
+    const thumb = cover ? '<div class="lunch-thumb"><img src="' + cover + '" alt="" loading="lazy"></div>' : '<div class="lunch-thumb no-image"></div>';
+    wrap.innerHTML = '<article class="lunch-card reveal" data-lunch-id="' + lunch.id + '">' +
+      thumb +
+      '<div><div class="lunch-meta">' + (lunch.publishDate || '') + (lunch.place ? ' · ' + lunch.place : '') + '</div>' +
+      '<h3 class="lunch-title">' + (lunch.title || '') + '</h3>' +
+      '<p class="lunch-summary">' + (lunch.summary || '') + '</p></div>' +
+      '<span class="lunch-arrow">→</span></article>';
+    const card = wrap.querySelector('[data-lunch-id]');
+    if (card) card.addEventListener('click', () => { previousView = 'home'; location.hash = card.dataset.lunchId; });
+  }
+
+  function renderLunchArchive(lunches) {
+    lunches = Array.isArray(lunches) ? lunches : [];
+    const list = document.getElementById('lunch-archive-list');
+    const count = document.getElementById('lunch-archive-count-num');
+    if (!list || !count) return;
+    count.textContent = lunches.length;
+    if (lunches.length === 0) {
+      list.innerHTML = '<li class="lunch-empty">まだランチ記事がありません</li>';
+      return;
+    }
+    list.innerHTML = lunches.map(lunch => {
+      const cover = getLunchCover(lunch);
+      const thumb = cover ? '<div class="lunch-list-thumb"><img src="' + cover + '" alt="" loading="lazy"></div>' : '<div class="lunch-list-thumb no-image"></div>';
+      return '<li data-lunch-id="' + lunch.id + '">' + thumb + '<div>' +
+        '<div class="lunch-list-meta">' + (lunch.publishDate || '') + (lunch.place ? ' · ' + lunch.place : '') + '</div>' +
+        '<h3 class="lunch-list-title">' + (lunch.title || '') + '</h3>' +
+        '<p class="lunch-list-summary">' + (lunch.summary || '') + '</p></div><span class="lunch-list-arrow">→</span></li>';
+    }).join('');
+    list.querySelectorAll('li[data-lunch-id]').forEach(li => {
+      li.addEventListener('click', () => { previousView = 'lunch-archive'; location.hash = li.dataset.lunchId; });
+    });
+  }
+
+  function renderLunchBody(body, photos) {
+    photos = Array.isArray(photos) ? photos : [];
+    let used = new Set();
+    function photoAt(index) {
+      const photo = photos[index - 1];
+      if (!photo) return '';
+      used.add(index - 1);
+      const src = typeof photo === 'string' ? photo : photo.image;
+      const caption = typeof photo === 'string' ? '' : (photo.caption || '');
+      if (!src) return '';
+      return '<figure class="lunch-gallery-image"><img src="' + src + '" alt="" loading="lazy">' +
+        (caption ? '<figcaption>' + escapeHTML(caption) + '</figcaption>' : '') + '</figure>';
+    }
+    let formatted = formatArticleBody(body);
+    formatted = formatted.replace(/\[\[photo:(\d+)\]\]/g, (_, num) => photoAt(parseInt(num, 10)));
+    const remaining = photos.map((photo, index) => ({ photo, index })).filter(item => !used.has(item.index)).map(item => {
+      const src = typeof item.photo === 'string' ? item.photo : item.photo.image;
+      const caption = typeof item.photo === 'string' ? '' : (item.photo.caption || '');
+      if (!src) return '';
+      return '<figure class="lunch-gallery-image"><img src="' + src + '" alt="" loading="lazy">' +
+        (caption ? '<figcaption>' + escapeHTML(caption) + '</figcaption>' : '') + '</figure>';
+    }).filter(Boolean);
+    if (remaining.length > 0) formatted += '<div class="lunch-gallery-grid">' + remaining.join('') + '</div>';
+    return formatted;
+  }
+
   // 直前のページを記憶(記事から戻るときに使う)
   let previousView = 'home'; // 'home' | 'archive'
 
@@ -1876,42 +2063,36 @@
       .join('');
   }
 
-  function showArticle(ideaId) {
-    const idea = APP_DATA.ideas.find(i => i.id === ideaId);
-    if (!idea) {
-      navigateHome();
-      return;
-    }
+  function showArticle(articleId) {
+    const isLunch = articleId && articleId.startsWith('lunch-');
+    const article = isLunch ? APP_DATA.lunches.find(i => i.id === articleId) : APP_DATA.ideas.find(i => i.id === articleId);
+    if (!article) { navigateHome(); return; }
 
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
+    document.getElementById('lunch-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.add('active');
-    document.getElementById('article-eyebrow').textContent =
-      'あしたのアイデア · ' + idea.category;
-    document.getElementById('article-title').textContent = idea.title;
-    document.getElementById('article-meta').innerHTML =
-      '<span>◷ 読了 ' + (idea.readTime || '5分') + '</span>' +
-      '<span>✎ 編集部</span>' +
-      '<span># ' + (idea.tag || '') + '</span>' +
-      '<span>' + (idea.publishDate || '') + '</span>';
+
+    document.getElementById('article-eyebrow').textContent = isLunch ? 'きょうのランチ · ' + (article.place || 'Lunch') : 'あしたのアイデア · ' + article.category;
+    document.getElementById('article-title').textContent = article.title;
+
+    if (isLunch) {
+      document.getElementById('article-meta').innerHTML = '<span>' + (article.publishDate || '') + '</span><span>🍽 ' + (article.place || 'Lunch') + '</span><span>✎ 編集長</span>';
+    } else {
+      document.getElementById('article-meta').innerHTML = '<span>◷ 読了 ' + (article.readTime || '5分') + '</span><span>✎ 編集部</span><span># ' + (article.tag || '') + '</span><span>' + (article.publishDate || '') + '</span>';
+    }
 
     const articleImage = document.getElementById('article-image');
     if (articleImage) {
-      if (idea.image) {
-        articleImage.classList.add('active');
-        articleImage.innerHTML = '<img src="' + idea.image + '" alt="">';
-      } else {
-        articleImage.classList.remove('active');
-        articleImage.innerHTML = '';
-      }
+      const image = isLunch ? getLunchCover(article) : article.image;
+      if (image) { articleImage.classList.add('active'); articleImage.innerHTML = '<img src="' + image + '" alt="">'; }
+      else { articleImage.classList.remove('active'); articleImage.innerHTML = ''; }
     }
 
-    document.getElementById('article-body').innerHTML = formatArticleBody(idea.body);
-
+    document.getElementById('article-body').innerHTML = isLunch ? renderLunchBody(article.body, article.photos) : formatArticleBody(article.body);
     window.scrollTo({ top: 0, behavior: 'instant' });
-    ViewCounter.increment(ideaId);
-
+    ViewCounter.increment(articleId);
     document.getElementById('nav-home').classList.remove('active');
     document.getElementById('nav-archive').classList.remove('active');
   }
@@ -1920,6 +2101,7 @@
     document.getElementById('home-view').classList.remove('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
+    document.getElementById('lunch-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.add('active');
     document.getElementById('nav-archive').classList.remove('active');
@@ -1930,6 +2112,7 @@
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.add('active');
     document.getElementById('quote-archive-view').classList.remove('active');
+    document.getElementById('lunch-archive-view').classList.remove('active');
     document.getElementById('article-view').classList.remove('active');
     document.getElementById('nav-home').classList.remove('active');
     document.getElementById('nav-archive').classList.add('active');
@@ -1948,6 +2131,18 @@
     previousView = 'quote-archive';
   }
 
+  function showLunchArchive() {
+    document.getElementById('home-view').classList.add('hidden');
+    document.getElementById('archive-view').classList.remove('active');
+    document.getElementById('quote-archive-view').classList.remove('active');
+    document.getElementById('lunch-archive-view').classList.add('active');
+    document.getElementById('article-view').classList.remove('active');
+    document.getElementById('nav-home').classList.remove('active');
+    document.getElementById('nav-archive').classList.remove('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    previousView = 'lunch-archive';
+  }
+
   function navigateHome() {
     if (location.hash) {
       history.pushState('', document.title, location.pathname + location.search);
@@ -1960,6 +2155,10 @@
   function goBackFromArticle() {
     if (previousView === 'archive') {
       location.hash = 'archive';
+    } else if (previousView === 'lunch-archive') {
+      location.hash = 'lunch-archive';
+    } else if (previousView === 'quote-archive') {
+      location.hash = 'quote-archive';
     } else {
       navigateHome();
     }
@@ -1968,12 +2167,14 @@
   function handleHashChange() {
     const hash = location.hash.replace('#', '');
 
-    if (hash && hash.startsWith('idea-')) {
+    if (hash && (hash.startsWith('idea-') || hash.startsWith('lunch-'))) {
       showArticle(hash);
     } else if (hash === 'archive') {
       showArchive();
     } else if (hash === 'quote-archive') {
       showQuoteArchive();
+    } else if (hash === 'lunch-archive') {
+      showLunchArchive();
     } else {
       showHome();
       // セクションスクロール
@@ -2206,7 +2407,7 @@
     list.querySelectorAll('li[data-article-id]').forEach(li => {
       li.addEventListener('click', () => {
         const id = li.dataset.articleId;
-        if (id.startsWith('idea-')) location.hash = id;
+        if (id.startsWith('idea-') || id.startsWith('lunch-')) location.hash = id;
       });
     });
   }
@@ -2217,6 +2418,11 @@
       id: i.id,
       title: i.title,
       source: 'あしたのアイデア'
+    }));
+    (data.lunches || []).forEach(i => all.push({
+      id: i.id,
+      title: i.title,
+      source: 'きょうのランチ'
     }));
     return all;
   }
@@ -2343,6 +2549,7 @@
 
     APP_DATA.ideas = Array.isArray(APP_DATA.ideas) ? APP_DATA.ideas : [];
     APP_DATA.quotes = Array.isArray(APP_DATA.quotes) ? APP_DATA.quotes : [];
+    APP_DATA.lunches = Array.isArray(APP_DATA.lunches) ? APP_DATA.lunches : [];
 
     setMastheadDate(APP_DATA.site.startDate);
     document.getElementById('weather').textContent = APP_DATA.site.weather;
@@ -2372,6 +2579,8 @@
     renderArchive(APP_DATA.ideas, viewMap);
     renderQuoteLatest(APP_DATA.quotes);
     renderQuoteArchive(APP_DATA.quotes);
+    renderLunchLatest(APP_DATA.lunches);
+    renderLunchArchive(APP_DATA.lunches);
     if (APP_DATA.noteConfig) {
       loadNoteFeed(APP_DATA.noteConfig.username, APP_DATA.noteConfig.displayCount || 3);
     }

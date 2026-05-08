@@ -1,8 +1,8 @@
 const SITE = {
   name: 'くるひもタイムズ / Kuruhimo Times',
   shortName: 'くるひもタイムズ',
-  originFallback: 'https://kuruhitimes.pages.dev',
-  domainFallback: 'kuruhitimes.pages.dev',
+  originFallback: 'https://kuruhimo.com',
+  domainFallback: 'kuruhimo.com',
   defaultOgImage: '/images/og/kuruhimo-times.png',
   xAccount: '@KuruhimoTimes',
   description: '次にくるアイデアと、それを支える本を、毎日少しずつ届ける編集室。テクノロジーと暮らしのあいだを、誰かより少し早く歩く小さなメディアです。'

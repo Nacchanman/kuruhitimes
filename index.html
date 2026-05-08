@@ -878,6 +878,11 @@
   }
   .about-page.active { display: block; }
 
+  body.is-about-route .navbar,
+  body.is-about-route .nav-spacer {
+    display: none !important;
+  }
+
   .about-shell {
     display: grid;
     grid-template-columns: minmax(260px, 0.86fr) minmax(0, 1.14fr);
@@ -3515,18 +3520,7 @@
 
   <!-- ============== このメディアについて ============== -->
   <section id="about-view" class="about-page">
-    <button class="article-back" onclick="navigateHome()">ホームに戻る</button>
     <div class="about-shell">
-      <div class="about-visual" aria-label="夕陽と『く』の字を組み合わせた、くるひもタイムズのイラスト">
-        <div class="about-sun" aria-hidden="true"></div>
-        <div class="about-horizon" aria-hidden="true"></div>
-        <div class="about-ku" aria-hidden="true">く</div>
-        <div class="about-caption" aria-hidden="true">
-          <span>Sunset Editorial Room</span>
-          <span>Kuruhimo Times · 2026</span>
-        </div>
-      </div>
-
       <div class="about-copy">
         <div class="about-kicker">— ABOUT THIS MEDIA —</div>
         <h1 class="about-title">このメディアについて<em>The Kuruhimo Times</em></h1>
@@ -4007,6 +4001,7 @@
     if (!article) { navigateHome(); return; }
 
     document.body.classList.add('is-article-route');
+    document.body.classList.remove('is-about-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -4054,6 +4049,7 @@
 
   function showHome() {
     document.body.classList.remove('is-article-route');
+    document.body.classList.remove('is-about-route');
     document.getElementById('home-view').classList.remove('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -4067,6 +4063,7 @@
 
   function showArchive() {
     document.body.classList.remove('is-article-route');
+    document.body.classList.remove('is-about-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.add('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -4081,6 +4078,7 @@
 
   function showQuoteArchive() {
     document.body.classList.remove('is-article-route');
+    document.body.classList.remove('is-about-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.add('active');
@@ -4095,6 +4093,7 @@
 
   function showLunchArchive() {
     document.body.classList.remove('is-article-route');
+    document.body.classList.remove('is-about-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');
@@ -4109,6 +4108,7 @@
 
   function showAbout() {
     document.body.classList.remove('is-article-route');
+    document.body.classList.add('is-about-route');
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('archive-view').classList.remove('active');
     document.getElementById('quote-archive-view').classList.remove('active');

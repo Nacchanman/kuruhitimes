@@ -139,6 +139,7 @@ function renderArticlePage({ post, requestUrl }) {
   const origin = requestUrl.origin || SITE.originFallback;
   const canonicalPath = '/article/' + encodeURIComponent(post.id) + '/';
   const canonicalUrl = absoluteUrl(canonicalPath, origin);
+  const shareUrl = versionedShareUrl(canonicalUrl, post.updatedAt || post.modifiedDate || post.date || post.id);
 
   const title = post.title || post.quote || '無題の記事';
   const siteTitle = title + '｜' + SITE.shortName;
@@ -231,11 +232,11 @@ ${updated ? `<meta property="article:modified_time" content="${escapeAttr(update
   <aside class="share-panel" aria-label="記事共有">
     <div>
       <p class="share-label">SHARE THIS POST</p>
-      <p class="share-url">${escapeHtml(canonicalUrl)}</p>
+      <p class="share-url">${escapeHtml(shareUrl)}</p>
     </div>
 
     <div class="share-actions">
-      <button class="copy-button" type="button" data-copy-url="${escapeAttr(canonicalUrl)}">
+      <button class="copy-button" type="button" data-copy-url="${escapeAttr(shareUrl)}">
         <span>リンクをコピー</span>
         <small>Copy URL</small>
       </button>
@@ -558,6 +559,16 @@ function versionedImageUrl(imageUrl, version) {
   return url.toString();
 }
 
+function versionedShareUrl(url, version) {
+  const value = new URL(url);
+  const key = String(version || '2026')
+    .replace(/[^\w-]/g, '')
+    .slice(0, 40) || '2026';
+
+  value.searchParams.set('xcard', key);
+  return value.toString();
+}
+
 function normalizePath(pathname) {
   return pathname.replace(/\/+/g, '/');
 }
@@ -795,6 +806,22 @@ h1 {
   margin: 0 0 1.75em;
 }
 
+.article-body > p:first-of-type::first-letter,
+.article-body p.dropcap::first-letter {
+  float: left;
+  font-family: 'Fraunces', 'Shippori Mincho', serif;
+  font-size: 4.8em;
+  line-height: 0.82;
+  padding: 0.14em 0.16em 0 0;
+  color: var(--vermilion);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+}
+
+.article-body > p:first-of-type {
+  text-indent: 0;
+}
+
 .article-body a {
   color: var(--vermilion);
   text-underline-offset: .2em;
@@ -977,6 +1004,13 @@ figcaption {
   .post-lunch h1 {
     font-size: clamp(28px, 9.2vw, 38px);
     line-height: 1.38;
+  }
+
+  .article-body > p:first-of-type::first-letter,
+  .article-body p.dropcap::first-letter {
+    font-size: 3.7em;
+    line-height: 0.86;
+    padding: 0.12em 0.14em 0 0;
   }
 
   .share-panel {

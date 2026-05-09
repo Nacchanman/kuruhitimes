@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>くるひもタイムズ</title>
-    <link>https://kuruhitimes.pages.dev</link>
+    <link>https://kuruhimo.com</link>
     <description>次にくるアイデアの編集室</description>
     <language>ja</language>
     <lastBuildDate>Fri, 01 May 2026 08:50:24 GMT</lastBuildDate>
-    <atom:link href="https://kuruhitimes.pages.dev/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://kuruhimo.com/rss.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ローカルファーストAI</title>
       <link>https://kuruhitimes.pages.dev/#idea-20</link>

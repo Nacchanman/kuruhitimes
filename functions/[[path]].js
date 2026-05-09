@@ -8,7 +8,7 @@ const SITE = {
   description: '次にくるアイデアと、それを支える本を、毎日少しずつ届ける編集室。テクノロジーと暮らしのあいだを、誰かより少し早く歩く小さなメディアです。'
 };
 
-const CRAWLER_RE = /(Twitterbot|facebookexternalhit|Facebot|Slackbot|Discordbot|LinkedInBot|Line|LINE|WhatsApp|TelegramBot|Pinterest|Googlebot|bingbot|DuckDuckBot)/i;
+const CRAWLER_RE = /(Twitterbot|facebookexternalhit|Facebot|Slackbot|Discordbot|LinkedInBot|WhatsApp|TelegramBot|Pinterest|Googlebot|bingbot|DuckDuckBot)/i;
 
 export async function onRequest(context) {
   const { request } = context;

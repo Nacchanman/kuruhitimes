@@ -903,10 +903,9 @@
   .about-page.active { display: block; }
 
   .about-shell {
-    display: grid;
-    grid-template-columns: minmax(260px, 0.86fr) minmax(0, 1.14fr);
-    gap: clamp(36px, 6vw, 84px);
-    align-items: center;
+    display: block;
+    max-width: 860px;
+    margin: 0 auto;
     padding: clamp(28px, 5vw, 56px) 0 0;
   }
 
@@ -3516,18 +3515,7 @@
 
   <!-- ============== このメディアについて ============== -->
   <section id="about-view" class="about-page">
-    <button class="article-back" onclick="navigateHome()">ホームに戻る</button>
     <div class="about-shell">
-      <div class="about-visual" aria-label="夕陽と『く』の字を組み合わせた、くるひもタイムズのイラスト">
-        <div class="about-sun" aria-hidden="true"></div>
-        <div class="about-horizon" aria-hidden="true"></div>
-        <div class="about-ku" aria-hidden="true">く</div>
-        <div class="about-caption" aria-hidden="true">
-          <span>Sunset Editorial Room</span>
-          <span>Kuruhimo Times · 2026</span>
-        </div>
-      </div>
-
       <div class="about-copy">
         <div class="about-kicker">— ABOUT THIS MEDIA —</div>
         <h1 class="about-title">このメディアについて<em>The Kuruhimo Times</em></h1>

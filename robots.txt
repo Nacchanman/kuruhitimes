@@ -25,4 +25,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://kuruhitimes.pages.dev/rss.xml
+Sitemap: https://kuruhimo.com/sitemap.xml

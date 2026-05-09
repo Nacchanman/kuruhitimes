@@ -391,7 +391,7 @@
   /* セクション共通 */
   .section { padding: 72px 0; position: relative; }
   .section + .section { border-top: 1px solid var(--rule); }
-  #today { padding-top: clamp(36px, 5vw, 52px); }
+  #today { padding-top: clamp(12px, 2vw, 22px); }
   .section-head { display: grid; grid-template-columns: auto 1fr auto; gap: 48px; align-items: end; margin-bottom: 64px; padding-bottom: 24px; border-bottom: 1px solid var(--rule-strong); }
   .section-num {
     font-family: 'Fraunces', serif;
@@ -1386,7 +1386,7 @@
 
   .ranked {
     position: relative;
-    margin: clamp(28px, 4vw, 52px) 0;
+    margin: clamp(8px, 1.5vw, 18px) 0 clamp(10px, 2vw, 22px);
     padding: clamp(46px, 6vw, 72px) clamp(22px, 4vw, 56px);
     border-top: 1px solid rgba(18,18,15,0.44);
     border-bottom: 1px solid rgba(18,18,15,0.16);
@@ -1618,7 +1618,7 @@
 
   .reviews {
     position: relative;
-    margin: clamp(24px, 4vw, 52px) 0 clamp(28px, 4vw, 56px);
+    margin: clamp(8px, 1.5vw, 18px) 0 clamp(10px, 2vw, 22px);
     padding: clamp(44px, 6vw, 72px) 0;
     background:
       linear-gradient(135deg, rgba(18,18,15,0.94), rgba(42,40,37,0.92)),
@@ -2044,7 +2044,7 @@
 
   @media (max-width: 760px) {
     .reviews {
-      margin: 36px 0 40px;
+      margin: 16px 0 18px;
       padding: 48px 0;
     }
 
@@ -2504,7 +2504,7 @@
 
   @media (max-width: 760px) {
     .ranked {
-      margin: 44px -22px;
+      margin: 18px -22px;
       padding: 44px 22px;
     }
 
@@ -2753,7 +2753,7 @@
     }
 
     #today {
-      padding-top: clamp(30px, 8vw, 44px);
+      padding-top: clamp(12px, 4vw, 22px);
     }
 
     .section + .section {
@@ -2977,7 +2977,7 @@
     }
 
     .reviews {
-      margin: clamp(64px, 18vw, 88px) calc(-1 * clamp(18px, 5.2vw, 24px));
+      margin: clamp(18px, 5vw, 26px) calc(-1 * clamp(18px, 5.2vw, 24px));
       padding: clamp(54px, 14vw, 72px) clamp(18px, 5.2vw, 24px);
     }
 
@@ -3040,7 +3040,7 @@
     }
 
     .ranked {
-      margin: clamp(38px, 10vw, 56px) calc(-1 * clamp(18px, 5.2vw, 24px));
+      margin: clamp(16px, 4vw, 24px) calc(-1 * clamp(18px, 5.2vw, 24px));
       padding: clamp(52px, 14vw, 68px) clamp(18px, 5.2vw, 24px);
     }
 

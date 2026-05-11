@@ -131,7 +131,9 @@
   "xPostsConfig": {
     "accountUrl": "https://x.com/newbookforbiz",
     "postUrls": [
-      "https://x.com/newbookforbiz/status/2053249597250920827?s=20"
+      "https://x.com/newbookforbiz/status/2053624898405453878?s=20",
+      "https://x.com/newbookforbiz/status/2053625387511648715?s=20",
+      "https://x.com/newbookforbiz/status/2053625086943621255?s=20"
     ],
     "_comment": "きょう発売のビジネス書はXの投稿を埋め込み表示。投稿のURLを最大3つまで指定",
     "_postUrls_help": "Xの投稿の「リンクをコピー」で取得したURLを貼り付け。3つまで表示されます。最新3投稿を取得する自動化はXのAPI仕様上、無料では不可"

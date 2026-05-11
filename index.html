@@ -196,6 +196,26 @@
   .site-title .char:hover { color: var(--vermilion); }
 
   .site-en { display: block; font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(13px, 1.4vw, 17px); letter-spacing: 0.45em; color: var(--ink-3); margin-top: 24px; text-transform: uppercase; padding-left: 0.45em; }
+  .visitor-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 18px;
+    padding: 5px 12px;
+    border: 1px solid rgba(18,18,15,0.14);
+    border-radius: 999px;
+    background: rgba(246,241,231,0.64);
+    color: var(--ink-3);
+    font-family: 'JetBrains Mono', 'Zen Kaku Gothic Antique', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+  }
+  .visitor-count strong {
+    color: var(--vermilion);
+    font-weight: 500;
+    margin: 0 0.22em;
+  }
   .tagline { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(15px, 1.5vw, 19px); color: var(--ink-2); margin-top: 24px; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 24px; }
   .tagline::before, .tagline::after { content: ''; width: 32px; height: 1px; background: var(--ink-3); }
 
@@ -2701,6 +2721,12 @@
       text-align: center;
     }
 
+    .visitor-count {
+      margin-top: 14px;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+    }
+
     .tagline {
       display: flex;
       justify-content: center;
@@ -3350,6 +3376,7 @@
         <span class="word"><span class="char">く</span><span class="char">る</span><span class="char">ひ</span><span class="char">も</span></span><span class="word"><span class="char">タ</span><span class="char">イ</span><span class="char">ム</span><span class="char">ズ</span></span>
         <span class="site-en">The Kuruhimo Times</span>
       </h1>
+      <div id="home-visitor-count" class="visitor-count" aria-live="polite">訪問者数を読み込み中…</div>
       <div class="tagline">次にくるアイデアの編集室</div>
     </div>
 
@@ -3714,6 +3741,76 @@
       return Promise.all(promises);
     }
   };
+
+  // ============================================================
+  // ホームページ訪問者数
+  // ============================================================
+  const VisitorCounter = {
+    namespace: 'kuruhimo-times-2026',
+    endpoint: 'https://api.counterapi.dev/v1',
+    id: 'home-visitors',
+    registeredKey: 'kuruhimo_home_visitor_registered',
+    storageKey: 'kuruhimo_home_visitor_count',
+
+    normalizeCount(value) {
+      const count = Number(value);
+      return Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
+    },
+
+    format(count) {
+      return this.normalizeCount(count).toLocaleString('ja-JP');
+    },
+
+    render(count) {
+      const el = document.getElementById('home-visitor-count');
+      if (!el) return;
+
+      const value = this.normalizeCount(count);
+
+      if (value > 0) {
+        el.innerHTML = 'あなたは<strong>' + this.format(value) + '</strong>人目の訪問者です';
+      } else {
+        el.textContent = 'ようこそ、くるひもタイムズへ';
+      }
+    },
+
+    async incrementOrGet() {
+      const alreadyRegistered = localStorage.getItem(this.registeredKey) === '1';
+      const action = alreadyRegistered ? '' : '/up';
+      const localCount = this.normalizeCount(localStorage.getItem(this.storageKey));
+
+      try {
+        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + encodeURIComponent(this.id) + action, {
+          cache: 'no-store'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const remoteCount = this.normalizeCount(data.count);
+
+          if (remoteCount > 0) {
+            localStorage.setItem(this.storageKey, String(remoteCount));
+            localStorage.setItem(this.registeredKey, '1');
+            return remoteCount;
+          }
+        }
+      } catch (e) {}
+
+      if (!alreadyRegistered) {
+        const fallbackCount = localCount + 1;
+        localStorage.setItem(this.storageKey, String(fallbackCount));
+        localStorage.setItem(this.registeredKey, '1');
+        return fallbackCount;
+      }
+
+      return localCount;
+    }
+  };
+
+  async function setupHomeVisitorCount() {
+    const count = await VisitorCounter.incrementOrGet();
+    VisitorCounter.render(count);
+  }
 
 
   // ============================================================
@@ -4570,6 +4667,7 @@
 
     setMastheadDate(APP_DATA.site.startDate);
     document.getElementById('weather').textContent = APP_DATA.site.weather;
+    setupHomeVisitorCount();
 
     // X "Xで見る" リンク
     if (APP_DATA.xPostsConfig) {

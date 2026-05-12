@@ -1,27 +1,15 @@
 const SITE = {
   name: 'くるひもタイムズ / Kuruhimo Times',
   shortName: 'くるひもタイムズ',
-  originFallback: 'https://kuruhimo.com',
-  domainFallback: 'kuruhimo.com',
+  originFallback: 'https://kuruhitimes.pages.dev',
   defaultOgImage: '/images/og/kuruhimo-times.png',
-  xAccount: '@KuruhimoTimes',
   description: '次にくるアイデアと、それを支える本を、毎日少しずつ届ける編集室。テクノロジーと暮らしのあいだを、誰かより少し早く歩く小さなメディアです。'
 };
-
-const CRAWLER_RE = /(Twitterbot|facebookexternalhit|Facebot|Slackbot|Discordbot|LinkedInBot|WhatsApp|TelegramBot|Pinterest|Googlebot|bingbot|DuckDuckBot)/i;
 
 export async function onRequest(context) {
   const { request } = context;
   const url = new URL(request.url);
   const path = normalizePath(url.pathname);
-  const userAgent = request.headers.get('user-agent') || '';
-
-  if (path === '/' && CRAWLER_RE.test(userAgent)) {
-    return new Response(renderHomePreviewPage(url), {
-      status: 200,
-      headers: htmlHeaders()
-    });
-  }
 
   const match = path.match(/^\/(article|share)\/([^/]+)\/?$/);
 
@@ -30,17 +18,7 @@ export async function onRequest(context) {
   }
 
   const slug = decodeURIComponent(match[2]);
-
-  let data;
-  try {
-    data = await loadData(request);
-  } catch (error) {
-    return new Response(renderFallbackArticlePage({ requestUrl: url, slug }), {
-      status: 200,
-      headers: htmlHeaders()
-    });
-  }
-
+  const data = await loadData(request);
   const post = findPost(data, slug);
 
   if (!post) {
@@ -61,10 +39,7 @@ export async function onRequest(context) {
 async function loadData(request) {
   const dataUrl = new URL('/data.json', request.url);
   const res = await fetch(dataUrl.toString(), {
-    headers: {
-      accept: 'application/json',
-      'user-agent': 'KuruhimoTimes-OGP-Renderer/1.0'
-    }
+    headers: { accept: 'application/json' }
   });
 
   if (!res.ok) {
@@ -78,7 +53,7 @@ function findPost(data, slug) {
   const collections = [
     { key: 'ideas', label: 'あしたのアイデア', type: 'idea' },
     { key: 'lunches', label: 'きょうのランチ', type: 'lunch' },
-    { key: 'quotes', label: 'きょうのクオート', type: 'quote' },
+    { key: 'quotes', label: 'ことばの標本', type: 'quote' },
     { key: 'posts', label: '記事', type: 'post' },
     { key: 'articles', label: '記事', type: 'post' }
   ];
@@ -101,58 +76,14 @@ function findPost(data, slug) {
   return null;
 }
 
-function renderHomePreviewPage(requestUrl) {
-  const origin = requestUrl.origin || SITE.originFallback;
-  const canonicalUrl = absoluteUrl('/', origin);
-  const imageUrl = versionedImageUrl(absoluteUrl(SITE.defaultOgImage, origin), 'home-2026');
-  const title = 'くるひもタイムズ｜次にくるアイデアの編集室';
-  const description = SITE.description;
-
-  return `<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtml(title)}</title>
-<meta name="description" content="${escapeAttr(description)}">
-<link rel="canonical" href="${escapeAttr(canonicalUrl)}">
-
-${socialMeta({
-  title,
-  description,
-  canonicalUrl,
-  imageUrl,
-  type: 'website',
-  imageAlt: '夕陽と「く」の字をあしらった、くるひもタイムズのプレビュー画像',
-  domain: requestUrl.hostname || SITE.domainFallback
-})}
-
-<meta http-equiv="refresh" content="0; url=/">
-</head>
-<body>
-<p><a href="/">くるひもタイムズを開く</a></p>
-</body>
-</html>`;
-}
-
 function renderArticlePage({ post, requestUrl }) {
   const origin = requestUrl.origin || SITE.originFallback;
   const canonicalPath = '/article/' + encodeURIComponent(post.id) + '/';
   const canonicalUrl = absoluteUrl(canonicalPath, origin);
-  const shareUrl = versionedShareUrl(canonicalUrl, post.updatedAt || post.modifiedDate || post.date || post.id);
-
   const title = post.title || post.quote || '無題の記事';
   const siteTitle = title + '｜' + SITE.shortName;
-  const description = normalizeDescription(
-    post.summary ||
-    post.description ||
-    post.editorNote ||
-    post.body ||
-    SITE.description
-  );
-
-  const rawImageUrl = absoluteUrl(selectOgImage(post), origin);
-  const imageUrl = versionedImageUrl(rawImageUrl, post.updatedAt || post.modifiedDate || post.date || post.id);
+  const description = normalizeDescription(post.summary || post.description || post.editorNote || post.body || SITE.description);
+  const imageUrl = absoluteUrl(selectOgImage(post), origin);
   const published = post.publishDate || post.date || '';
   const updated = post.updatedAt || post.modifiedDate || published;
   const bodyHtml = renderBody(post);
@@ -160,13 +91,9 @@ function renderArticlePage({ post, requestUrl }) {
   const coverHtml = cover
     ? `<figure class="article-cover"><img src="${escapeAttr(absoluteUrl(cover, origin))}" alt=""></figure>`
     : '';
-
   const place = post.place ? `<span>${escapeHtml(post.place)}</span>` : '';
   const readTime = post.readTime ? `<span>読了 ${escapeHtml(post.readTime)}</span>` : '';
-
-  const rawCategory = post.category || post.tag || '';
-  const category = rawCategory && rawCategory !== post.collectionLabel ? rawCategory : '';
-  const imageAlt = title + '｜' + SITE.shortName;
+  const category = post.category || post.tag || post.collectionLabel;
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -176,28 +103,29 @@ function renderArticlePage({ post, requestUrl }) {
 <title>${escapeHtml(siteTitle)}</title>
 <meta name="description" content="${escapeAttr(description)}">
 <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
-
-${socialMeta({
-  title,
-  description,
-  canonicalUrl,
-  imageUrl,
-  type: 'article',
-  imageAlt,
-  domain: requestUrl.hostname || SITE.domainFallback
-})}
-
+<meta property="og:locale" content="ja_JP">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="${escapeAttr(SITE.name)}">
+<meta property="og:title" content="${escapeAttr(title)}">
+<meta property="og:description" content="${escapeAttr(description)}">
+<meta property="og:url" content="${escapeAttr(canonicalUrl)}">
+<meta property="og:image" content="${escapeAttr(imageUrl)}">
+<meta property="og:image:secure_url" content="${escapeAttr(imageUrl)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeAttr(title)}">
+<meta name="twitter:description" content="${escapeAttr(description)}">
+<meta name="twitter:image" content="${escapeAttr(imageUrl)}">
 ${published ? `<meta property="article:published_time" content="${escapeAttr(published)}">` : ''}
 ${updated ? `<meta property="article:modified_time" content="${escapeAttr(updated)}">` : ''}
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,500&family=JetBrains+Mono:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700&display=swap" rel="stylesheet">
-
 <script type="application/ld+json">${jsonLd({ post, title, description, imageUrl, canonicalUrl, published, updated })}</script>
 <style>${articleCss()}</style>
 </head>
-<body class="post-${escapeAttr(post.type)}">
+<body>
 <div class="paper-grain" aria-hidden="true"></div>
 
 <header class="article-header">
@@ -232,11 +160,11 @@ ${updated ? `<meta property="article:modified_time" content="${escapeAttr(update
   <aside class="share-panel" aria-label="記事共有">
     <div>
       <p class="share-label">SHARE THIS POST</p>
-      <p class="share-url">${escapeHtml(shareUrl)}</p>
+      <p class="share-url">${escapeHtml(canonicalUrl)}</p>
     </div>
 
     <div class="share-actions">
-      <button class="copy-button" type="button" data-copy-url="${escapeAttr(shareUrl)}">
+      <button class="copy-button" type="button" data-copy-url="${escapeAttr(canonicalUrl)}">
         <span>リンクをコピー</span>
         <small>Copy URL</small>
       </button>
@@ -256,6 +184,22 @@ ${updated ? `<meta property="article:modified_time" content="${escapeAttr(update
 </footer>
 
 <script>
+(() => {
+  const articleId = '${escapeAttr(post.id)}';
+
+  if (articleId) {
+    fetch('/api/article-counter', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json'
+      },
+      cache: 'no-store',
+      body: JSON.stringify({ id: articleId })
+    }).catch(() => {});
+  }
+})();
+
 (() => {
   const button = document.querySelector('[data-copy-url]');
   const status = document.querySelector('.copy-status');
@@ -289,89 +233,7 @@ ${updated ? `<meta property="article:modified_time" content="${escapeAttr(update
 </html>`;
 }
 
-function renderFallbackArticlePage({ requestUrl, slug }) {
-  const origin = requestUrl.origin || SITE.originFallback;
-  const canonicalUrl = absoluteUrl('/article/' + encodeURIComponent(slug) + '/', origin);
-  const title = SITE.shortName + 'の記事';
-  const description = SITE.description;
-  const imageUrl = versionedImageUrl(absoluteUrl(SITE.defaultOgImage, origin), 'fallback-2026');
-
-  return `<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtml(title)}</title>
-<meta name="description" content="${escapeAttr(description)}">
-<link rel="canonical" href="${escapeAttr(canonicalUrl)}">
-${socialMeta({
-  title,
-  description,
-  canonicalUrl,
-  imageUrl,
-  type: 'article',
-  imageAlt: SITE.shortName,
-  domain: requestUrl.hostname || SITE.domainFallback
-})}
-<style>
-body {
-  margin: 0;
-  padding: 48px;
-  background: #f6f1e7;
-  color: #12120f;
-  font-family: serif;
-  line-height: 1.8;
-}
-a {
-  color: #d4391b;
-}
-</style>
-</head>
-<body>
-<h1>${escapeHtml(title)}</h1>
-<p>${escapeHtml(description)}</p>
-<p><a href="/">トップへ戻る</a></p>
-</body>
-</html>`;
-}
-
-function socialMeta({ title, description, canonicalUrl, imageUrl, type, imageAlt, domain }) {
-  return `
-<meta property="og:locale" content="ja_JP">
-<meta property="og:type" content="${escapeAttr(type)}">
-<meta property="og:site_name" content="${escapeAttr(SITE.name)}">
-<meta property="og:title" content="${escapeAttr(title)}">
-<meta property="og:description" content="${escapeAttr(description)}">
-<meta property="og:url" content="${escapeAttr(canonicalUrl)}">
-<meta property="og:image" content="${escapeAttr(imageUrl)}">
-<meta property="og:image:secure_url" content="${escapeAttr(imageUrl)}">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${escapeAttr(imageAlt || title)}">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="${escapeAttr(SITE.xAccount)}">
-<meta name="twitter:creator" content="${escapeAttr(SITE.xAccount)}">
-<meta name="twitter:domain" content="${escapeAttr(domain || SITE.domainFallback)}">
-<meta name="twitter:url" content="${escapeAttr(canonicalUrl)}">
-<meta name="twitter:title" content="${escapeAttr(title)}">
-<meta name="twitter:description" content="${escapeAttr(description)}">
-<meta name="twitter:image" content="${escapeAttr(imageUrl)}">
-<meta name="twitter:image:src" content="${escapeAttr(imageUrl)}">
-<meta name="twitter:image:alt" content="${escapeAttr(imageAlt || title)}">
-
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:title" content="${escapeAttr(title)}">
-<meta property="twitter:description" content="${escapeAttr(description)}">
-<meta property="twitter:image" content="${escapeAttr(imageUrl)}">`;
-}
-
 function renderNotFound(url, slug) {
-  const origin = url.origin || SITE.originFallback;
-  const canonicalUrl = absoluteUrl('/article/' + encodeURIComponent(slug) + '/', origin);
-  const imageUrl = versionedImageUrl(absoluteUrl(SITE.defaultOgImage, origin), 'not-found-2026');
-
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -379,15 +241,6 @@ function renderNotFound(url, slug) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>記事が見つかりません｜くるひもタイムズ</title>
 <meta name="robots" content="noindex">
-${socialMeta({
-  title: '記事が見つかりません｜くるひもタイムズ',
-  description: SITE.description,
-  canonicalUrl,
-  imageUrl,
-  type: 'article',
-  imageAlt: SITE.shortName,
-  domain: url.hostname || SITE.domainFallback
-})}
 <style>
 body {
   margin: 0;
@@ -549,26 +402,6 @@ function absoluteUrl(path, origin) {
   return new URL(value.startsWith('/') ? value : '/' + value, origin).toString();
 }
 
-function versionedImageUrl(imageUrl, version) {
-  const url = new URL(imageUrl);
-  const key = String(version || '2026')
-    .replace(/[^\w-]/g, '')
-    .slice(0, 40) || '2026';
-
-  url.searchParams.set('x-card', key);
-  return url.toString();
-}
-
-function versionedShareUrl(url, version) {
-  const value = new URL(url);
-  const key = String(version || '2026')
-    .replace(/[^\w-]/g, '')
-    .slice(0, 40) || '2026';
-
-  value.searchParams.set('xcard', key);
-  return value.toString();
-}
-
 function normalizePath(pathname) {
   return pathname.replace(/\/+/g, '/');
 }
@@ -591,8 +424,7 @@ function formatDate(value) {
 function htmlHeaders() {
   return {
     'content-type': 'text/html; charset=UTF-8',
-    'cache-control': 'public, max-age=60, s-maxage=60',
-    'x-robots-tag': 'index, follow'
+    'cache-control': 'public, max-age=120'
   };
 }
 
@@ -750,20 +582,12 @@ body {
 }
 
 h1 {
-  max-width: 980px;
   font-family: 'Shippori Mincho', serif;
-  font-size: clamp(34px, 5.4vw, 62px);
+  font-size: clamp(38px, 7vw, 78px);
   font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: -.045em;
+  line-height: 1.18;
+  letter-spacing: -.055em;
   margin: 0 0 24px;
-}
-
-.post-lunch h1 {
-  max-width: 900px;
-  font-size: clamp(32px, 4.7vw, 54px);
-  line-height: 1.32;
-  letter-spacing: -.035em;
 }
 
 .article-meta {
@@ -804,22 +628,6 @@ h1 {
 
 .article-body p {
   margin: 0 0 1.75em;
-}
-
-.article-body > p:first-of-type::first-letter,
-.article-body p.dropcap::first-letter {
-  float: left;
-  font-family: 'Fraunces', 'Shippori Mincho', serif;
-  font-size: 4.8em;
-  line-height: 0.82;
-  padding: 0.14em 0.16em 0 0;
-  color: var(--vermilion);
-  font-weight: 500;
-  letter-spacing: -0.08em;
-}
-
-.article-body > p:first-of-type {
-  text-indent: 0;
 }
 
 .article-body a {
@@ -932,11 +740,7 @@ figcaption {
   gap: 0;
   font-family: 'Zen Kaku Gothic Antique', sans-serif;
   line-height: 1.25;
-  transition:
-    transform .25s ease,
-    background .25s ease,
-    color .25s ease,
-    border-color .25s ease;
+  transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
 }
 
 .copy-button span,
@@ -996,23 +800,6 @@ figcaption {
     padding-top: 42px;
   }
 
-  h1 {
-    font-size: clamp(30px, 10vw, 42px);
-    line-height: 1.32;
-  }
-
-  .post-lunch h1 {
-    font-size: clamp(28px, 9.2vw, 38px);
-    line-height: 1.38;
-  }
-
-  .article-body > p:first-of-type::first-letter,
-  .article-body p.dropcap::first-letter {
-    font-size: 3.7em;
-    line-height: 0.86;
-    padding: 0.12em 0.14em 0 0;
-  }
-
   .share-panel {
     grid-template-columns: 1fr;
   }
@@ -1034,6 +821,5 @@ figcaption {
   .article-footer {
     flex-direction: column;
   }
-}
-`;
+}`;
 }

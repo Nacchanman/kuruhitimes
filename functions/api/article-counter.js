@@ -42,22 +42,30 @@ export async function onRequest(context) {
           updated_at = CURRENT_TIMESTAMP
       `).bind(key).run();
 
-      const row = await db.prepare(`
-        SELECT value
-        FROM counters
-        WHERE key = ?
-        LIMIT 1
-      `).bind(key).first();
+      const count = await getArticleCount(db, id);
 
       return jsonResponse({
         ok: true,
         id,
-        count: Number(row?.value || 0)
+        count
       }, 200);
     }
 
     const url = new URL(request.url);
+    const singleId = normalizeArticleId(url.searchParams.get('id'));
     const rawIds = url.searchParams.get('ids') || '';
+
+    if (singleId) {
+      const count = await getArticleCount(db, singleId);
+
+      return jsonResponse({
+        ok: true,
+        id: singleId,
+        count,
+        counts: { [singleId]: count }
+      }, 200);
+    }
+
     const ids = rawIds
       .split(',')
       .map(normalizeArticleId)
@@ -74,14 +82,7 @@ export async function onRequest(context) {
     const counts = {};
 
     for (const id of ids) {
-      const row = await db.prepare(`
-        SELECT value
-        FROM counters
-        WHERE key = ?
-        LIMIT 1
-      `).bind(articleKey(id)).first();
-
-      counts[id] = Number(row?.value || 0);
+      counts[id] = await getArticleCount(db, id);
     }
 
     return jsonResponse({
@@ -104,6 +105,17 @@ async function ensureCountersTable(db) {
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
   `).run();
+}
+
+async function getArticleCount(db, id) {
+  const row = await db.prepare(`
+    SELECT value
+    FROM counters
+    WHERE key = ?
+    LIMIT 1
+  `).bind(articleKey(id)).first();
+
+  return Number(row?.value || 0);
 }
 
 async function readJson(request) {

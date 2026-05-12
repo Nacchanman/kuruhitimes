@@ -4177,7 +4177,11 @@
     }
 
     window.scrollTo({ top: 0, behavior: 'instant' });
-    ViewCounter.increment(articleId);
+    ViewCounter.increment(articleId).then(() => {
+      if (APP_DATA) {
+        renderRanked(collectAllArticles(APP_DATA));
+      }
+    });
     document.getElementById('nav-home').classList.remove('active');
     document.getElementById('nav-archive')?.classList.remove('active');
   }

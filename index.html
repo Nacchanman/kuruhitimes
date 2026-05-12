@@ -2721,12 +2721,6 @@
       text-align: center;
     }
 
-    .visitor-count {
-      margin-top: 14px;
-      font-size: 9px;
-      letter-spacing: 0.08em;
-    }
-
     .tagline {
       display: flex;
       justify-content: center;
@@ -3680,60 +3674,32 @@
     storageKey: id => 'kuruhimo_views_' + id,
     visitedKey: id => 'kuruhimo_visited_' + id + '_' + todayKey(),
 
-    normalizeCount(value) {
-      const count = Number(value);
-      return Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
-    },
-
-    format(count) {
-      const value = this.normalizeCount(count);
-      return value.toLocaleString('en-US') + ' views';
-    },
-
     async increment(id) {
-      if (!id) return 0;
+      if (!id) return null;
       if (sessionStorage.getItem(this.visitedKey(id))) return this.get(id);
       sessionStorage.setItem(this.visitedKey(id), '1');
-
-      const localCount = this.normalizeCount(localStorage.getItem(this.storageKey(id))) + 1;
+      const localCount = parseInt(localStorage.getItem(this.storageKey(id)) || '0', 10) + 1;
       localStorage.setItem(this.storageKey(id), String(localCount));
-
       try {
-        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + encodeURIComponent(id) + '/up', {
-          cache: 'no-store'
-        });
+        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + id + '/up');
         if (res.ok) {
           const data = await res.json();
-          const remoteCount = this.normalizeCount(data.count);
-          if (remoteCount > 0) {
-            localStorage.setItem(this.storageKey(id), String(remoteCount));
-            return remoteCount;
-          }
+          return data.count || localCount;
         }
       } catch (e) {}
-
       return localCount;
     },
 
     async get(id) {
       if (!id) return 0;
-      const localCount = this.normalizeCount(localStorage.getItem(this.storageKey(id)));
-
       try {
-        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + encodeURIComponent(id), {
-          cache: 'no-store'
-        });
+        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + id);
         if (res.ok) {
           const data = await res.json();
-          const remoteCount = this.normalizeCount(data.count);
-          if (remoteCount > 0) {
-            localStorage.setItem(this.storageKey(id), String(remoteCount));
-            return remoteCount;
-          }
+          return data.count || 0;
         }
       } catch (e) {}
-
-      return localCount;
+      return parseInt(localStorage.getItem(this.storageKey(id)) || '0', 10);
     },
 
     async getMany(articles) {
@@ -3742,15 +3708,12 @@
     }
   };
 
+
   // ============================================================
-  // ホームページ訪問者数
+  // ホームページ訪問者数（Cloudflare D1で累計カウント）
   // ============================================================
   const VisitorCounter = {
-    namespace: 'kuruhimo-times-2026',
-    endpoint: 'https://api.counterapi.dev/v1',
-    id: 'home-visitors',
-    registeredKey: 'kuruhimo_home_visitor_registered',
-    storageKey: 'kuruhimo_home_visitor_count',
+    endpoint: '/api/visit-counter',
 
     normalizeCount(value) {
       const count = Number(value);
@@ -3774,42 +3737,34 @@
       }
     },
 
-    async incrementOrGet() {
-      const alreadyRegistered = localStorage.getItem(this.registeredKey) === '1';
-      const action = alreadyRegistered ? '' : '/up';
-      const localCount = this.normalizeCount(localStorage.getItem(this.storageKey));
+    async increment() {
+      const res = await fetch(this.endpoint, {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json'
+        },
+        cache: 'no-store'
+      });
 
-      try {
-        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + encodeURIComponent(this.id) + action, {
-          cache: 'no-store'
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          const remoteCount = this.normalizeCount(data.count);
-
-          if (remoteCount > 0) {
-            localStorage.setItem(this.storageKey, String(remoteCount));
-            localStorage.setItem(this.registeredKey, '1');
-            return remoteCount;
-          }
-        }
-      } catch (e) {}
-
-      if (!alreadyRegistered) {
-        const fallbackCount = localCount + 1;
-        localStorage.setItem(this.storageKey, String(fallbackCount));
-        localStorage.setItem(this.registeredKey, '1');
-        return fallbackCount;
+      if (!res.ok) {
+        throw new Error('Visitor counter failed: ' + res.status);
       }
 
-      return localCount;
+      const data = await res.json();
+      return this.normalizeCount(data.count);
     }
   };
 
   async function setupHomeVisitorCount() {
-    const count = await VisitorCounter.incrementOrGet();
-    VisitorCounter.render(count);
+    const el = document.getElementById('home-visitor-count');
+    if (!el) return;
+
+    try {
+      const count = await VisitorCounter.increment();
+      VisitorCounter.render(count);
+    } catch (error) {
+      el.textContent = 'ようこそ、くるひもタイムズへ';
+    }
   }
 
 
@@ -4139,9 +4094,9 @@
     document.getElementById('article-title').textContent = article.title;
 
     if (isLunch) {
-      document.getElementById('article-meta').innerHTML = '<span>' + (article.publishDate || '') + '</span><span>🍽 ' + (article.place || 'Lunch') + '</span><span>✎ 編集長</span><span id="article-view-count">— views</span>';
+      document.getElementById('article-meta').innerHTML = '<span>' + (article.publishDate || '') + '</span><span>🍽 ' + (article.place || 'Lunch') + '</span><span>✎ 編集長</span>';
     } else {
-      document.getElementById('article-meta').innerHTML = '<span>◷ 読了 ' + (article.readTime || '5分') + '</span><span>✎ 編集部</span><span># ' + (article.tag || '') + '</span><span>' + (article.publishDate || '') + '</span><span id="article-view-count">— views</span>';
+      document.getElementById('article-meta').innerHTML = '<span>◷ 読了 ' + (article.readTime || '5分') + '</span><span>✎ 編集部</span><span># ' + (article.tag || '') + '</span><span>' + (article.publishDate || '') + '</span>';
     }
 
     const articleImage = document.getElementById('article-image');
@@ -4168,11 +4123,7 @@
     }
 
     window.scrollTo({ top: 0, behavior: 'instant' });
-    ViewCounter.increment(articleId).then(count => {
-      const viewEl = document.getElementById('article-view-count');
-      if (viewEl) viewEl.textContent = ViewCounter.format(count);
-      renderRanked(collectAllArticles(APP_DATA));
-    });
+    ViewCounter.increment(articleId);
     document.getElementById('nav-home').classList.remove('active');
     document.getElementById('nav-archive')?.classList.remove('active');
   }
@@ -4506,7 +4457,7 @@
         '<span class="ranked-num">' + String(i+1).padStart(2,'0') + '</span>' +
         '<div class="ranked-text">' + escapeHTML(a.title) +
         '<small>' + escapeHTML(a.source || 'article') + '</small></div>' +
-        '<span class="ranked-views">' + ViewCounter.format(a.views) + '</span>' +
+        '<span class="ranked-views">' + a.views + ' views</span>' +
         '</li>'
     ).join('');
 
@@ -4514,14 +4465,16 @@
     list.querySelectorAll('li[data-article-id]').forEach(li => {
       li.addEventListener('click', () => {
         const id = li.dataset.articleId;
-        openArticlePage(id);
+        if (id.startsWith('idea-') || id.startsWith('lunch-')) {
+          openArticlePage(id);
+        }
       });
     });
   }
 
   function collectAllArticles(data) {
     const all = [];
-    (data.ideas || []).forEach(i => all.push({
+    data.ideas.forEach(i => all.push({
       id: i.id,
       title: i.title,
       source: 'あしたのアイデア'
@@ -4531,7 +4484,7 @@
       title: i.title,
       source: 'きょうのランチ'
     }));
-    return all.filter(article => article.id && article.title);
+    return all;
   }
 
   async function buildViewMap(articles) {
@@ -4667,7 +4620,6 @@
 
     setMastheadDate(APP_DATA.site.startDate);
     document.getElementById('weather').textContent = APP_DATA.site.weather;
-    setupHomeVisitorCount();
 
     // X "Xで見る" リンク
     if (APP_DATA.xPostsConfig) {
@@ -4707,6 +4659,7 @@
     setupReveal();
     setupStickyNav();
     setupContactMailLink();
+    setupHomeVisitorCount();
 
     // /share/{id} が通常ページとして開かれた場合の保険
     routeSharePathToHash();

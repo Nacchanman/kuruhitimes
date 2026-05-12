@@ -3666,45 +3666,99 @@
   }
 
   // ============================================================
-  // ページビュー集計
+  // 記事別ページビュー集計（Cloudflare D1で累計カウント）
   // ============================================================
   const ViewCounter = {
-    namespace: 'kuruhimo-times-2026',
-    endpoint: 'https://api.counterapi.dev/v1',
-    storageKey: id => 'kuruhimo_views_' + id,
-    visitedKey: id => 'kuruhimo_visited_' + id + '_' + todayKey(),
+    endpoint: '/api/article-counter',
+
+    normalizeCount(value) {
+      const count = Number(value);
+      return Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
+    },
+
+    format(count) {
+      return this.normalizeCount(count).toLocaleString('ja-JP');
+    },
 
     async increment(id) {
-      if (!id) return null;
-      if (sessionStorage.getItem(this.visitedKey(id))) return this.get(id);
-      sessionStorage.setItem(this.visitedKey(id), '1');
-      const localCount = parseInt(localStorage.getItem(this.storageKey(id)) || '0', 10) + 1;
-      localStorage.setItem(this.storageKey(id), String(localCount));
+      if (!id) return 0;
+
       try {
-        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + id + '/up');
-        if (res.ok) {
-          const data = await res.json();
-          return data.count || localCount;
+        const res = await fetch(this.endpoint, {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'content-type': 'application/json'
+          },
+          cache: 'no-store',
+          body: JSON.stringify({ id })
+        });
+
+        if (!res.ok) {
+          throw new Error('Article view counter failed: ' + res.status);
         }
-      } catch (e) {}
-      return localCount;
+
+        const data = await res.json();
+        return this.normalizeCount(data.count);
+      } catch (error) {
+        return this.get(id);
+      }
     },
 
     async get(id) {
       if (!id) return 0;
+
       try {
-        const res = await fetch(this.endpoint + '/' + this.namespace + '/' + id);
-        if (res.ok) {
-          const data = await res.json();
-          return data.count || 0;
+        const url = this.endpoint + '?id=' + encodeURIComponent(id);
+        const res = await fetch(url, {
+          headers: { accept: 'application/json' },
+          cache: 'no-store'
+        });
+
+        if (!res.ok) {
+          throw new Error('Article view counter get failed: ' + res.status);
         }
-      } catch (e) {}
-      return parseInt(localStorage.getItem(this.storageKey(id)) || '0', 10);
+
+        const data = await res.json();
+        return this.normalizeCount(data.count);
+      } catch (error) {
+        return 0;
+      }
     },
 
     async getMany(articles) {
-      const promises = articles.map(async a => ({ ...a, views: await this.get(a.id) }));
-      return Promise.all(promises);
+      const ids = articles.map(article => article.id).filter(Boolean);
+
+      if (ids.length === 0) {
+        return articles.map(article => ({ ...article, views: 0 }));
+      }
+
+      try {
+        const url = this.endpoint + '?ids=' + encodeURIComponent(ids.join(','));
+        const res = await fetch(url, {
+          headers: { accept: 'application/json' },
+          cache: 'no-store'
+        });
+
+        if (!res.ok) {
+          throw new Error('Article view counter batch get failed: ' + res.status);
+        }
+
+        const data = await res.json();
+        const counts = data.counts || {};
+
+        return articles.map(article => ({
+          ...article,
+          views: this.normalizeCount(counts[article.id])
+        }));
+      } catch (error) {
+        const promises = articles.map(async article => ({
+          ...article,
+          views: await this.get(article.id)
+        }));
+
+        return Promise.all(promises);
+      }
     }
   };
 
@@ -3810,7 +3864,7 @@
         '<div class="idea-row-meta">' +
           '<div>' + (idea.publishDate || '') + '</div>' +
           '<div>読了 ' + (idea.readTime || '5分') + '</div>' +
-          (views > 0 ? '<div class="idea-row-views">' + views + ' views</div>' : '') +
+          (views > 0 ? '<div class="idea-row-views">' + ViewCounter.format(views) + ' views</div>' : '') +
         '</div>' +
         '<span class="idea-row-arrow">→</span>' +
         '</li>';
@@ -3845,7 +3899,7 @@
           '<p class="archive-list-summary">' + (idea.summary || '') + '</p>' +
         '</div>' +
         '<div class="archive-list-views' + (views > 0 ? ' has-views' : '') + '">' +
-          (views > 0 ? views + ' views' : '—') +
+          (views > 0 ? ViewCounter.format(views) + ' views' : '—') +
         '</div>' +
         '</li>';
     }).join('');
@@ -4457,7 +4511,7 @@
         '<span class="ranked-num">' + String(i+1).padStart(2,'0') + '</span>' +
         '<div class="ranked-text">' + escapeHTML(a.title) +
         '<small>' + escapeHTML(a.source || 'article') + '</small></div>' +
-        '<span class="ranked-views">' + a.views + ' views</span>' +
+        '<span class="ranked-views">' + ViewCounter.format(a.views) + ' views</span>' +
         '</li>'
     ).join('');
 

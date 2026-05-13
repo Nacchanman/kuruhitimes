@@ -332,12 +332,20 @@ function formatPlainText(text) {
   if (!value) return '';
 
   if (/<\/?[a-z][\s\S]*>/i.test(value)) {
-    return value;
+    return value.replace(
+      /<p(\s[^>]*)?>/i,
+      match => match.includes('class=')
+        ? match.replace(/class=(["'])(.*?)\1/i, 'class=$1$2 dropcap$1')
+        : match.replace('<p', '<p class="dropcap"')
+    );
   }
 
   return value
     .split(/\n\s*\n/g)
-    .map(paragraph => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`)
+    .map((paragraph, index) => {
+      const className = index === 0 ? ' class="dropcap"' : '';
+      return `<p${className}>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`;
+    })
     .join('');
 }
 
@@ -630,6 +638,23 @@ h1 {
   margin: 0 0 1.75em;
 }
 
+.article-body > p:first-of-type::first-letter,
+.article-body p.dropcap::first-letter {
+  float: left;
+  font-family: 'Fraunces', 'Shippori Mincho', serif;
+  font-size: 4.8em;
+  line-height: 0.82;
+  padding: 0.14em 0.16em 0 0;
+  color: var(--vermilion);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+}
+
+.article-body > p:first-of-type,
+.article-body p.dropcap {
+  text-indent: 0;
+}
+
 .article-body a {
   color: var(--vermilion);
   text-underline-offset: .2em;
@@ -798,6 +823,13 @@ figcaption {
 @media (max-width: 760px) {
   .article-shell {
     padding-top: 42px;
+  }
+
+  .article-body > p:first-of-type::first-letter,
+  .article-body p.dropcap::first-letter {
+    font-size: 3.8em;
+    line-height: 0.86;
+    padding: 0.12em 0.14em 0 0;
   }
 
   .share-panel {

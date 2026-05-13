@@ -1,0 +1,39 @@
+name: Migrate content from data.json
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate-content:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Migrate data.json to content files
+        run: node scripts/migrate-data-json-to-content.mjs
+
+      - name: Rebuild data.json
+        run: node scripts/build-data-json.mjs
+
+      - name: Commit migrated content
+        run: |
+          if git diff --quiet; then
+            echo "No migration changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add content data.json
+          git commit -m "Migrate CMS content into separate files"
+          git push

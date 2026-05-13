@@ -5,6 +5,7 @@ on:
     paths:
       - "content/**"
       - "scripts/build-data-json.mjs"
+      - "scripts/validate-data.mjs"
       - "admin/config.yml"
   workflow_dispatch:
 
@@ -26,6 +27,9 @@ jobs:
 
       - name: Build data.json
         run: node scripts/build-data-json.mjs
+
+      - name: Validate data.json
+        run: node scripts/validate-data.mjs
 
       - name: Commit generated data.json
         run: |

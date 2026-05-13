@@ -1,0 +1,41 @@
+name: Build data.json from content
+
+on:
+  push:
+    paths:
+      - "content/**"
+      - "scripts/build-data-json.mjs"
+      - "admin/config.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-data-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build data.json
+        run: node scripts/build-data-json.mjs
+
+      - name: Commit generated data.json
+        run: |
+          if git diff --quiet data.json; then
+            echo "No data.json changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git commit -m "Build data.json from content"
+          git push

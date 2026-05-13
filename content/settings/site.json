@@ -1,0 +1,27 @@
+{
+  "site": {
+    "weather": "晴れ・知的好奇心",
+    "startDate": "2026-05-01"
+  },
+  "noteConfig": {
+    "username": "techno_optimist",
+    "displayCount": 3,
+    "_username_help": "Noteのプロフィール画面でURLが https://note.com/xxxxx だった場合、xxxxx を入れる",
+    "_comment": "テッキーズ・ブックレビューはNoteのRSSから最新3記事を取得して表示する"
+  },
+  "xPostsConfig": {
+    "accountUrl": "https://x.com/newbookforbiz",
+    "postUrls": [
+      "https://x.com/newbookforbiz/status/2053998337154830519?s=20",
+      "https://x.com/newbookforbiz/status/2053998032577069148?s=20"
+    ],
+    "_comment": "きょう発売のビジネス書はXの投稿を埋め込み表示。投稿のURLを最大3つまで指定",
+    "_postUrls_help": "Xの投稿の「リンクをコピー」で取得したURLを貼り付け。3つまで表示されます。最新3投稿を取得する自動化はXのAPI仕様上、無料では不可"
+  },
+  "beehiivConfig": {
+    "publicationUrl": "https://your-publication.beehiiv.com",
+    "_setup_help": "beehiivのSettings > Integrations > RSS to Email で、サイトのrss.xmlを毎週水曜7時に配信するよう設定する",
+    "_publicationUrl_help": "beehiivで作成したパブリケーションのURL。例: https://kuruhimotimes.beehiiv.com",
+    "_comment": "ニュースレター購読のbeehiiv連携。RSS自動配信を使うので、メール送信はbeehiiv側で完全自動"
+  }
+}

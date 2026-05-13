@@ -4665,6 +4665,38 @@
     });
   }
 
+
+  // ============================================================
+  // アーカイブリンク：同じハッシュを再クリックしても確実に表示する
+  // ============================================================
+  function setupArchiveLinks() {
+    const routes = {
+      archive: showArchive,
+      'quote-archive': showQuoteArchive,
+      'lunch-archive': showLunchArchive,
+      about: showAbout
+    };
+
+    document.querySelectorAll('a[href$="#archive"], a[href$="#quote-archive"], a[href$="#lunch-archive"], a[href$="#about"]').forEach(link => {
+      link.addEventListener('click', event => {
+        const href = link.getAttribute('href') || '';
+        const hash = href.split('#')[1];
+        const route = routes[hash];
+
+        if (!route) return;
+
+        event.preventDefault();
+
+        const nextUrl = '/#' + hash;
+        if (location.pathname + location.hash !== nextUrl) {
+          history.pushState('', document.title, nextUrl);
+        }
+
+        route();
+      });
+    });
+  }
+
   // ============================================================
   // 起動
   // ============================================================
@@ -4717,6 +4749,7 @@
     setupReveal();
     setupStickyNav();
     setupContactMailLink();
+    setupArchiveLinks();
     setupHomeVisitorCount();
 
     // /share/{id} が通常ページとして開かれた場合の保険

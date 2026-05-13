@@ -7,92 +7,234 @@ media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  - name: "data"
-    label: "くるひもCMS"
+  - name: "settings"
+    label: "サイト設定"
     files:
-      - file: "data.json"
-        label: "サイトデータ"
-        name: "site"
+      - file: "content/settings/site.json"
+        label: "基本設定"
+        name: "site_settings"
         format: "json"
-
         fields:
           - label: "サイト設定"
             name: "site"
             widget: "object"
             fields:
-              - { label: "天気", name: "weather", widget: "string" }
-              - { label: "開始日", name: "startDate", widget: "string" }
-
-          - label: "あしたのアイデア"
-            name: "ideas"
-            widget: "list"
-            add_to_top: true
-            fields:
-              - { label: "ID", name: "id", widget: "string", hint: "例: idea-21。他の記事と重複しないIDにしてください。" }
-              - { label: "サムネイル画像", name: "image", widget: "image", required: false, hint: "ホーム画面では小さな画像として表示され、記事ページでは大きく表示されます。" }
-              - { label: "カテゴリ", name: "category", widget: "string" }
-              - { label: "タイトル", name: "title", widget: "string" }
-              - { label: "要約", name: "summary", widget: "text" }
-              - { label: "タグ", name: "tag", widget: "string" }
-              - { label: "公開日", name: "publishDate", widget: "string", hint: "例: 2026-05-02" }
-              - { label: "読了時間", name: "readTime", widget: "string", hint: "例: 5分" }
-              - { label: "本文", name: "body", widget: "text" }
-
-          - label: "きょうのクオート"
-            name: "quotes"
-            widget: "list"
-            add_to_top: true
-            fields:
-              - { label: "ID", name: "id", widget: "string", hint: "例: quote-001。他のクオートと重複しないIDにしてください。" }
-              - { label: "引用文", name: "quote", widget: "text" }
-              - { label: "人物名", name: "author", widget: "string" }
-              - { label: "出典", name: "source", widget: "string", required: false }
-              - { label: "公開日", name: "publishDate", widget: "string", hint: "例: 2026-05-02" }
-              - { label: "編集長の所感", name: "editorNote", widget: "text" }
-
-          - label: "きょうのランチ"
-            name: "lunches"
-            widget: "list"
-            add_to_top: true
-            fields:
-              - { label: "ID", name: "id", widget: "string", hint: "例: lunch-001。他のランチ記事と重複しないIDにしてください。" }
-              - { label: "タイトル", name: "title", widget: "string" }
-              - { label: "お店・場所", name: "place", widget: "string", required: false }
-              - { label: "公開日", name: "publishDate", widget: "string", hint: "例: 2026-05-03" }
-              - { label: "要約", name: "summary", widget: "text" }
-              - { label: "カバー画像", name: "coverImage", widget: "image", required: false, hint: "未設定の場合は写真リストの1枚目が使われます。" }
-              - label: "写真"
-                name: "photos"
-                widget: "list"
+              - label: "天気"
+                name: "weather"
+                widget: "string"
                 required: false
-                add_to_top: false
-                fields:
-                  - { label: "写真", name: "image", widget: "image" }
-                  - { label: "キャプション", name: "caption", widget: "string", required: false }
-              - { label: "本文", name: "body", widget: "text", hint: "本文中の好きな場所に [[photo:1]]、[[photo:2]] のように書くと、その番号の写真が挿入されます。指定しなかった写真は本文末尾にまとめて表示されます。" }
+
+              - label: "開始日"
+                name: "startDate"
+                widget: "string"
+                required: false
 
           - label: "note連携"
             name: "noteConfig"
             widget: "object"
+            required: false
             fields:
-              - { label: "noteユーザー名", name: "username", widget: "string" }
-              - { label: "表示件数", name: "displayCount", widget: "number", value_type: "int", min: 1, max: 6 }
+              - label: "noteユーザー名"
+                name: "username"
+                widget: "string"
+                required: false
 
-          - label: "beehiiv連携"
-            name: "beehiivConfig"
-            widget: "object"
-            fields:
-              - { label: "Publication URL", name: "publicationUrl", widget: "string" }
+              - label: "表示件数"
+                name: "displayCount"
+                widget: "number"
+                value_type: "int"
+                min: 1
+                max: 6
+                required: false
 
           - label: "X投稿"
             name: "xPostsConfig"
             widget: "object"
+            required: false
             fields:
-              - { label: "アカウントURL", name: "accountUrl", widget: "string" }
+              - label: "アカウントURL"
+                name: "accountUrl"
+                widget: "string"
+                required: false
+
               - label: "投稿URL"
                 name: "postUrls"
                 widget: "list"
+                required: false
                 field:
                   label: "URL"
                   name: "url"
                   widget: "string"
+
+          - label: "beehiiv連携"
+            name: "beehiivConfig"
+            widget: "object"
+            required: false
+            fields:
+              - label: "Publication URL"
+                name: "publicationUrl"
+                widget: "string"
+                required: false
+
+  - name: "ideas"
+    label: "あしたのアイデア"
+    label_singular: "あしたのアイデア"
+    folder: "content/ideas"
+    create: true
+    format: "json"
+    extension: "json"
+    identifier_field: "title"
+    slug: "{{id}}"
+    summary: "{{title}}"
+    fields:
+      - label: "ID"
+        name: "id"
+        widget: "string"
+        hint: "例: idea-21。他の記事と重複しないIDにしてください。"
+
+      - label: "サムネイル画像"
+        name: "image"
+        widget: "image"
+        required: false
+        hint: "ホーム画面では小さな画像として表示され、記事ページでは大きく表示されます。"
+
+      - label: "カテゴリ"
+        name: "category"
+        widget: "string"
+        required: false
+
+      - label: "タイトル"
+        name: "title"
+        widget: "string"
+
+      - label: "要約"
+        name: "summary"
+        widget: "text"
+        required: false
+
+      - label: "タグ"
+        name: "tag"
+        widget: "string"
+        required: false
+
+      - label: "公開日"
+        name: "publishDate"
+        widget: "string"
+        required: false
+        hint: "例: 2026-05-02"
+
+      - label: "読了時間"
+        name: "readTime"
+        widget: "string"
+        required: false
+        hint: "例: 5分"
+
+      - label: "本文"
+        name: "body"
+        widget: "text"
+        required: false
+
+  - name: "quotes"
+    label: "きょうのクオート"
+    label_singular: "きょうのクオート"
+    folder: "content/quotes"
+    create: true
+    format: "json"
+    extension: "json"
+    identifier_field: "quote"
+    slug: "{{id}}"
+    summary: "{{quote}}"
+    fields:
+      - label: "ID"
+        name: "id"
+        widget: "string"
+        hint: "例: quote-001。他のクオートと重複しないIDにしてください。"
+
+      - label: "引用文"
+        name: "quote"
+        widget: "text"
+
+      - label: "人物名"
+        name: "author"
+        widget: "string"
+        required: false
+
+      - label: "出典"
+        name: "source"
+        widget: "string"
+        required: false
+
+      - label: "公開日"
+        name: "publishDate"
+        widget: "string"
+        required: false
+        hint: "例: 2026-05-02"
+
+      - label: "編集長の所感"
+        name: "editorNote"
+        widget: "text"
+        required: false
+
+  - name: "lunches"
+    label: "きょうのランチ"
+    label_singular: "きょうのランチ"
+    folder: "content/lunches"
+    create: true
+    format: "json"
+    extension: "json"
+    identifier_field: "title"
+    slug: "{{id}}"
+    summary: "{{title}}"
+    fields:
+      - label: "ID"
+        name: "id"
+        widget: "string"
+        hint: "例: lunch-001。他のランチ記事と重複しないIDにしてください。"
+
+      - label: "タイトル"
+        name: "title"
+        widget: "string"
+
+      - label: "お店・場所"
+        name: "place"
+        widget: "string"
+        required: false
+
+      - label: "公開日"
+        name: "publishDate"
+        widget: "string"
+        required: false
+        hint: "例: 2026-05-03"
+
+      - label: "要約"
+        name: "summary"
+        widget: "text"
+        required: false
+
+      - label: "カバー画像"
+        name: "coverImage"
+        widget: "image"
+        required: false
+        hint: "未設定の場合は写真リストの1枚目が使われます。"
+
+      - label: "写真"
+        name: "photos"
+        widget: "list"
+        required: false
+        add_to_top: false
+        fields:
+          - label: "写真"
+            name: "image"
+            widget: "image"
+            required: false
+
+          - label: "キャプション"
+            name: "caption"
+            widget: "string"
+            required: false
+
+      - label: "本文"
+        name: "body"
+        widget: "text"
+        required: false
+        hint: "本文中の好きな場所に [[photo:1]]、[[photo:2]] のように書くと、その番号の写真が挿入されます。指定しなかった写真は本文末尾にまとめて表示されます。"
